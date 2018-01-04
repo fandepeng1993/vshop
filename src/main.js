@@ -12,7 +12,7 @@ Vue.use(Vuelazyload,{
   loading: require('common/images/default.png')
 })
 Vue.config.productionTip = false
-/* 移动端300MS延时 */
+/* 移动端点击300MS延时 */
 fastclick.attach(document.body)
 
 /* eslint-disable no-new */

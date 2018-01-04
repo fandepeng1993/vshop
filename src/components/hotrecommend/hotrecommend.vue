@@ -2,7 +2,7 @@
   <div class="recommend">
     <div class="recommend-top">
       <ul>
-        <li v-for="item in toppng">
+        <li v-for="item in recommend.toppng">
           <a>
             <img v-lazy="item">
           </a>
@@ -11,7 +11,7 @@
     </div>
     <div class="recommoned-bot">
       <ul>
-        <li v-for="item in botpng">
+        <li v-for="item in recommend.botpng">
           <a>
             <img v-lazy="item">
           </a>
@@ -23,11 +23,14 @@
 </template>
 <script type="text/ecmascript-6">
   export default {
-    data() {
-      return {
-        toppng: ['http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/2118160835.jpg', 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/2118162353.jpg', 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/2118163154.jpg'],
-        botpng: ['http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201708/2110375767.jpg', 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201708/2110155752.jpg']
+    props: {
+      recommend:{
+        type: Object,
+        default: {}
       }
+    },
+    data() {
+      return{}
     },
     methods: {
     }

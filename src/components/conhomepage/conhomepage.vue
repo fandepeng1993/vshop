@@ -12,7 +12,7 @@
             </slider>
           </div>
           <div>
-            <isat-hotrecommend></isat-hotrecommend>
+            <isat-hotrecommend :recommend="goodslistdata.recommend"></isat-hotrecommend>
             <isat-goodslistshow :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
           </div>
         </div>
@@ -59,7 +59,11 @@
                 havesale: '12'
               }
             ]
-          }
+          },
+          recommend: {
+        toppng: ['http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/2118160835.jpg', 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/2118162353.jpg', 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/2118163154.jpg'],
+          botpng: ['http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201708/2110375767.jpg', 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201708/2110155752.jpg']
+      }
         }
       }
     },
