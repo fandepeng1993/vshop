@@ -2,14 +2,14 @@
   <div class="goodslistshow">
     <div class="topTile">
       <a>
-        <img :src="showListdata.topurl">
+        <img v-lazy="showListdata.topurl">
       </a>
     </div>
     <div class="goodslist">
       <ul v-if="showListdata.listinfo.length">
         <li v-for="item in showListdata.listinfo">
           <a>
-            <img :src="item.picurl" >
+            <img v-lazy="item.picurl" >
             <p>{{item.name}}</p>
           </a>
           <div>

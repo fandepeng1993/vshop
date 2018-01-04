@@ -21,6 +21,9 @@
       }
     },
     mounted() {
+     /* this.$nextTick(function(){
+        this._initScroll()
+      })*/
       setTimeout(() => {
         this._initScroll()
       }, 500)

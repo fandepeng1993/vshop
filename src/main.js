@@ -6,7 +6,11 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import 'common/stylus/index.styl'
 import fastclick from 'fastclick'
+import Vuelazyload from 'vue-lazyload'
 Vue.use(MintUI)
+Vue.use(Vuelazyload,{
+  loading: require('common/images/default.png')
+})
 Vue.config.productionTip = false
 /* 移动端300MS延时 */
 fastclick.attach(document.body)

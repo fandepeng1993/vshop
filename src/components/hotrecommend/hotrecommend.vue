@@ -4,7 +4,7 @@
       <ul>
         <li v-for="item in toppng">
           <a>
-            <img  >
+            <img v-lazy="item">
           </a>
         </li>
       </ul>
@@ -13,7 +13,7 @@
       <ul>
         <li v-for="item in botpng">
           <a>
-            <img :src="item">
+            <img v-lazy="item">
           </a>
         </li>
       </ul>
