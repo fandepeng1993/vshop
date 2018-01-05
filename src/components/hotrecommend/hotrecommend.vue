@@ -2,9 +2,9 @@
   <div class="recommend">
     <div class="recommend-top">
       <ul>
-        <li v-for="item in recommend.toppng">
+        <li  v-for="item in recommend.toppng">
           <a>
-            <img v-lazy="item">
+            <img width="100%" :height="screenWidth*0.33*0.556"  v-lazy="item">
           </a>
         </li>
       </ul>
@@ -13,7 +13,7 @@
       <ul>
         <li v-for="item in recommend.botpng">
           <a>
-            <img v-lazy="item">
+            <img width="100%" :height="screenWidth*0.5*0.525" v-lazy="item">
           </a>
         </li>
       </ul>
@@ -24,13 +24,19 @@
 <script type="text/ecmascript-6">
   export default {
     props: {
-      recommend:{
+      recommend: {
         type: Object,
         default: {}
+      },
+      screenWidth: {
+        type: Number,
+        default: 0
       }
     },
+    mounted() {
+    },
     data() {
-      return{}
+      return {}
     },
     methods: {
     }
@@ -53,10 +59,7 @@
             overflow hidden
             text-align center
             img
-              width 100%
-              display block
               vertical-align middle
-              height auto
 
 
 </style>

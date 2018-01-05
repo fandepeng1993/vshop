@@ -8,7 +8,7 @@ import 'common/stylus/index.styl'
 import fastclick from 'fastclick'
 import Vuelazyload from 'vue-lazyload'
 Vue.use(MintUI)
-Vue.use(Vuelazyload,{
+Vue.use(Vuelazyload, {
   loading: require('common/images/default.png')
 })
 Vue.config.productionTip = false

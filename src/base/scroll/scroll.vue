@@ -21,12 +21,15 @@
       }
     },
     mounted() {
-     /* this.$nextTick(function(){
-        this._initScroll()
-      })*/
       setTimeout(() => {
         this._initScroll()
-      }, 500)
+      }, 20)
+      window.addEventListener('resize', () => {
+        if (!this.scroll) {
+          return
+        }
+        this.scroll.refresh()
+      })
     },
     methods: {
       _initScroll() {
@@ -52,7 +55,7 @@
       datas() {
         setTimeout(() => {
           this.refresh()
-        }, 500)
+        }, 20)
       }
     }
   }

@@ -1,19 +1,30 @@
 <template>
-  <div class="conhomepage">
-      <scroll ref="scroll" @loads="loadImage" class="conhomepage-content">
+  <div class="conhomepage" ref="conhomepage">
+      <scroll ref="scroll" :datas="goodslistdata"  class="conhomepage-content">
         <div>
-          <div v-if="homepagedata.length" class="slider-wrapper">
-            <slider>
-              <div v-for="item in homepagedata">
-                <a :href="item.linkUrl">
-                  <img @load="loadImage" :src="item.picUrl">
-                </a>
-              </div>
-            </slider>
+          <div v-bind:style="{height:screenWidth*0.4+'px'}">
+            <div v-if="homepagedata.length" class="slider-wrapper">
+              <slider>
+                <div v-for="item in homepagedata">
+                  <a :href="item.linkUrl">
+                    <img class="needsclick" width="100%" :src="item.picUrl">
+                  </a>
+                </div>
+              </slider>
+            </div>
           </div>
           <div>
-            <isat-hotrecommend :recommend="goodslistdata.recommend"></isat-hotrecommend>
-            <isat-goodslistshow :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
+            <isat-hotrecommend :screenWidth="screenWidth" :recommend="goodslistdata.recommend"></isat-hotrecommend>
+            <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
+            <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
+            <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
+            <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
+            <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
+            <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
+            <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
+            <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
+            <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
+            <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
           </div>
         </div>
       </scroll>
@@ -64,11 +75,27 @@
         toppng: ['http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/2118160835.jpg', 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/2118162353.jpg', 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/2118163154.jpg'],
           botpng: ['http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201708/2110375767.jpg', 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201708/2110155752.jpg']
       }
-        }
+        },
+        screenWidth: document.documentElement.clientWidth
       }
     },
     created () {
       this._getJsonpHomepage()
+      console.log(this.screenWidth)
+    },
+    mounted() {
+      /* ES5中非箭头函数this是指向window对象的
+      const that = this
+      window.onresize = function temp() {
+        that.screenWidth = `${document.documentElement.clientHeight}px`
+      } */
+
+      window.addEventListener('resize', () => {
+        if (!this.$refs.conhomepage) {
+          return
+        }
+        this.getScreenWidth()
+      })
     },
     methods: {
       _getJsonpHomepage() {
@@ -80,7 +107,14 @@
         })
       },
       loadImage() {
-        this.$refs.scroll.refresh()
+        if (!this.checkLoad) {
+          this.$refs.scroll.refresh()
+          this.checkLoad = true
+        }
+      },
+      getScreenWidth() {
+        this.screenWidth = document.documentElement.clientWidth
+        console.log(this.screenWidth)
       }
     },
     components: {

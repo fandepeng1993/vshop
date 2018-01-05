@@ -2,14 +2,14 @@
   <div class="goodslistshow">
     <div class="topTile">
       <a>
-        <img v-lazy="showListdata.topurl">
+        <img width="100%" :height="screenWidth*0.078125" v-lazy="showListdata.topurl">
       </a>
     </div>
     <div class="goodslist">
-      <ul v-if="showListdata.listinfo.length">
+      <ul>
         <li v-for="item in showListdata.listinfo">
           <a>
-            <img v-lazy="item.picurl" >
+            <img width="100%" :height="screenWidth*0.48"  v-lazy="item.picurl" >
             <p>{{item.name}}</p>
           </a>
           <div>
@@ -29,19 +29,23 @@
       showListdata: {
         type: Object,
         default: {}
+      },
+      screenWidth: {
+        type: Number,
+        default: 0
+      }
+    },
+    data() {
+      return {
       }
     },
     created() {
-     /* console.log(this.showListdata)*/
     },
     methods: {
     },
+    mounted() {
+    },
     watch: {
-      showListdata() {
-        setTimeout(() => {
-          this.$parent.refresh()
-        }, 500)
-      }
     }
   }
 </script>
@@ -52,8 +56,9 @@
     .topTile
       a
         display block
+        overflow hidden
+        text-align center
         img
-          width 100%
           vertical-align middle
     .goodslist
       overflow hidden
@@ -67,8 +72,9 @@
           width 48%
           a
             display block
+            overflow hidden
+            text-align center
             img
-              width 100%
               vertical-align middle
 
 </style>
