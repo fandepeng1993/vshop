@@ -2,7 +2,7 @@
   <div class="conhomepage" ref="conhomepage">
       <scroll ref="scroll" :datas="goodslistdata"  class="conhomepage-content">
         <div>
-          <div v-bind:style="{height:screenWidth*0.4+'px'}">
+          <div class="bannerWraper" v-bind:style="{height:screenWidth*0.4+'px'}">
             <div v-if="homepagedata.length" class="slider-wrapper">
               <slider>
                 <div v-for="item in homepagedata">
@@ -12,8 +12,9 @@
                 </div>
               </slider>
             </div>
+            <Loading v-if="!homepagedata.length"></Loading>
           </div>
-          <div>
+          <div v-if="goodslistdata">
             <isat-hotrecommend :screenWidth="screenWidth" :recommend="goodslistdata.recommend"></isat-hotrecommend>
             <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
             <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
@@ -26,6 +27,7 @@
             <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
             <isat-goodslistshow :screenWidth="screenWidth" :showListdata ="goodslistdata.newgoods"></isat-goodslistshow>
           </div>
+          <loading v-if="!goodslistdata"></loading>
         </div>
       </scroll>
   </div>
@@ -37,6 +39,7 @@
   import IsatGoodslistshow from 'components/goodslistshow/goodslistshow'
   import {ERR_OK} from 'api/config'
   import Scroll from 'base/scroll/scroll'
+  import Loading from 'base/loading/loading'
   export default {
     data() {
       return {
@@ -81,7 +84,7 @@
     },
     created () {
       this._getJsonpHomepage()
-      console.log(this.screenWidth)
+    /*  console.log(this.screenWidth) */
     },
     mounted() {
       /* ES5中非箭头函数this是指向window对象的
@@ -121,7 +124,8 @@
       Slider,
       IsatHotrecommend,
       IsatGoodslistshow,
-      Scroll
+      Scroll,
+      Loading
     }
   }
 </script>
@@ -134,8 +138,12 @@
       height:100%
       overflow:hidden
       background $color-highlight-background
-      .slider-wrapper
-        position:relative
-        width:100%
-        overflow:hidden
+      .bannerWraper
+        display flex
+        align-items center
+        background $color-header-bg
+        .slider-wrapper
+          position:relative
+          width:100%
+          overflow:hidden
 </style>
