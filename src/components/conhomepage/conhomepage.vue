@@ -117,7 +117,7 @@
       },
       getScreenWidth() {
         this.screenWidth = document.documentElement.clientWidth
-        console.log(this.screenWidth)
+        /* console.log(this.screenWidth) */
       }
     },
     components: {

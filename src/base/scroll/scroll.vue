@@ -18,6 +18,10 @@
       datas: {
         type: Object,
         default: null
+      },
+      listenScroll: {
+        type: Boolean,
+        default: false
       }
     },
     mounted() {
@@ -28,6 +32,7 @@
         if (!this.scroll) {
           return
         }
+        console.log('onresize')
         this.scroll.refresh()
       })
     },
@@ -40,6 +45,13 @@
           probeType: this.probeType,
           click: this.click
         })
+        if (this.listenScroll) {
+          let me = this
+          /* 监听滚动事件 */
+          me.scroll.on('scroll', (pos) => {
+            me.$emit('scroll', pos)
+          })
+        }
       },
       enable() {
         this.scroll && this.scroll.enable()
@@ -49,6 +61,12 @@
       },
       refresh() {
         this.scroll && this.scroll.refresh()
+      },
+      scrollTo() {
+        this.scroll && this.scrollTo.apply(this.scroll, arguments)
+      },
+      scrollToElement() {
+        this.scroll && this.scrollToElement.apply(this.scroll, arguments)
       }
     },
     watch: {
