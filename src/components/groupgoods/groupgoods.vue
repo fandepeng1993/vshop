@@ -33,8 +33,8 @@
 </template>
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
-  import IsatSearchtitle from 'components/searchtitle/searchtitle'
-  import IsatBabylist from 'components/babylist/babylist'
+  import IsatSearchtitle from 'base/searchtitle/searchtitle'
+  import IsatBabylist from 'base/babylist/babylist'
   export default {
     data() {
       return {
@@ -54,7 +54,8 @@
         console.log(123)
       },
       back() {
-        this.$router.back()
+        /*this.$router.back()*/
+        this.$router.push({path: '/Homepage'})
       },
       onQueryChange(query) {
         this.query = query
@@ -65,7 +66,11 @@
       },
       selectGoodsId (goodsid) {
         this.$router.push({
-          path: `/Groupgoods/${goodsid.id}`
+          path: `/Groupgoods/${goodsid.id}`,
+          query: {
+            name:'fdp',
+            age:24
+          }
         })
       }
     },

@@ -16,7 +16,7 @@
         default: true
       },
       datas: {
-        type: Object,
+        type: Object | String | Array ,
         default: null
       },
       listenScroll: {
@@ -32,7 +32,7 @@
         if (!this.scroll) {
           return
         }
-        console.log('onresize')
+       /* console.log('onresize') */
         this.scroll.refresh()
       })
     },

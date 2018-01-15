@@ -3,15 +3,18 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import MintUI from 'mint-ui'
+
 import 'mint-ui/lib/style.css'
 import 'common/stylus/index.styl'
-import Vuelazyload from 'vue-lazyload'
+/*import Vuelazyload from 'vue-lazyload'*/
+
 import fastclick from 'fastclick'
+import MintUI from 'mint-ui'
+/*import { Lazyload } from 'mint-ui';*/
 Vue.use(MintUI)
-Vue.use(Vuelazyload, {
+/*Vue.use(Lazyload, {
   loading: require('common/images/default.png')
-})
+})*/
 Vue.config.productionTip = false
 
 /* 移动端点击300MS延时 */

@@ -12,16 +12,28 @@
     <router-link tag="div" class="tab-item" :to="'/Groupgoods/'+dirPath+'/price'">
       <p class="tab-link">价格</p>
     </router-link>
-    <div class="changeIcon">
-      <i class="icon-caidan"></i>
+    <div class="changeIcon" @click="exchangeIc" >
+      <i :class="{'icon-caidan': !datas, 'icon-icon122': datas}" ></i>
     </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
   export default {
+    props: {
+      datas: {
+        type: Boolean,
+        default: false
+      }
+    },
     data() {
       return {
         dirPath: ''
+      }
+    },
+    methods: {
+      exchangeIc() {
+        let changeValue = !this.datas
+        this.$emit('changeIcon', changeValue)
       }
     },
     created() {

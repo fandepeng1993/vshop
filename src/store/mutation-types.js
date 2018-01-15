@@ -1,1 +1,1 @@
-export const SET_GOODSNAME = 'SET_GOODSNAME'
+export const SET_LOGINSTATE = 'SET_LOGINSTATE'

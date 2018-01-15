@@ -6,7 +6,11 @@ import Joinsales from 'components/joinsales/joinsales'
 import Membercenter from 'components/membercenter/membercenter'
 import Shoppingcart from 'components/shoppingcart/shoppingcart'
 import Goodsinfomation from 'components/goodsinfomation/goodsinfomation'
-import GoodsList from 'components/goodsList/goodsList'
+import Comprehensive from 'components/fourtabRouter/isat-comprehensive'
+import SalesVolume from 'components/fourtabRouter/isat-salesVolume'
+import NewProduct from 'components/fourtabRouter/isat-newProduct'
+import Price from 'components/fourtabRouter/isat-price'
+import Loginpage from 'components/loginpage/loginpage'
 Vue.use(Router)
 
 export default new Router({
@@ -29,7 +33,12 @@ export default new Router({
     },
     {
       path: '/Shoppingcart',
+      /* path: '/Shoppingcart/:id', */
       component: Shoppingcart
+    },
+    {
+      path: '/login',
+      component: Loginpage
     },
     {
       path: '/Groupgoods',
@@ -42,19 +51,19 @@ export default new Router({
             {
               /* 注意在children中 path 是不允许加斜杠的 */
               path: 'comprehensive',
-              component: GoodsList
+              component: Comprehensive
             },
             {
               path: 'salesVolume',
-              component: GoodsList
+              component: SalesVolume
             },
             {
               path: 'newProduct',
-              component: GoodsList
+              component: NewProduct
             },
             {
               path: 'price',
-              component: GoodsList
+              component: Price
             },
             {
               path: '',

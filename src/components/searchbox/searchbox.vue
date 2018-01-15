@@ -5,8 +5,8 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import IsatSearch from 'components/search/search'
-  import IsatPerson from 'components/person/person'
+  import IsatSearch from 'base/search/search'
+  import IsatPerson from 'base/person/person'
   export default {
     components: {
       IsatSearch,

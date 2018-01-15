@@ -1,4 +1,4 @@
 const state = {
-  goodsname: {}
+  loginstate: false
 }
 export default state

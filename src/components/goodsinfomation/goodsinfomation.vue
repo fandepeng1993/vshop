@@ -6,19 +6,20 @@
           <router-link to="/Groupgoods" slot="left">
             <mt-button icon="back"></mt-button>
           </router-link>
-          <mt-button class="isatbtn" slot="right">
+          <mt-button @click.native.prevent.stop="handleperson" class="isatbtn" slot="right">
             <i class="icon-huiyuan1"></i>
           </mt-button>
-          <mt-button class="isatbtn" slot="right">
+          <mt-button @click.native.prevent.stop="handleshop" class="isatbtn" slot="right">
             <i class="icon-gouwuche"></i>
           </mt-button>
         </mt-header>
       </div>
       <div class="goodslistwrap">
-        <isat-infour-tab></isat-infour-tab>
+        <isat-infour-tab :datas="rowValue" @changeIcon="changeValue"></isat-infour-tab>
         <!-- tab-container -->
-        <router-view></router-view>
+        <router-view :datas="rowValue"></router-view>
       </div>
+
     </div>
 
   </transition>
@@ -45,8 +46,19 @@
     },
     created() {
       this.goodsId = this.$route.params
+     /* console.log(this.$route, this.$router) */
     },
     methods: {
+      changeValue(newval) {
+        this.rowValue = newval
+      },
+      handleperson() {
+        /* console.log(123) */
+      },
+      handleshop() {
+       /* console.log(456) */
+      }
+
     },
     components: {
       IsatInfourTab
@@ -83,4 +95,5 @@
 
   .slide-enter,.slide-leave-to
     transform translate3d(100%,0,0)
+
 </style>

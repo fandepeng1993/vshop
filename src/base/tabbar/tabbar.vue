@@ -8,22 +8,49 @@
       <div class="linkpng png2"></div>
       <p class="tab-link">商品分组</p>
     </router-link>
-    <router-link tag="div" class="tab-item" to="/Joinsales">
+    <!--<router-link tag="div" class="tab-item" to="/Joinsales">
       <div class="linkpng png3"></div>
       <p class="tab-link">加入分销</p>
-    </router-link>
-    <router-link tag="div" class="tab-item" to="/Shoppingcart">
+    </router-link>-->
+    <router-link tag="div" class="tab-item" :to="loginState">
       <div class="linkpng png4"></div>
       <p class="tab-link">购物车</p>
     </router-link>
-    <router-link tag="div" class="tab-item" to="/Membercenter">
+    <router-link tag="div" class="tab-item" :to="loginState2">
       <div class="linkpng png5"></div>
       <p class="tab-link">会员中心</p>
     </router-link>
   </div>
 </template>
 <script type="text/ecmascript-6">
+  import {mapGetters} from 'vuex'
   export default {
+    data() {
+      return {
+        fdp: 'fdp'
+      }
+    },
+    computed: {
+      loginState() {
+        if (this.loginstate) {
+          return '/Shoppingcart'
+         }
+        else {
+          return '/login'
+        }
+      },
+      loginState2() {
+        if (this.loginstate) {
+          return '/Membercenter'
+        }
+        else {
+          return '/login'
+        }
+      },
+      ...mapGetters([
+        'loginstate'
+      ])
+    }
   }
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">

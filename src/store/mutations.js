@@ -1,7 +1,7 @@
 import * as types from './mutation-types'
 const mutations = {
-  [types.SET_GOODSNAME](state, goodsname) {
-    state.goodsname = goodsname
+  [types.SET_LOGINSTATE](state, loginstate) {
+    state.loginstate = loginstate
   }
 }
 
