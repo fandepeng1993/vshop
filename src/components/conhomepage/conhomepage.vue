@@ -15,6 +15,7 @@
             <Loading v-if="!homepagedata.length"></Loading>
           </div>
           <isat-goodlistshow-wrap></isat-goodlistshow-wrap>
+          <isat-callphone></isat-callphone>
         </div>
       </scroll>
   </div>
@@ -27,6 +28,7 @@
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
   import IsatGoodlistshowWrap from 'components/goodslistshow-wrap/goodslistshow-wrap'
+  import IsatCallphone from 'base/callphone/callphone'
   export default {
     data() {
       return {
@@ -77,7 +79,8 @@
       IsatHotrecommend,
       Scroll,
       Loading,
-      IsatGoodlistshowWrap
+      IsatGoodlistshowWrap,
+      IsatCallphone
     }
   }
 </script>

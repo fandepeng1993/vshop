@@ -68,8 +68,8 @@
         this.$router.push({
           path: `/Groupgoods/${goodsid.id}`,
           query: {
-            name:'fdp',
-            age:24
+            name: 'fdp',
+            age: 24
           }
         })
       }

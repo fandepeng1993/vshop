@@ -11,6 +11,8 @@ import SalesVolume from 'components/fourtabRouter/isat-salesVolume'
 import NewProduct from 'components/fourtabRouter/isat-newProduct'
 import Price from 'components/fourtabRouter/isat-price'
 import Loginpage from 'components/loginpage/loginpage'
+import Goodsdetail from 'components/goodsdetail/goodsdetail'
+import Singlepagegoods from 'base/singlepagegoods/singlepagegoods'
 Vue.use(Router)
 
 export default new Router({
@@ -72,7 +74,20 @@ export default new Router({
           ]
         }
       ]
+    },
+    {
+      path: '/Goodsdetail',
+      component: Goodsdetail,
+      children: [
+        {
+          path: ':id',
+          component: Singlepagegoods
+        },
+        {
+          path: '',
+          redirect: '/Groupgoods'
+        }
+      ]
     }
-
   ]
 })

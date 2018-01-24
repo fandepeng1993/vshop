@@ -34,7 +34,7 @@
       loginState() {
         if (this.loginstate) {
           return '/Shoppingcart'
-         }
+        }
         else {
           return '/login'
         }

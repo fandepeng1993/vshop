@@ -10,12 +10,12 @@
         <li v-for="item in showListdata.listinfo">
           <a>
             <img width="100%" :height="screenWidth*0.48"  v-lazy="item.picurl" >
-            <p>{{item.name}}</p>
+            <p class="goodsName">{{item.name}}</p>
           </a>
-          <div>
+          <div class="text-box">
             <p>{{item.price}}</p>
-            <p>{{item.havesale}}件已售</p>
-            <i></i>
+            <p class="hasSale ">{{item.havesale}}件已售</p>
+            <div  @click.prevent.stop.self="addShopping" class="icon-gouwuche "></div>
           </div>
         </li>
       </ul>
@@ -42,6 +42,9 @@
     created() {
     },
     methods: {
+      addShopping() {
+        console.log(123)
+      }
     },
     mounted() {
     },
@@ -51,6 +54,7 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   @import "~common/stylus/variable"
+  @import "~common/stylus/mixin"
   .goodslistshow
     overflow hidden
     .topTile
@@ -76,4 +80,25 @@
             text-align center
             img
               vertical-align middle
+            .goodsName
+              no-wrap()
+              font-size 19px
+              text-align left
+              color: rgba(51,51,51 ,1)
+          .text-box
+            position relative
+            padding-left 15px
+            p
+              margin 5px 0
+              &.hasSale
+                color rgba(200,200,200 ,1)
+                font-size 14px
+            .icon-gouwuche
+              position absolute
+              right 10px
+              top 50%
+              transform translateY(-50%)
+              font-size 20px
+
+
 </style>
