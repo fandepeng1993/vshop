@@ -85,7 +85,7 @@
         this.scroll && this.scroll.refresh()
       },
       scrollTo: function () {
-        this.scroll && this.scroll.scrollTo.apply(this.scroll,arguments)
+        this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
       },
       scrollToElement() {
         this.scroll && this.scrollToElement.apply(this.scroll, arguments)

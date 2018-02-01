@@ -27,7 +27,9 @@
     },
     methods: {
       handleClick(e) {
-        console.log('登录主页条件')
+        this.$router.push({
+          path: '/'
+        })
       },
       back() {
         this.$router.back()

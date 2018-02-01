@@ -10,10 +10,10 @@
           </div>
         </li>
         <li></li>
-        <li class="addSHop">
+        <li class="addSHop" @click.prevent.stop="addShop">
           <span>加入购物车</span>
         </li>
-        <li class="buyIt">
+        <li class="buyIt" @click.prevent.stop="addShop">
           <span>立即购买</span>
         </li>
       </ul>
@@ -21,7 +21,13 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-export default {}
+export default {
+  methods: {
+    addShop() {
+      this.$emit('openBottombox', true)
+    }
+  }
+}
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
   .footerBottom

@@ -19,7 +19,7 @@
     </ul>
     <div class="shopbottom">
       <div class="shopbtn">
-        <a>
+        <a @click.prevent.stop="">
           <img src="../../common/images/menu.png" alt="">
           <span>查看分组</span>
         </a>

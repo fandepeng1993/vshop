@@ -1,8 +1,11 @@
 <template>
   <transition name="slide">
     <div class="goodsInfo">
-      <div>
-        <mt-header :title="Goodstitle">
+       <!-- <mt-header :title="nexttitle">
+          &lt;!&ndash;<div slot="left">
+            <mt-button icon="back" @click="back"></mt-button>
+            &lt;!&ndash; <mt-button @click="handleClose">关闭</mt-button>&ndash;&gt;
+          </div>&ndash;&gt;
           <router-link to="/Groupgoods" slot="left">
             <mt-button icon="back"></mt-button>
           </router-link>
@@ -12,25 +15,34 @@
           <mt-button @click.native.prevent.stop="handleshop" class="isatbtn" slot="right">
             <i class="icon-gouwuche"></i>
           </mt-button>
-        </mt-header>
-      </div>
+        </mt-header>-->
+      <isat-publictoptitle
+        :titles="nexttitle"
+        :isback="false"
+        :defaultHome="'/Groupgoods'"
+      >
+      </isat-publictoptitle>
       <div class="goodslistwrap">
-        <isat-infour-tab :datas="rowValue" @changeIcon="changeValue"></isat-infour-tab>
+        <isat-infour-tab :datastab="datastab" :menuIcon="rowValue" @changeIcon="changeValue"></isat-infour-tab>
         <!-- tab-container -->
-        <router-view :datas="rowValue"></router-view>
+        <transition name="slides" mode="out-in">
+          <router-view :rowclass="rowValue"></router-view>
+        </transition>
       </div>
     </div>
   </transition>
 </template>
 <script type="text/ecmascript-6">
   import IsatInfourTab from 'base/infourtab/infourtab'
+  import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
+  import {mapGetters} from 'vuex'
   export default {
     props: {
-      Goodstitle: {
-        type: String,
-        default: '商品列表'
-      },
       goodsid: {
+        type: String,
+        default: ''
+      },
+      nexttitle: {
         type: String,
         default: ''
       }
@@ -39,12 +51,29 @@
       return {
         selected: '1',
         active: 'tab-container2',
-        rowValue: true
+        rowValue: false,
+        datastab: [
+          {name: '综合', srcfirst: '/Groupgoods/', srclast: '/comprehensive'},
+          {name: '销量', srcfirst: '/Groupgoods/', srclast: '/salesVolume'},
+          {name: '新品', srcfirst: '/Groupgoods/', srclast: '/newProduct'},
+          {name: '价格', srcfirst: '/Groupgoods/', srclast: '/price'}
+        ]
       }
+    },
+    computed: {
+      /* Goodstitle() {
+        return this.titlesname
+      },
+      ...mapGetters(['titlesname']) */
     },
     created() {
       this.goodsId = this.$route.params
      /* console.log(this.$route, this.$router) */
+    },
+    mounted() {
+      this.$on('acciveHome', (data) => {
+        console.log()
+      })
     },
     methods: {
       changeValue(newval) {
@@ -55,11 +84,15 @@
       },
       handleshop() {
        /* console.log(456) */
+      },
+      back() {
+        this.$router.back()
       }
 
     },
     components: {
-      IsatInfourTab
+      IsatInfourTab,
+      IsatPublictoptitle
     }
   }
 </script>
@@ -90,7 +123,15 @@
 
   .slide-enter-active,.slide-leave-active
     transition all 0.3s
-  .slide-enter,.slide-leave-to
+  .slide-enter
+    transform translate3d(100%,0,0)
+  .slide-leave-to
     transform translate3d(100%,0,0)
 
+  .slides-enter-active,.slides-leave-active
+    transition all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)
+  .slides-enter
+    transform translate3d(100%,0,0)
+  .slides-leave-to
+    transform translate3d(-100%,0,0)
 </style>

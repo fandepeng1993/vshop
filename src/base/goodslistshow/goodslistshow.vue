@@ -8,7 +8,7 @@
     <div class="goodslist">
       <ul>
         <li v-for="item in showListdata.listinfo">
-          <a>
+          <a @click.prevent.stop="jumppage(item)">
             <img width="100%" :height="screenWidth*0.48"  v-lazy="item.picurl" >
             <p class="goodsName">{{item.name}}</p>
           </a>
@@ -44,6 +44,11 @@
     methods: {
       addShopping() {
         console.log(123)
+      },
+      jumppage(item) {
+        this.$router.push({
+          path: '/Goodsdetail/' + item.id
+        })
       }
     },
     mounted() {

@@ -1,21 +1,6 @@
 <template>
   <div class="singepagegoods">
-    <div>
-      <mt-header :title="Goodstitle">
-       <!-- <router-link to="/Groupgoods" slot="left">
-        </router-link>-->
-        <div slot="left">
-          <mt-button icon="back" @click="back"></mt-button>
-          <!-- <mt-button @click="handleClose">关闭</mt-button>-->
-        </div>
-        <mt-button @click.native.prevent.stop="handleperson" class="isatbtn" slot="right">
-          <i class="icon-huiyuan1"></i>
-        </mt-button>
-        <mt-button @click.native.prevent.stop="handleshop" class="isatbtn" slot="right">
-          <i class="icon-gouwuche"></i>
-        </mt-button>
-      </mt-header>
-    </div>
+    <isat-publictoptitle :titles="Goodstitle"></isat-publictoptitle>
     <scroll class="scrollpage" ref="scrollpage" @scroll="scroll"
     :probeType="probeType" :listenScroll="listenScroll">
       <div>
@@ -53,7 +38,7 @@
           </div>
           <isat-appraise></isat-appraise>
           <isat-shopentrance></isat-shopentrance>
-          <isat-shopinfo></isat-shopinfo>
+          <isat-shopinfo @refreshscroll="refreshscroll"></isat-shopinfo>
           <!--<mt-popup
             v-model="popupVisible"
             position="top"
@@ -70,7 +55,7 @@
     <transition name="propUp" >
       <isat-bottombox :imgurl="imgUrl[0]" class="bottombox" @closeBotBox="closeBotBox" v-show="shower"></isat-bottombox>
     </transition>
-    <isat-bottom  class="fixedBottom"></isat-bottom>
+    <isat-bottom @openBottombox="alertBtbox" class="fixedBottom"></isat-bottom>
     <isat-backtop v-show="isShow" @backtop="backtop"></isat-backtop>
   </div>
 </template>
@@ -87,11 +72,12 @@
   import IsatAppraise from 'components/isatappraise/isatappraise'
   import IsatShopentrance from 'components/shopentrance/shopentrance'
   import IsatShopinfo from 'components/shopinfo/shopinfo'
+  import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   export default {
     data() {
       return {
-        Goodstitle: '商品详情',
         homepagedata: [],
+        Goodstitle: '商品详情',
         screenWidth: document.documentElement.clientWidth,
         imgUrl: [
           {picUrl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201707/2718343054.jpg'},
@@ -102,11 +88,13 @@
         shower: false,
         isShow: false,
         probeType: 3,
-        listenScroll: true
+        listenScroll: true,
+        fullpath: ''
       }
     },
     created() {
       this._getJsonpHomepage()
+      this.fullpath = this.$route.query.fullpath
     },
     mounted() {
       window.addEventListener('resize', () => {
@@ -129,12 +117,6 @@
           }
         })
       },
-      loadImage() {
-        if (!this.checkLoad) {
-          this.$refs.scrollpage.refresh()
-          this.checkLoad = true
-        }
-      },
       getScreenWidth() {
         this.screenWidth = document.documentElement.clientWidth
         /* console.log(this.screenWidth) */
@@ -147,6 +129,9 @@
       },
       backtop(backtime) {
         this.$refs.scrollpage.scrollTo(0, 0, backtime)
+      },
+      refreshscroll() {
+        this.$refs.scrollpage.refresh()
       },
       scroll(pos) {
         // 定义滚动 监听前提条件 probeType: 3,listenScroll: true
@@ -167,7 +152,8 @@
       IsatBacktop,
       IsatAppraise,
       IsatShopentrance,
-      IsatShopinfo
+      IsatShopinfo,
+      IsatPublictoptitle
     }
   }
 </script>
@@ -237,14 +223,6 @@
       width 100%
       overflow hidden
       bottom 0px
-    .icon-gouwuche
-      color white
-      font-size 23px
-      margin 0 5px
-    .icon-huiyuan1
-      color white
-      font-size 23px
-      margin 0 5px
     .slider-wrapper
       position:relative
       width:100%

@@ -1,15 +1,18 @@
 <template>
     <div class="goodsList">
-        <scroll :datas="datas" @scroll="scroll"
-                :listenScroll="listenScroll"
-                :probeType="probeType"
-                :pullup="pullup"
-                @scrollToEnd="searchMore"
-                :beforeScroll="beforeScroll"
-                @beforeScroll="listScroll"
-                ref="scrolls" class="goodsListScroll">
+        <scroll
+          :datas="datas"
+          @scroll="scroll"
+          :listenScroll="listenScroll"
+          :probeType="probeType"
+          :pullup="pullup"
+          @scrollToEnd="searchMore"
+          :beforeScroll="beforeScroll"
+          @beforeScroll="listScroll"
+          ref="scrolls"
+          class="goodsListScroll">
           <div>
-            <ul class="goodsListUl" :class="{extendul:datas === false}">
+            <ul class="goodsListUl" :class="{extendul: rowclass == true}">
               <li  v-for="item in listinfo.concat(listinfo)">
                 <a class="needsclick" @click.prevent.stop="goTodetail(item.linkUrl)">
                   <div class="imgurl" :style="{backgroundImage:'url('+item.picurl+')'}">
@@ -39,7 +42,6 @@
           <p>更新成功</p>
         </mt-popup>
     </div>
-
 </template>
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
@@ -49,6 +51,10 @@
   export default {
     props: {
       datas: {
+        type: Boolean,
+        default: false
+      },
+      rowclass: {
         type: Boolean,
         default: false
       }
@@ -105,7 +111,7 @@
         }
       },
       backtop(backtime) {
-       this.$refs.scrolls.scrollTo(0, 0, backtime)
+        this.$refs.scrolls.scrollTo(0, 0, backtime)
       },
       searchMore() {
         console.log('searchMore')
@@ -125,14 +131,12 @@
         this.$router.push({
           path: `/Goodsdetail/${item}`,
           query: {
-            name: 'fdp',
-            age: 24
           }
         })
       }
     },
     created() {
-      console.log(this.$route)
+      /*console.log(this.$route)*/
     },
     components: {
       Scroll,
@@ -165,16 +169,15 @@
   @import "~common/stylus/variable"
   @import "~common/stylus/mixin"
   .goodsList
+    position relative
     width 100%
     height 100%
-    overflow hidden
-    background #f0f0f0
     .goodsListScroll
-      position fixed
+      position absolute
       width 100%
-      height calc(100% - 90px)
+      height 100%
       bottom 100px
-      top 90px
+      top 0px
       overflow hidden
       background #f0f0f0
       .goodsListUl

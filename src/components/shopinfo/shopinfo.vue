@@ -1,7 +1,7 @@
 <template>
-  <div class="shopInfo" style="height: 2150px">
-    <p v-for="item in imgs">
-      <img :src="item.imgurl" alt="">
+  <div class="shopInfo">
+    <p v-for="(item,index) in imgs">
+      <img @load="loadLast(index)" :src="item.imgurl" alt="">
     </p>
   </div>
 
@@ -24,6 +24,15 @@ export default {
         {imgurl: 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201711/2713465179.jpg'},
         {imgurl: 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201711/2713513557.jpg'}
       ]
+    }
+  },
+  methods: {
+    loadLast(index) {
+      if (this.imgs.length === index + 1) {
+        this.$emit('refreshscroll')
+      } else {
+          return
+      }
     }
   }
 }

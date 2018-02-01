@@ -6,6 +6,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+  import {mapMutations} from 'vuex'
   export default {
     data () {
       return {
@@ -18,8 +19,17 @@
         this.searchVal = ''
       },
       jumppage () {
-        window.location.href = `https://www.baidu.com`
-      }
+        this.setTitlesname('商品列表')
+        this.$router.push({
+          path: '/Groupgoods/search',
+          query: {
+            seachkey: this.searchVal
+          }
+        })
+      },
+      ...mapMutations({
+        setTitlesname: 'SET_TITLESNAME'
+      })
     }
   }
 </script>
@@ -53,10 +63,5 @@
       text-indent 10px
       &::placeholder
         color: $color-text-d
-
-
-
-
-
 </style>
 

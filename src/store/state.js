@@ -1,4 +1,6 @@
 const state = {
-  loginstate: false
+  loginstate: true,
+  titlesname: '',
+  checkedstate: []
 }
 export default state

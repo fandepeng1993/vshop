@@ -13,6 +13,20 @@ import Price from 'components/fourtabRouter/isat-price'
 import Loginpage from 'components/loginpage/loginpage'
 import Goodsdetail from 'components/goodsdetail/goodsdetail'
 import Singlepagegoods from 'base/singlepagegoods/singlepagegoods'
+import Orderstatus from 'components/orderstatus/orderstatus'
+import Singerorderstate from 'components/singerorderstate/singerorderstate'
+import Bounty from 'components/bounty/bounty'
+import IncomeIndetail from 'components/incomeIndetail/incomeIndetail'
+import Bonusrules from 'components/bonusrules/bonusrules'
+import Membershipcard from 'components/membershipcard/membershipcard'
+import MembershipcardList from 'components/membershipcardList/membershipcardList'
+import MembershipcardInfo from 'components/membershipcardInfo/membershipcardInfo'
+import Integralmall from 'components/integralmall/integralmall'
+import Deduction from 'components/deduction/deduction'
+import Integrationinfo from 'components/integrationinfo/integrationinfo'
+import IntegrationinfoList from 'components/integrationinfoList/integrationinfoList'
+import Integrationrule from 'components/integrationrule/integrationrule'
+
 Vue.use(Router)
 
 export default new Router({
@@ -23,7 +37,11 @@ export default new Router({
     },
     {
       path: '/Homepage',
-      component: Homepage
+      component: Homepage,
+      name: '主页',
+      props: {
+        mms: '主页'
+      }
     },
     {
       path: '/Joinsales',
@@ -31,12 +49,86 @@ export default new Router({
     },
     {
       path: '/Membercenter',
-      component: Membercenter
+      component: Membercenter,
+      children: [
+        {
+          path: 'orderstatus',
+          component: Orderstatus,
+          children: [
+            {path: ':id', component: Singerorderstate, name: 'orderstate'},
+            {
+              path: '',
+              redirect: 'allorder'
+            }
+          ]
+        },
+        {
+          path: 'bounty',
+          component: Bounty,
+          children: [
+            {
+              path: ':id', component: IncomeIndetail, name: 'IncomeIndetail'
+            },
+            {
+              path: '',
+              redirect: 'all'
+            }
+          ]
+        },
+        {
+          path: 'bonusrules',
+          component: Bonusrules
+        },
+        {
+          path: 'membershipcard',
+          component: Membershipcard,
+          children: [
+            {
+              path: 'membershipcardList',
+              component: MembershipcardList,
+              children: [
+                {
+                  path: 'membershipcardInfo',
+                  component: MembershipcardInfo
+                }
+              ]
+            }
+          ]
+        },
+        {
+          path: 'integralmall',
+          component: Integralmall,
+          children: [
+            {
+              path: ':id',
+              component: Deduction
+            }
+          ]
+        },
+        {
+          path: 'integrationinfo',
+          component: Integrationinfo,
+          children: [
+            {
+              path: ':id',
+              component: IntegrationinfoList
+            }
+          ]
+        },
+        {
+          path: 'integrationrule',
+          component: Integrationrule
+        }
+      ]
     },
     {
       path: '/Shoppingcart',
       /* path: '/Shoppingcart/:id', */
-      component: Shoppingcart
+      component: Shoppingcart,
+      props: {
+        mms: '购物车'
+      },
+      name: 'shopcart'
     },
     {
       path: '/login',

@@ -34,7 +34,7 @@
       loginState() {
         if (this.loginstate) {
           return '/Shoppingcart'
-        }
+         }
         else {
           return '/login'
         }
@@ -42,7 +42,7 @@
       loginState2() {
         if (this.loginstate) {
           return '/Membercenter'
-        }
+         }
         else {
           return '/login'
         }

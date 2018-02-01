@@ -2,18 +2,18 @@
   <div class="recommend">
     <div class="recommend-top">
       <ul>
-        <li  v-for="item in recommend.toppng">
+        <li  v-for="item in recommend.toppng" @click.prevent.stop="jumppage(item)">
           <a>
-            <img width="100%" :height="screenWidth*0.33*0.556"  v-lazy="item">
+            <img width="100%" :height="screenWidth*0.33*0.556"  v-lazy="item.imgurl">
           </a>
         </li>
       </ul>
     </div>
     <div class="recommoned-bot">
       <ul>
-        <li v-for="item in recommend.botpng">
+        <li v-for="item in recommend.botpng" @click.prevent.stop="jumppage(item)">
           <a>
-            <img width="100%" :height="screenWidth*0.5*0.525" v-lazy="item">
+            <img width="100%" :height="screenWidth*0.5*0.525" v-lazy="item.imgurl">
           </a>
         </li>
       </ul>
@@ -22,6 +22,7 @@
 
 </template>
 <script type="text/ecmascript-6">
+  import {mapMutations} from 'vuex'
   export default {
     props: {
       recommend: {
@@ -39,6 +40,15 @@
       return {}
     },
     methods: {
+      jumppage(item) {
+        this.setTitlesname(item.name)
+        this.$router.push({
+          path: '/Groupgoods/' + item.id
+        })
+      },
+      ...mapMutations({
+        setTitlesname: 'SET_TITLESNAME'
+      })
     }
   }
 </script>
