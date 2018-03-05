@@ -13,6 +13,11 @@ export function shuffle(arr) {
   return _arr
 }
 // 函数节流
+/*
+(newQuery) => {
+  this.$emit('query', newQuery)
+}, 200
+*/
 export function debounce(func, delay) {
   let timer
   return function (...args) {
@@ -22,7 +27,5 @@ export function debounce(func, delay) {
     timer = setTimeout(() => {
       func.apply(this, args)
     }, delay)
-
   }
-
 }

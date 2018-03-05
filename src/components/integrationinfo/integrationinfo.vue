@@ -27,15 +27,15 @@
         <i class="topdistance"></i>
         <router-view></router-view>
       </div>
-      <isat-selectaddress :popupVisible="popupVisible" @cancleProup="cancleproup" ref="selectaddress">
-      </isat-selectaddress>
+      <isat-selectdate :popupVisible="popupVisible" @cancleProup="cancleproup" ref="selectaddress">
+      </isat-selectdate>
     </div>
   </transition>
 </template>
 <script type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   import IsatInfourTab from 'base/infourtab/infourtab'
-  import IsatSelectaddress from 'base/selectaddress/selectaddress'
+  import IsatSelectdate from 'base/selectdate/selectdate'
   export default {
     data() {
       return {
@@ -71,7 +71,7 @@
     components: {
       IsatPublictoptitle,
       IsatInfourTab,
-      IsatSelectaddress
+      IsatSelectdate
     }
   }
 </script>
