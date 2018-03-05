@@ -10,7 +10,7 @@
             <img src="http://backend.jjiehao.com/mobile/shop/images/login-img1.png">
           </div>
           <div class="btn">
-            <a @click.prevent.stop="jumpage" class="external" href="http://backend.jjiehao.com/shop/user-icon-upload/408">上传头像</a>
+            <a @click.prevent.stop="jumpage" class="external">上传头像</a>
           </div>
         </div>
       </div>

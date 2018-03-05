@@ -10,7 +10,6 @@ import 'common/stylus/index.styl'
 
 import fastclick from 'fastclick'
 import MintUI from 'mint-ui'
-import $ from 'jquery'
 /* import { Lazyload } from 'mint-ui'; */
 Vue.use(MintUI)
 /* Vue.use(Lazyload, {

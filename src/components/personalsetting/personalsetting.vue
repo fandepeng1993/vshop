@@ -115,7 +115,7 @@
         let tempIndex = index - 2
         if (tempIndex >= 0 && tempIndex < 3) {
           this.showList.splice(tempIndex, 1, true)
-        } else if (tempIndex === -2 || tempIndex === 5) {
+        } else if (tempIndex === -2 || tempIndex === 3) {
           this.$router.push({
             path: `/Membercenter/personalsetting/${tempIndex + 2}`
           })

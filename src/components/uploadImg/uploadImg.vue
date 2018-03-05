@@ -13,29 +13,11 @@
         :fixedBox="example.fixedBox"
       ></vueCropper>
     </div>
-    <div class="test-button">
-      <button @click="changeImg" class="btn">changeImg</button>
-      <label class="btn" for="uploads">upload</label>
-      <input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg($event, 1)">
-      <button @click="startCrop" v-if="!crap" class="btn">start</button>
-      <button @click="stopCrop" v-else class="btn">stop</button>
-      <button @click="clearCrop" class="btn">clear</button>
-      <button @click="refreshCrop" class="btn">refresh</button>
-      <button @click="changeScale(1)" class="btn">+</button>
-      <button @click="changeScale(-1)" class="btn">-</button>
-      <button @click="rotateLeft" class="btn">rotateLeft</button>
-      <button @click="rotateRight" class="btn">rotateRight</button>
-      <button @click="finish('base64')" class="btn">preview(base64)</button>
-      <button @click="finish('blob')" class="btn">preview(blob)</button>
-      <a @click="down('base64')" class="btn">download(base64)</a>
-      <a @click="down('blob')" class="btn">download(blob)</a>
-      </div>
+
     </div>
-  </div>
 </template>
 <script type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
-  import $ from 'jquery'
   import vueCropper from 'vue-cropper'
   export default {
     data () {
