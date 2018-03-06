@@ -26,11 +26,12 @@
       <isat-selectaddress :popupVisible="showList[0]" @cancleProup="cancleproup">
       </isat-selectaddress>
       <event-calendar :popupVisible="showList[1]" @cancleProup="cancleproup"></event-calendar>
-      <a class="footerbox">
       <isat-selectsex :popupVisible="showList[2]" @cancleProup="cancleproup">
       </isat-selectsex>
+      <isat-pbottombtn :btnText="'保存'"></isat-pbottombtn>
+      <!--<a class="footerbox">
         <span>保存</span>
-      </a>
+      </a>-->
       <router-view></router-view>
     </div>
   </transition>
@@ -40,6 +41,7 @@
   import Scroll from 'base/scroll/scroll'
   import IsatSelectaddress from 'base/selectaddress/selectaddress'
   import IsatSelectsex from 'base/selectsex/selectsex'
+  import IsatPbottombtn from 'base/pbottombtn/pbottombtn'
   import EventCalendar from 'base/eventcalendar/eventcalendar'
   export default {
     data() {
@@ -140,7 +142,8 @@
       Scroll,
       IsatSelectaddress,
       EventCalendar,
-      IsatSelectsex
+      IsatSelectsex,
+      IsatPbottombtn
     }
   }
 </script>
@@ -197,7 +200,7 @@
               color #a9a9a9
               font-size 20px
 
-    .footerbox
+    /*.footerbox
       height 50px
       display flex
       align-items center
@@ -207,7 +210,7 @@
         background-color #26a2ff
       span
         color #fff
-        font-size 20px
+        font-size 20px*/
 
   .slidex-enter-active,.slidex-leave-active
     transition transform  0.3s

@@ -93,8 +93,8 @@
           {pname: '积分明细', src: 'score-icon.svg', link: '/Membercenter/integrationinfo/1'},
           {pname: '购物车', src: '3gouwu.svg', link: '/Shoppingcart'},
           {pname: '个人设置', src: '8shezhi.svg', link: '/Membercenter/personalsetting'},
-          {pname: '收货地址', src: '6map.svg', link: '/Membercenter/orderstatus/allorder'},
-          {pname: '退款/售后', src: '5tuikuan.svg', link: '/Membercenter/orderstatus/allorder'}
+          {pname: '收货地址', src: '6map.svg', link: '/Membercenter/addreceiveradd'},
+          {pname: '退款/售后', src: '5tuikuan.svg', link: '/Membercenter/afterSale'}
         ],
         allorder: [
           {text: '待付款', routeid: 'obligation'},

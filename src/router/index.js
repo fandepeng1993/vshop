@@ -19,6 +19,8 @@ import Bounty from 'components/bounty/bounty'
 import IncomeIndetail from 'components/incomeIndetail/incomeIndetail'
 import Bonusrules from 'components/bonusrules/bonusrules'
 import Membershipcard from 'components/membershipcard/membershipcard'
+import Receiveraddress from 'components/receiveraddress/receiveraddress'
+import Addreceiveradd from 'components/addreceiveradd/addreceiveradd'
 import MembershipcardList from 'components/membershipcardList/membershipcardList'
 import MembershipcardInfo from 'components/membershipcardInfo/membershipcardInfo'
 import Integralmall from 'components/integralmall/integralmall'
@@ -173,6 +175,14 @@ export default new Router({
               ]
             }
           ]
+        },
+        {
+          path: 'receiveraddress',
+          component: Receiveraddress
+        },
+        {
+          path: 'addreceiveradd',
+          component: Addreceiveradd
         }
       ]
     },
