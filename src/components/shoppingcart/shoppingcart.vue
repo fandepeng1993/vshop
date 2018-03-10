@@ -13,7 +13,7 @@
             <li v-for="(item,index) in shopArray" >
               <i :class="{'on': tempchecked[index]}" @click.prevent.stop="checkThis(index)"></i>
              <!-- {{tempchecked[index]}}-->
-              <img @load="loadLast(index)" :src="item.imgurl">
+              <img @load="loadLast(index)" :src="imageDomainName+item.imgurl">
               <div class="h3">
                 <h4>{{item.name}}</h4>
                 <span><i>¥</i>{{item.price.toFixed(2)}}</span>
@@ -26,7 +26,7 @@
                   :countNum="item.haschoiceNumber"></isat-numberoption>
               </div>
               <transition name="slide-fade">
-                <div class="deleteBtn" v-show="isEdit">
+                <div class="deleteBtn" v-show="isEdit" @click.prevent.stop="deleteThis(index)">
                     <span >删除</span>
                 </div>
               </transition>
@@ -60,92 +60,16 @@
   import Scroll from 'base/scroll/scroll'
   import IsatNumberoption from 'base/numberoption/numberoption'
   import {mapGetters, mapMutations} from 'vuex'
+  import {imageDomainName} from 'api/config'
+  import {getShopCarList, removeShopCarInfo} from 'api/getdata'
   export default {
     data() {
       return {
         Goodstitle: '购物车',
-        shopArray: [
-          {
-            name: '【利川团堡山药】5KG/盒，粘液质高，水分低，香面',
-            imgurl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201712/1315020348.jpg',
-            price: 118,
-            number: 1,
-            haschoiceNumber: 1,
-            stock: 20
-          },
-          {
-            name: '【贡水白柚】15KG/袋，恩施八宝之一，口感细腻',
-            imgurl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201711/2711405629.jpg',
-            price: 108,
-            number: 1,
-            haschoiceNumber: 2,
-            stock: 40
-          },
-          {
-            name: '【利川团堡山药】5KG/盒，粘液质高，水分低，香面',
-            imgurl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201712/1315020348.jpg',
-            price: 118,
-            number: 1,
-            haschoiceNumber: 1,
-            stock: 20
-          },
-          {
-            name: '【贡水白柚】15KG/袋，恩施八宝之一，口感细腻',
-            imgurl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201711/2711405629.jpg',
-            price: 108,
-            number: 1,
-            haschoiceNumber: 2,
-            stock: 40
-          },
-          {
-            name: '【利川团堡山药】5KG/盒，粘液质高，水分低，香面',
-            imgurl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201712/1315020348.jpg',
-            price: 118,
-            number: 1,
-            haschoiceNumber: 1,
-            stock: 20
-          },
-          {
-            name: '【贡水白柚】15KG/袋，恩施八宝之一，口感细腻',
-            imgurl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201711/2711405629.jpg',
-            price: 108,
-            number: 1,
-            haschoiceNumber: 2,
-            stock: 40
-          },
-          {
-            name: '【利川团堡山药】5KG/盒，粘液质高，水分低，香面',
-            imgurl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201712/1315020348.jpg',
-            price: 118,
-            number: 1,
-            haschoiceNumber: 1,
-            stock: 20
-          },
-          {
-            name: '【贡水白柚】15KG/袋，恩施八宝之一，口感细腻',
-            imgurl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201711/2711405629.jpg',
-            price: 108,
-            number: 1,
-            haschoiceNumber: 2,
-            stock: 40
-          },
-          {
-            name: '【利川团堡山药】5KG/盒，粘液质高，水分低，香面',
-            imgurl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201712/1315020348.jpg',
-            price: 118,
-            number: 1,
-            haschoiceNumber: 1,
-            stock: 20
-          },
-          {
-            name: '【贡水白柚】15KG/袋，恩施八宝之一，口感细腻',
-            imgurl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201711/2711405629.jpg',
-            price: 108,
-            number: 1,
-            haschoiceNumber: 2,
-            stock: 40
-          }
-        ],
+        shopArray: [],
+        imageDomainName:imageDomainName,
+        pageNo: 1,
+        pageSize: 10,
         shopgoods: [],
         isEdit: false,
         tempchecked: [],
@@ -156,6 +80,7 @@
        /* console.log(this.$route, this.$router) */
       /* console.log(this) */
       this.setInitcheckstate()
+      this._getShopCarList()
       /* this.setCheckedstate(this.tempchecked) */
     },
     mounted() {
@@ -194,6 +119,28 @@
       ])
     },
     methods: {
+      //取数据，并放入购物车数组中。
+      _getShopCarList() {
+        let params = {}
+        params.pageNo = this.pageNo;
+        params.pageSize = this.pageSize;
+        getShopCarList(params).then((res) => {
+          if (res.ret === '0') {
+            let arr = res.data.list
+            this.shopArray = []
+            for(let i=0; i<arr.length; i++) {
+              let obj = {};
+              obj.id = arr[i].id
+              obj.name = arr[i].item.name
+              obj.imgurl = arr[i].item.photo
+              obj.price = arr[i].item.currentPrice/100
+              obj.haschoiceNumber = arr[i].itemNum
+              obj.stock = arr[i].item.storage
+              this.shopArray.push(obj);
+            }
+          }
+        })
+      },
       allchecked() {
         if (this.isallchecked) {
           this.setInitcheckstate()
@@ -208,13 +155,67 @@
         this.shopArray[index].haschoiceNumber = tempval - 1
       },
       sss() {
-        console.log(this.shopArray)
+        //console.log(this.isEdit, this.shopArray)
+        if(this.isEdit) {
+          let deleteIds = ""
+          let deleteIdArr = []
+          let deleteIndexArr = []
+          for(let i=this.tempchecked.length-1; i>=0; i--) {
+            if(this.tempchecked[i]) {
+              let deleteShopCarInfo = this.shopArray[i]
+              deleteIdArr.push(deleteShopCarInfo.id)
+              deleteIndexArr.push(i)
+            }
+          }
+
+          for(let i=0; i<deleteIdArr.length; i++) {
+            deleteIds = deleteIds + deleteIdArr[i] + ","
+          }
+
+          if(deleteIds != "") {
+            deleteIds = deleteIds.substring(0,deleteIds.length-1)
+          }
+
+          //批量删除
+          console.log("批量删除=" + deleteIds)
+          this.deleteByIds(deleteIds, deleteIndexArr)
+        } else {
+          //结算
+          console.log("结算")
+        }
       },
       changeEdit() {
         this.isEdit = !this.isEdit
       },
       checkThis(index) {
         this.tempchecked.splice(index, 1, !this.tempchecked[index])
+      },
+      //删除单个购物车信息
+      deleteThis(index) {
+        let deleteIds = ""
+        let deleteIndexArr = []
+        let deleteShopCarInfo = this.shopArray[index]
+        deleteIndexArr.push(index)
+        if(deleteShopCarInfo != null) {
+          deleteIds = deleteShopCarInfo.id
+          console.log("删除单个="+deleteIds)
+          this.deleteByIds(deleteIds, deleteIndexArr)
+        }
+      },
+      deleteByIds(ids, deleteIndexArr) {
+        console.log("deleteByIds==" + ids)
+        //执行删除
+        removeShopCarInfo(ids).then((res) => {
+          if (res.ret === '0') {
+            alert(res.retMsg)
+            //界面数据上执行删除
+            for(let i=0; i<deleteIndexArr.length; i++) {
+              console.log(deleteIndexArr[i])
+              this.shopArray.splice(deleteIndexArr[i], 1)
+              this.tempchecked.splice(deleteIndexArr[i], 1)
+            }
+          }
+        })
       },
       setInitcheckstate() {
         for (let i in this.shopArray) {
@@ -249,6 +250,9 @@
           return
         }
         this.isallchecked = true
+      },
+      '$route': function () {
+        this._getShopCarList()
       }
     }
   }

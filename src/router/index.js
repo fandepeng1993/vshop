@@ -19,8 +19,6 @@ import Bounty from 'components/bounty/bounty'
 import IncomeIndetail from 'components/incomeIndetail/incomeIndetail'
 import Bonusrules from 'components/bonusrules/bonusrules'
 import Membershipcard from 'components/membershipcard/membershipcard'
-import Receiveraddress from 'components/receiveraddress/receiveraddress'
-import Addreceiveradd from 'components/addreceiveradd/addreceiveradd'
 import MembershipcardList from 'components/membershipcardList/membershipcardList'
 import MembershipcardInfo from 'components/membershipcardInfo/membershipcardInfo'
 import Integralmall from 'components/integralmall/integralmall'
@@ -28,15 +26,6 @@ import Deduction from 'components/deduction/deduction'
 import Integrationinfo from 'components/integrationinfo/integrationinfo'
 import IntegrationinfoList from 'components/integrationinfoList/integrationinfoList'
 import Integrationrule from 'components/integrationrule/integrationrule'
-import Coupons from 'components/coupons/coupons'
-import Couponslist from 'components/couponslist/couponslist'
-import Crazybargaining from 'components/crazybargaining/crazybargaining'
-import Crazybargaininglist from 'components/crazybargaininglist/crazybargaininglist'
-import Mygroup from 'components/mygroup/mygroup'
-import Mygrouplist from 'components/mygrouplist/mygrouplist'
-import Personalsetting from 'components/personalsetting/personalsetting'
-import Personalsettingpage from 'components/personalsettingpage/personalsettingpage'
-import UploadImg from 'components/uploadImg/uploadImg'
 
 Vue.use(Router)
 
@@ -129,60 +118,6 @@ export default new Router({
         {
           path: 'integrationrule',
           component: Integrationrule
-        },
-        {
-          path: 'coupons',
-          component: Coupons,
-          children: [
-            {
-              path: ':id',
-              component: Couponslist
-            }
-          ]
-        },
-        {
-          path: 'crazybargaining',
-          component: Crazybargaining,
-          children: [
-            {
-              path: ':id',
-              component: Crazybargaininglist
-            }
-          ]
-        },
-        {
-          path: 'mygroup',
-          component: Mygroup,
-          children: [
-            {
-              path: ':id',
-              component: Mygrouplist
-            }
-          ]
-        },
-        {
-          path: 'personalsetting',
-          component: Personalsetting,
-          children: [
-            {
-              path: ':id',
-              component: Personalsettingpage,
-              children: [
-                {
-                  path: 'uploadImg',
-                  component: UploadImg
-                }
-              ]
-            }
-          ]
-        },
-        {
-          path: 'receiveraddress',
-          component: Receiveraddress
-        },
-        {
-          path: 'addreceiveradd',
-          component: Addreceiveradd
         }
       ]
     },

@@ -6,7 +6,7 @@
       </div>
       <div class="call-text">
         <span>客服电话</span>
-        <span>18516662341</span>
+        <span>{{phone}}</span>
       </div>
       <div class="call-btn">
         <mt-button type="primary" size="small">拨号</mt-button>
@@ -15,7 +15,14 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-
+  export default {
+    props: {
+      phone: {
+        type: String,
+        default: "18516662341"
+      }
+    }
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">

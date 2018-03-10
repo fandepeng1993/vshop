@@ -5,7 +5,7 @@
         <div class="bountytop">
           <div class="usablebounty">
             <p>当前可用奖励金（元）</p>
-            <h3>0.00</h3>
+            <h3>{{(parseFloat(userInfo.user.curBountyNum)/100).toFixed(2)}}</h3>
           </div>
           <div class="rules">
             <a @click.prevent.stop="checkbonusrules"><i></i><span>奖励金规则</span></a>
@@ -25,11 +25,16 @@
 <script type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   import IsatInfourTab from 'base/infourtab/infourtab'
+  import {imageDomainName} from 'api/config'
+  import {getCurrentUser} from 'api/getdata'
 
   export default {
     data() {
       return {
         titlesname: '奖励金',
+        userInfo: {
+          user: {}
+        },
         datastab: [
           {name: '全部', srcfirst: '/Membercenter/bounty', srclast: '/all'},
           {name: '收入', srcfirst: '/Membercenter/bounty', srclast: '/income'},
@@ -37,7 +42,18 @@
         ]
       }
     },
+    created() {
+      this._getCurrentUser()
+    },
     methods: {
+      _getCurrentUser() {
+        getCurrentUser().then((res) => {
+          if (res.ret === '0') {
+            console.log(res.data.userInfo)
+            this.userInfo = res.data.userInfo;
+          }
+        })
+      },
       checkbonusrules() {
         this.$router.push({
           path: '/Membercenter/bonusrules'

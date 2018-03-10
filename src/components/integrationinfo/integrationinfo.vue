@@ -11,11 +11,11 @@
           <ul>
             <li class="first">
               <p>当前积分</p>
-              <h3>200</h3>
+              <h3>{{userInfo.user.curScoreNum}}</h3>
             </li>
             <li>
               <p>累计积分</p>
-              <h3>200</h3>
+              <h3>{{userInfo.user.totalScoreNum}}</h3>
             </li>
             <div class="tips">
               <i @click.prevent.stop="jumpage">积分规则</i>
@@ -27,15 +27,17 @@
         <i class="topdistance"></i>
         <router-view></router-view>
       </div>
-      <isat-selectdate :popupVisible="popupVisible" @cancleProup="cancleproup" ref="selectaddress">
-      </isat-selectdate>
+      <isat-selectaddress :popupVisible="popupVisible" @cancleProup="cancleproup" ref="selectaddress">
+      </isat-selectaddress>
     </div>
   </transition>
 </template>
 <script type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   import IsatInfourTab from 'base/infourtab/infourtab'
-  import IsatSelectdate from 'base/selectdate/selectdate'
+  import IsatSelectaddress from 'base/selectaddress/selectaddress'
+  import {imageDomainName} from 'api/config'
+  import {getCurrentUser} from 'api/getdata'
   export default {
     data() {
       return {
@@ -44,10 +46,24 @@
           {name: '增加', srcfirst: '/Membercenter/integrationinfo/', srclast: '2'},
           {name: '消耗', srcfirst: '/Membercenter/integrationinfo/', srclast: '3'}
         ],
+        userInfo: {
+          user: {}
+        },
         popupVisible: false
       }
     },
+    created() {
+      this._getCurrentUser()
+    },
     methods: {
+      _getCurrentUser() {
+        getCurrentUser().then((res) => {
+          if (res.ret === '0') {
+            console.log(res.data.userInfo)
+            this.userInfo = res.data.userInfo;
+          }
+        })
+      },
       cancleproup() {
         if (!this.popupVisible) {
           return
@@ -71,7 +87,7 @@
     components: {
       IsatPublictoptitle,
       IsatInfourTab,
-      IsatSelectdate
+      IsatSelectaddress
     }
   }
 </script>

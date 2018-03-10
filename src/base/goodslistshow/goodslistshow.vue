@@ -2,19 +2,19 @@
   <div class="goodslistshow">
     <div class="topTile">
       <a>
-        <img width="100%" :height="screenWidth*0.078125" v-lazy="showListdata.topurl">
+        <img width="100%" :height="screenWidth*0.078125" v-lazy="imageDomainName + showListdata.topurl">
       </a>
     </div>
     <div class="goodslist">
       <ul>
-        <li v-for="item in showListdata.listinfo">
+        <li v-for="item in showListdata.goodsList">
           <a @click.prevent.stop="jumppage(item)">
-            <img width="100%" :height="screenWidth*0.48"  v-lazy="item.picurl" >
+            <img width="100%" :height="screenWidth*0.48"  v-lazy="imageDomainName + item.photo" >
             <p class="goodsName">{{item.name}}</p>
           </a>
           <div class="text-box">
-            <p>{{item.price}}</p>
-            <p class="hasSale ">{{item.havesale}}件已售</p>
+            <p>{{item.currentPrice/100 | currency('￥')}}</p>
+            <p class="hasSale ">{{item.salesNum}}件已售</p>
             <div  @click.prevent.stop.self="addShopping" class="icon-gouwuche "></div>
           </div>
         </li>
@@ -24,6 +24,8 @@
 
 </template>
 <script type="text/ecmascript-6">
+  import {imageDomainName} from 'api/config'
+  const digitsRE = /(\d{3})(?=\d)/g
   export default {
     props: {
       showListdata: {
@@ -37,6 +39,7 @@
     },
     data() {
       return {
+        imageDomainName: imageDomainName
       }
     },
     created() {
@@ -54,6 +57,30 @@
     mounted() {
     },
     watch: {
+    },
+    filters:{      //数据过滤器
+        currency:function(value, currency, decimals) {
+          value = parseFloat(value)
+          if (!isFinite(value) || (!value && value !== 0)) return ''
+          currency = currency != null ? currency : '$'
+          decimals = decimals != null ? decimals : 2
+          var stringified = Math.abs(value).toFixed(decimals)
+          var _int = decimals
+            ? stringified.slice(0, -1 - decimals)
+            : stringified
+          var i = _int.length % 3
+          var head = i > 0
+            ? (_int.slice(0, i) + (_int.length > 3 ? ',' : ''))
+            : ''
+          var _float = decimals
+            ? stringified.slice(-1 - decimals)
+            : ''
+          var sign = value < 0 ? '-' : ''
+          return sign + currency + head +
+            _int.slice(i).replace(digitsRE, '$1,') +
+            _float
+        }
+
     }
   }
 </script>

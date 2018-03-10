@@ -3,11 +3,11 @@
       <div class="bottomwrap">
         <div class="bottomImg">
           <div class="imgwraper">
-            <img :src="imgurl.picUrl" >
+            <img :src="imageDomainName+imgurl" >
           </div>
           <div class="imgInfo">
-            <span>¥39.00</span>
-            <p>库存<i>25</i>件</p>
+            <span>{{goodsEntity.currentPrice/100 | currency('￥')}}</span>
+            <p>库存<i>{{goodsEntity.storage}}</i>件</p>
           </div>
           <i class="closeICon" @click.prevent.stop="changeShower"></i>
         </div>
@@ -36,18 +36,37 @@
 </template>
 <script type="text/ecmascript-6">
 import IsatNumberoption from 'base/numberoption/numberoption'
+import {imageDomainName} from 'api/config'
+import {addShopCarInfo} from 'api/getdata'
+const digitsRE = /(\d{3})(?=\d)/g
 export default {
   props: {
     imgurl: {
+      type: String,
+      default: '../../common/images/default.png'
+    },
+    goodsEntity: {
       type: Object,
-      default: {picUrl: '../../common/images/default.png'}
+      default: {}
+    },
+    buyerType: {
+      type: Number,
+      default: 1
     }
   },
   data() {
     return {
       countNum: 1,
       maxNumber: 99,
-      minNumber: 1
+      imageDomainName: imageDomainName,
+      minNumber: 1,
+      specInfo: []
+    }
+  },
+  created() {
+    if(this.goodsEntity.specInfoStr) {
+      console.log(JSON.parse(this.goodsEntity.specInfoStr))
+      this.specInfo = JSON.parse(this.goodsEntity.specInfoStr);
     }
   },
   methods: {
@@ -61,11 +80,59 @@ export default {
       this.countNum = countNum + 1
     },
     sss() {
-      console.log(this.countNum)
+      console.log("buyerType=" + this.buyerType, "itemId="+this.goodsEntity.id, "countNum=" + this.countNum)
+      let params = {}
+      params.itemId=this.goodsEntity.id
+      params.itemNum=this.countNum
+
+      if(this.buyerType == 1) {
+        //加入购物车
+        addShopCarInfo(params).then((res) => {
+          if (res.ret === '0') {
+            console.log(res.retMsg)
+            alert(res.retMsg)
+            this.changeShower()
+          }
+        })
+      } else {
+        //立即购买
+      }
     }
+  },
+  filters:{      //数据过滤器
+      currency:function(value, currency, decimals) {
+        value = parseFloat(value)
+        if (!isFinite(value) || (!value && value !== 0)) return ''
+        currency = currency != null ? currency : '$'
+        decimals = decimals != null ? decimals : 2
+        var stringified = Math.abs(value).toFixed(decimals)
+        var _int = decimals
+          ? stringified.slice(0, -1 - decimals)
+          : stringified
+        var i = _int.length % 3
+        var head = i > 0
+          ? (_int.slice(0, i) + (_int.length > 3 ? ',' : ''))
+          : ''
+        var _float = decimals
+          ? stringified.slice(-1 - decimals)
+          : ''
+        var sign = value < 0 ? '-' : ''
+        return sign + currency + head +
+          _int.slice(i).replace(digitsRE, '$1,') +
+          _float
+      }
+
   },
   components: {
     IsatNumberoption
+  },
+  watch: {
+    '$route': function () {
+      if(this.goodsEntity.specInfoStr) {
+        console.log(JSON.parse(this.goodsEntity.specInfoStr))
+        this.specInfo = JSON.parse(this.goodsEntity.specInfoStr);
+      }
+    }
   }
 }
 </script>

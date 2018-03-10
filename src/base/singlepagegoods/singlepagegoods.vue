@@ -5,11 +5,11 @@
     :probeType="probeType" :listenScroll="listenScroll">
       <div>
         <div class="bannerWraper" v-bind:style="{height:screenWidth+'px'}">
-          <div v-if="imgUrl.length" class="slider-wrapper">
-            <slider :autoPlay="false" ref="sliderSinger">
+          <div v-if="imgUrl.length > 0" class="slider-wrapper">
+            <slider :autoPlay="false" ref="sliderSinger" >
               <div v-for="item in imgUrl">
                 <a :href="'#'">
-                  <img class="needsclick" width="100%" :height="screenWidth+'px'" :src="item.picUrl">
+                  <img class="needsclick" width="100%" :height="screenWidth+'px'" :src="imageDomainName+item.picUrl">
                 </a>
               </div>
             </slider>
@@ -18,16 +18,16 @@
         </div>
         <div class="contentWraper">
           <div class="goodsInfo">
-            <h3>【野生葛粉】500克/袋，绿色认证，出口日本，39元/袋</h3>
-            <h4><span>¥</span>39</h4>
+            <h3>{{goodsEntity.name}}</h3>
+            <h4>{{goodsEntity.currentPrice/100 | currency('￥')}}</h4>
             <h5>
               <i>原价</i>
-              <del>¥39.00</del>
+              <del>{{goodsEntity.originalPrice/100 | currency('￥')}}</del>
             </h5>
             <ul class="tip">
-              <li>快递：10.00</li>
-              <li>426人购买</li>
-              <li class="last">湖北恩施</li>
+              <li>快递：{{goodsEntity.freightPrice/100 | currency('￥')}}</li>
+              <li>{{goodsEntity.salesNum}}人购买</li>
+              <li class="last">{{goodsEntity.productPlace}}</li>
             </ul>
           </div>
           <div class="propsbox" @click.prevent.stop="alertBtbox">
@@ -36,7 +36,7 @@
               <i class="icon-right"></i>
             </div>
           </div>
-          <isat-appraise></isat-appraise>
+          <isat-appraise :itemId="id"></isat-appraise>
           <isat-shopentrance></isat-shopentrance>
           <isat-shopinfo @refreshscroll="refreshscroll"></isat-shopinfo>
           <!--<mt-popup
@@ -53,7 +53,7 @@
     </scroll>
     <isat-mask @cancelMask="closeBotBox" v-show="shower"></isat-mask>
     <transition name="propUp" >
-      <isat-bottombox :imgurl="imgUrl[0]" class="bottombox" @closeBotBox="closeBotBox" v-show="shower"></isat-bottombox>
+      <isat-bottombox :imgurl="imgUrl.length > 0 ? imgUrl[0].picUrl : ''" :goodsEntity="goodsEntity" class="bottombox" @closeBotBox="closeBotBox" v-show="shower" :buyerType="buyerType"></isat-bottombox>
     </transition>
     <isat-bottom @openBottombox="alertBtbox" class="fixedBottom"></isat-bottom>
     <isat-backtop v-show="isShow" @backtop="backtop"></isat-backtop>
@@ -64,7 +64,8 @@
   import Slider from 'base/slider/slider'
   import Loading from 'base/loading/loading'
   import {getJsonpHomepage, getAxiosHomepage} from 'api/gethomepage'
-  import {ERR_OK} from 'api/config'
+  import {ERR_OK, imageDomainName} from 'api/config'
+  import {getItemDetail} from 'api/getdata'
   import IsatBottombox from 'base/bottombox/bottombox'
   import IsatMask from 'base/mask/mask'
   import IsatBottom from 'base/isatbottom/isatbottom'
@@ -73,27 +74,28 @@
   import IsatShopentrance from 'components/shopentrance/shopentrance'
   import IsatShopinfo from 'components/shopinfo/shopinfo'
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
+  const digitsRE = /(\d{3})(?=\d)/g
   export default {
     data() {
       return {
-        homepagedata: [],
+        id: "",
+        goodsEntity: {},
         Goodstitle: '商品详情',
         screenWidth: document.documentElement.clientWidth,
-        imgUrl: [
-          {picUrl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201707/2718343054.jpg'},
-          {picUrl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201707/2718343625.jpg'},
-          {picUrl: 'http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201707/2718350029.jpg'}
-        ],
+        imgUrl: [],
         popupVisible: true,
         shower: false,
+        buyerType: 1, //购买方式，1--购物车，2--立即购买
         isShow: false,
         probeType: 3,
         listenScroll: true,
+        imageDomainName: imageDomainName,
         fullpath: ''
       }
     },
     created() {
-      this._getJsonpHomepage()
+      this.id = this.$route.params.id;
+      this._getItemDetail()
       this.fullpath = this.$route.query.fullpath
     },
     mounted() {
@@ -105,24 +107,32 @@
       })
     },
     methods: {
+      _getItemDetail() {
+        getItemDetail(this.id).then((res) => {
+          if (res.ret === '0') {
+            this.goodsEntity = res.data
+            let photos = res.data.photoUrls.split("|")
+            this.imgUrl.splice(0,this.imgUrl.length);
+            for (let photo in photos) {
+              if(photos[photo] != "") {
+                this.imgUrl.push({picUrl: photos[photo]})
+              }
+            }
+            console.log(this.imgUrl)
+          }
+        })
+      },
       back() {
         this.$refs.scrollpage.scrollTo(0, 0, 0)
         this.$router.back()
-      },
-      _getJsonpHomepage() {
-        getJsonpHomepage().then((res) => {
-          if (res.code === ERR_OK) {
-            /* console.log(res.data.slider) */
-            this.homepagedata = res.data.slider
-          }
-        })
       },
       getScreenWidth() {
         this.screenWidth = document.documentElement.clientWidth
         /* console.log(this.screenWidth) */
       },
-      alertBtbox() {
+      alertBtbox(buyerType) {
         this.shower = true
+        this.buyerType = buyerType
       },
       closeBotBox(param) {
         this.shower = param
@@ -140,6 +150,36 @@
         } else if (pos.y > -300 && this.isShow === true) {
           this.isShow = false
         }
+      }
+    },
+    filters:{      //数据过滤器
+        currency:function(value, currency, decimals) {
+          value = parseFloat(value)
+          if (!isFinite(value) || (!value && value !== 0)) return ''
+          currency = currency != null ? currency : '$'
+          decimals = decimals != null ? decimals : 2
+          var stringified = Math.abs(value).toFixed(decimals)
+          var _int = decimals
+            ? stringified.slice(0, -1 - decimals)
+            : stringified
+          var i = _int.length % 3
+          var head = i > 0
+            ? (_int.slice(0, i) + (_int.length > 3 ? ',' : ''))
+            : ''
+          var _float = decimals
+            ? stringified.slice(-1 - decimals)
+            : ''
+          var sign = value < 0 ? '-' : ''
+          return sign + currency + head +
+            _int.slice(i).replace(digitsRE, '$1,') +
+            _float
+        }
+
+    },
+    watch: {
+      '$route': function () {
+        this.id = this.$route.params.id;
+        this._getItemDetail()
       }
     },
     components: {

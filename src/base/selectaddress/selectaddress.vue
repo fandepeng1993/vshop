@@ -76,7 +76,7 @@
         }
       },
       cancleProup() {
-        this.$emit('cancleProup', 0, this.myAddressProvince + ' ' + this.myAddressCity + ' ' + this.myAddresscounty)
+        this.$emit('cancleProup')
       }
     },
     mounted() {

@@ -13,16 +13,16 @@
           class="goodsListScroll">
           <div>
             <ul class="goodsListUl" :class="{extendul: rowclass == true}">
-              <li  v-for="item in listinfo.concat(listinfo)">
-                <a class="needsclick" @click.prevent.stop="goTodetail(item.linkUrl)">
-                  <div class="imgurl" :style="{backgroundImage:'url('+item.picurl+')'}">
+              <li  v-for="item in goodsList">
+                <a class="needsclick" @click.prevent.stop="goTodetail(item.id)">
+                  <div class="imgurl" :style="{backgroundImage:'url('+imageDomainName+item.photo+')'}">
                   </div>
                 </a>
                 <div class="titleicon">
                   <p class="itemName">{{item.name}}</p>
                   <div class="itemBotom">
-                    <p class="itemPrice">{{item.price}}</p>
-                    <p class="itemHasale">{{item.havesale}}件已售</p>
+                    <p class="itemPrice">{{item.currentPrice/100 | currency('￥')}}</p>
+                    <p class="itemHasale">{{item.salesNum}}件已售</p>
                     <i class="icon-gouwuche"></i>
                   </div>
                 </div>
@@ -47,7 +47,10 @@
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
   import IsatBacktop from 'base/backtop/backtop'
+  import {imageDomainName} from 'api/config'
+  import {getItemList} from 'api/getdata'
   let TIMER = ''
+  const digitsRE = /(\d{3})(?=\d)/g
   export default {
     props: {
       datas: {
@@ -61,6 +64,7 @@
     },
     data () {
       return {
+        goodsList: [],
         listinfo: [
           {
             picurl: 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201712/1315020348.jpg',
@@ -94,15 +98,32 @@
         isShow: false,
         probeType: 3,
         listenScroll: true,
-        page: 1,
+        pageNo: 1,
+        pageSize: 10,
         result: [],
         pullup: true,
         hasMore: true,
         beforeScroll: true,
-        popupVisible: false
+        popupVisible: false,
+        searchItemParams: {},
+        imageDomainName: imageDomainName
       }
     },
     methods: {
+      _getItemList() {
+        this.searchItemParams.pageNo = this.pageNo;
+        this.searchItemParams.pageSize = this.pageSize;
+
+        getItemList(this.searchItemParams).then((res) => {
+          if (res.ret === '0') {
+            if(res.data.list.length > 0) {
+              this.goodsList = this.goodsList.concat(res.data.list)
+            } else {
+              this.pageNo--;
+            }
+          }
+        })
+      },
       scroll(pos) {
         if (pos.y < -300 && this.isShow === false) {
           this.isShow = true
@@ -113,12 +134,17 @@
       backtop(backtime) {
         this.$refs.scrolls.scrollTo(0, 0, backtime)
       },
+      //上拉加载更多
       searchMore() {
         console.log('searchMore')
+
+        this.pageNo++;
+        this._getItemList();
+
         if (!this.popupVisible) {
           this.popupVisible = true
         } else {
-            return
+          return
         }
       },
       listScroll() {
@@ -137,6 +163,34 @@
     },
     created() {
       /*console.log(this.$route)*/
+
+      if(this.$route.fullPath.indexOf("comprehensive") != -1) {
+        //综合
+        this.searchItemParams.orderBy = "";
+      } else if(this.$route.fullPath.indexOf("salesVolume") != -1) {
+        //销量
+        this.searchItemParams.orderBy = "salesNum DESC";
+      } else if(this.$route.fullPath.indexOf("newProduct") != -1) {
+        //新品
+        this.searchItemParams.orderBy = "";
+        this.searchItemParams.isNew = 1;
+      } else if(this.$route.fullPath.indexOf("price") != -1) {
+        //价格
+        this.searchItemParams.orderBy = "currentPrice ASC";
+      }
+
+      if(this.$route.params.id != "allbaby") {
+        this.searchItemParams.sortId = this.$route.params.id;  //商品类别id
+      }
+      this.searchItemParams.isOnShelf = 1;//是否上架
+
+      //this.searchItemParams.isNew = 1;//是否新品
+      //this.searchItemParams.canUseBounty = 1;//是否可用奖励金
+      //this.searchItemParams.canUseCoupon = 1;//是否可用优惠券
+      //this.searchItemParams.canUseScoreDeduct = 1;//是否可用积分抵扣
+      //this.searchItemParams.canUseScoreExchange = 1;//是否可用积分兑换
+
+      this._getItemList();
     },
     components: {
       Scroll,
@@ -160,6 +214,30 @@
           return
         }
       }
+
+    },
+    filters:{      //数据过滤器
+        currency:function(value, currency, decimals) {
+          value = parseFloat(value)
+          if (!isFinite(value) || (!value && value !== 0)) return ''
+          currency = currency != null ? currency : '$'
+          decimals = decimals != null ? decimals : 2
+          var stringified = Math.abs(value).toFixed(decimals)
+          var _int = decimals
+            ? stringified.slice(0, -1 - decimals)
+            : stringified
+          var i = _int.length % 3
+          var head = i > 0
+            ? (_int.slice(0, i) + (_int.length > 3 ? ',' : ''))
+            : ''
+          var _float = decimals
+            ? stringified.slice(-1 - decimals)
+            : ''
+          var sign = value < 0 ? '-' : ''
+          return sign + currency + head +
+            _int.slice(i).replace(digitsRE, '$1,') +
+            _float
+        }
 
     }
   }

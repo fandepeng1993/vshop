@@ -2,13 +2,11 @@
 
   <div class="wrapperGoods" ref="wrapperGoods">
     <div v-if="goodslistdata">
-      <isat-hotrecommend  :screenWidth="screenWidth" :recommend="goodslistdata.recommend"></isat-hotrecommend>
-      <isat-goodslistshow :screenWidth="screenWidth" :showListdata="goodslistdata.newgoods"></isat-goodslistshow>
-      <isat-goodslistshow :screenWidth="screenWidth" :showListdata="goodslistdata.newgoods"></isat-goodslistshow>
-      <isat-goodslistshow :screenWidth="screenWidth" :showListdata="goodslistdata.newgoods"></isat-goodslistshow>
-      <isat-goodslistshow :screenWidth="screenWidth" :showListdata="goodslistdata.newgoods"></isat-goodslistshow>
-      <isat-goodslistshow :screenWidth="screenWidth" :showListdata="goodslistdata.newgoods"></isat-goodslistshow>
-      <isat-goodslistshow :screenWidth="screenWidth" :showListdata="goodslistdata.newgoods"></isat-goodslistshow>
+      <isat-hotrecommend :screenWidth="screenWidth" :homepagedata="homepagedata"></isat-hotrecommend>
+
+      <div v-for="item in homepagedata.goodsList">
+        <isat-goodslistshow :screenWidth="screenWidth" :showListdata="item"></isat-goodslistshow>
+      </div>
     </div>
     <loading v-if="!goodslistdata"></loading>
   </div>
@@ -20,7 +18,10 @@
   import Loading from 'base/loading/loading'
   export default {
     props: {
-
+      homepagedata: {
+        type: Object,
+        default: {}
+      }
     },
     data() {
       return {

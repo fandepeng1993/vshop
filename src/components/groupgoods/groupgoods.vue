@@ -34,6 +34,7 @@
 </template>
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
+  import {getItemSortList} from 'api/getdata'
   import IsatSearchtitle from 'base/searchtitle/searchtitle'
   import IsatBabylist from 'base/babylist/babylist'
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
@@ -46,15 +47,23 @@
         goodsId: '',
         nexttitle: '全部宝贝',
         Goodstitle: '商品详情',
-        babyListdata: [{name: '全部宝贝', id: 'allbaby'}, {name: '茶叶', id: 'tea'}, {name: '恩施特色水果', id: 'fruits'}, {name: '硒片', id: 'selenium'}, {name: ' 富硒大米', id: 'seEnrichedRice'}, {name: '腊味', id: 'cured'}, {name: '恩施特色食品', id: 'specialFood'}, {name: '爆款单品', id: 'hotSale'}],
+        babyListdata: [{name: '全部宝贝', id: 'allbaby'}],
         babyListdata2: [{name: '茶叶', id: 'tea'}, {name: '恩施特色水果', id: 'fruits'}, {name: '硒片', id: 'selenium'}, {name: ' 富硒大米', id: 'seEnrichedRice'}, {name: '腊味', id: 'cured'}, {name: '恩施特色食品', id: 'specialFood'}, {name: '全部宝贝', id: 'allbaby'}, {name: '爆款单品', id: 'hotSale'}]
 
       }
     },
     created() {
       /* console.log(this.$router) */
+      this._getItemSortData()
     },
     methods: {
+      _getItemSortData() {
+        getItemSortList().then((res) => {
+          if (res.ret === '0') {
+            this.babyListdata = this.babyListdata.concat(res.data.list)
+          }
+        })
+      },
       handleClose() {
         console.log(123)
       },

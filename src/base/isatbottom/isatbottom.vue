@@ -10,10 +10,10 @@
           </div>
         </li>
         <li></li>
-        <li class="addSHop" @click.prevent.stop="addShop">
+        <li class="addSHop" @click.prevent.stop="addShop(1)">
           <span>加入购物车</span>
         </li>
-        <li class="buyIt" @click.prevent.stop="addShop">
+        <li class="buyIt" @click.prevent.stop="addShop(2)">
           <span>立即购买</span>
         </li>
       </ul>
@@ -23,8 +23,8 @@
 <script type="text/ecmascript-6">
 export default {
   methods: {
-    addShop() {
-      this.$emit('openBottombox', true)
+    addShop(buyerType) {
+      this.$emit('openBottombox', buyerType)
     }
   }
 }

@@ -127,6 +127,9 @@
     },
     destoryed () {
       clearTimeout(this.timer)
+    },
+    deactivated () {
+      this.$destroy()
     }
   }
 </script>

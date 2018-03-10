@@ -1,10 +1,20 @@
 <template>
   <div class="incomeIndetail">
     <scroll class="incomeIndetailscroll">
-      <ul v-show="false">
-        <li v-for="n in 100" style="line-height: 30px">{{n.toString()}}</li>
+      <ul v-show="bountyInfoList.length > 0">
+        <!-- <li v-for="n in 15" style="line-height: 30px">{{n.toString()}}</li> -->
+        <li class="case" v-for="item in bountyInfoList">
+           <h3>
+             <span>{{item.fromType}}</span>
+             <span>{{item.type == "0" ? "" : "+"}}{{(item.price/100).toFixed(2)}}</span>
+           </h3>
+           <p>
+             <span>{{item.type == "0" ? "支出" : "收入"}}</span>
+             <span >{{item.createDate}}</span>
+           </p>
+        </li>
       </ul>
-      <div v-show="true" class="hasNodata">
+      <div v-show="bountyInfoList.length == 0" class="hasNodata">
         <img src="../../common/images/nodata.png" alt="">
         <p>您暂时没有数据</p>
       </div>
@@ -13,9 +23,51 @@
 </template>
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
+  import {imageDomainName} from 'api/config'
+  import {getBountyInfoList} from 'api/getdata'
+
   export default {
+    data() {
+      return {
+        id: "all",
+        bountyInfoList: [],
+        pageNo: 1,
+        pageSize: 10
+      }
+    },
+    created() {
+      this.id = this.$route.params.id;
+      this._getBountyInfoList()
+    },
+    methods: {
+      _getBountyInfoList() {
+        let params = {}
+        params.pageNo = this.pageNo;
+        params.pageSize = this.pageSize;
+
+        if(this.id == "income") {
+          //增加
+          params.type = "1"
+        } else if(this.id == "expenditure") {
+          //消耗
+          params.type = "0"
+        }
+
+        getBountyInfoList(params).then((res) => {
+          if (res.ret === '0') {
+            this.bountyInfoList = res.data.list
+          }
+        })
+      }
+    },
     components: {
       Scroll
+    },
+    watch: {
+      '$route': function () {
+        this.id = this.$route.params.id;
+        this._getBountyInfoList()
+      }
     }
   }
 </script>

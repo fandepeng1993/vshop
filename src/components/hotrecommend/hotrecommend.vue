@@ -2,18 +2,18 @@
   <div class="recommend">
     <div class="recommend-top">
       <ul>
-        <li  v-for="item in recommend.toppng" @click.prevent.stop="jumppage(item)">
+        <li v-for="item in homepagedata.navBars" @click.prevent.stop="jumppage(item)">
           <a>
-            <img width="100%" :height="screenWidth*0.33*0.556"  v-lazy="item.imgurl">
+            <img width="100%" :height="screenWidth*0.33*0.556"  v-lazy="imageDomainName+item.image">
           </a>
         </li>
       </ul>
     </div>
     <div class="recommoned-bot">
       <ul>
-        <li v-for="item in recommend.botpng" @click.prevent.stop="jumppage(item)">
+        <li v-for="item in homepagedata.middleNavBars" @click.prevent.stop="jumppage(item)">
           <a>
-            <img width="100%" :height="screenWidth*0.5*0.525" v-lazy="item.imgurl">
+            <img width="100%" :height="screenWidth*0.5*0.525" v-lazy="imageDomainName+item.image">
           </a>
         </li>
       </ul>
@@ -23,9 +23,10 @@
 </template>
 <script type="text/ecmascript-6">
   import {mapMutations} from 'vuex'
+  import {imageDomainName} from 'api/config'
   export default {
     props: {
-      recommend: {
+      homepagedata: {
         type: Object,
         default: {}
       },
@@ -37,7 +38,9 @@
     mounted() {
     },
     data() {
-      return {}
+      return {
+        imageDomainName: imageDomainName
+      }
     },
     methods: {
       jumppage(item) {

@@ -1,12 +1,16 @@
 <template>
   <div class="appraise">
     <div class="appraisetitle">
-      <h3 data-max="5">宝贝评价(<span>2</span>)</h3>
+      <h3 data-max="5">宝贝评价(<span>{{count}}</span>)</h3>
     </div>
-    <div class="appraise-content" v-for="n in 2">
-        <h4><div class="userImg"></div><span class="userName">莉</span></h4>
-        <h5 class="appraise-text">柚子甜且汁多，不错</h5>
-        <span>2017年10月25日 17:53</span>
+    <div class="appraise-content" v-for="item in dataList">
+        <h4>
+          <!-- <div class="userImg"></div> -->
+          <img style="height:28px;width:28px;" :src="imageDomainName+item.buyerPhoto">
+          <span class="userName">{{item.buyerNick}}</span>
+        </h4>
+        <h5 class="appraise-text">{{item.buyerMessage}}</h5>
+        <span>{{item.commentTime}}</span>
     </div>
     <div class="moreWrap">
       <h6>
@@ -16,7 +20,49 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-
+  import {getBuyerCommentList} from 'api/getdata'
+  import {imageDomainName} from 'api/config'
+  export default {
+    props: {
+      itemId: {
+        type: String,
+        default: ""
+      }
+    },
+    data() {
+      return {
+        imageDomainName: imageDomainName,
+        count: "",
+        dataList: [],
+        params: {
+          itemId: "",
+          pageNo: 1,
+          pageSize: 10
+        }
+      }
+    },
+    created() {
+      this._getBuyerCommentList()
+    },
+    mounted() {
+    },
+    methods: {
+      _getBuyerCommentList() {
+        this.params.itemId = this.itemId;
+        getBuyerCommentList(this.params).then((res) => {
+          if (res.ret === '0') {
+            this.dataList = res.data.list
+            this.count = res.data.count
+          }
+        })
+      }
+    },
+    watch: {
+      '$route': function () {
+        this._getBuyerCommentList()
+      }
+    }
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">

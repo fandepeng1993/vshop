@@ -1,38 +1,48 @@
 <template>
   <div class="conhomepage" ref="conhomepage">
-      <scroll ref="scroll" :datas="homepagedata"  class="conhomepage-content">
+      <scroll ref="scroll" :datas="homepagedata.banna"  class="conhomepage-content">
         <div>
           <div class="bannerWraper" v-bind:style="{height:screenWidth*0.4+'px'}">
-            <div v-if="homepagedata.length" class="slider-wrapper">
+            <div v-if="homepagedata.banna.length" class="slider-wrapper">
               <slider>
-                <div v-for="item in homepagedata">
-                  <a :href="item.linkUrl">
-                    <img class="needsclick" width="100%" :src="item.picUrl">
+                <div v-for="item in homepagedata.banna">
+                  <a :href="item.href">
+                    <img class="needsclick" width="100%" :src="imageDomainName+item.image">
                   </a>
                 </div>
               </slider>
             </div>
-            <Loading v-if="!homepagedata.length"></Loading>
+            <Loading v-if="!homepagedata.banna.length"></Loading>
           </div>
-          <isat-goodlistshow-wrap></isat-goodlistshow-wrap>
-          <isat-callphone></isat-callphone>
+          <isat-goodlistshow-wrap :homepagedata="homepagedata"></isat-goodlistshow-wrap>
+          <isat-callphone :phone="homepagedata.servicePhone"></isat-callphone>
         </div>
       </scroll>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import Slider from 'base/slider/slider'
-  import {getJsonpHomepage, getAxiosHomepage} from 'api/gethomepage'
+  import {imageDomainName} from 'api/config'
+  import {getJsonpHomepage, getAxiosHomepage, getWemallHomepage} from 'api/getdata'
   import IsatHotrecommend from 'components/hotrecommend/hotrecommend'
   import {ERR_OK} from 'api/config'
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
   import IsatGoodlistshowWrap from 'components/goodslistshow-wrap/goodslistshow-wrap'
   import IsatCallphone from 'base/callphone/callphone'
+
   export default {
     data() {
       return {
-        homepagedata: [],
+        homepagedata: {
+          banna:[],
+          middleNavBars:[],
+          navBars:[],
+          newGoodsList:[],
+          recommendGoodsList:[],
+          servicePhone:""
+        },
+        imageDomainName: imageDomainName,
         screenWidth: document.documentElement.clientWidth
       }
     },
@@ -56,10 +66,9 @@
     },
     methods: {
       _getJsonpHomepage() {
-        getJsonpHomepage().then((res) => {
-          if (res.code === ERR_OK) {
-           /* console.log(res.data.slider) */
-            this.homepagedata = res.data.slider
+        getWemallHomepage().then((res) => {
+          if (res.ret === '0') {
+            this.homepagedata = res.data
           }
         })
       },
