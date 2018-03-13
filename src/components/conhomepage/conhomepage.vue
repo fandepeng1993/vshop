@@ -2,12 +2,12 @@
   <div class="conhomepage" ref="conhomepage">
       <scroll ref="scroll" :datas="homepagedata.banna"  class="conhomepage-content">
         <div>
-          <div class="bannerWraper" v-bind:style="{height:screenWidth*0.4+'px'}">
-            <div v-if="homepagedata.banna.length" class="slider-wrapper">
-              <slider>
+          <div class="bannerWraper" >
+            <div v-if="homepagedata.banna.length" v-bind:style="{height:screenWidth*0.4+'px'}" class="slider-wrapper">
+              <slider :showDot="homepagedata.banna.length>1 " :autoPlay="homepagedata.banna.length>1" :ScrollX="homepagedata.banna.length>1">
                 <div v-for="item in homepagedata.banna">
                   <a :href="item.href">
-                    <img class="needsclick" width="100%" :src="imageDomainName+item.image">
+                    <img class="needsclick" v-bind:style="{height:screenWidth*0.4+'px'}" width="100%" :src="imageDomainName+item.image">
                   </a>
                 </div>
               </slider>
@@ -61,6 +61,7 @@
         if (!this.$refs.conhomepage) {
           return
         }
+        console.log(123)
         this.getScreenWidth()
       })
     },

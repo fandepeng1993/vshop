@@ -25,7 +25,6 @@
 </template>
 <script type="text/ecmascript-6">
   import {imageDomainName} from 'api/config'
-  const digitsRE = /(\d{3})(?=\d)/g
   export default {
     props: {
       showListdata: {
@@ -49,6 +48,7 @@
         console.log(123)
       },
       jumppage(item) {
+        console.log(item)
         this.$router.push({
           path: '/Goodsdetail/' + item.id
         })
@@ -57,30 +57,6 @@
     mounted() {
     },
     watch: {
-    },
-    filters:{      //数据过滤器
-        currency:function(value, currency, decimals) {
-          value = parseFloat(value)
-          if (!isFinite(value) || (!value && value !== 0)) return ''
-          currency = currency != null ? currency : '$'
-          decimals = decimals != null ? decimals : 2
-          var stringified = Math.abs(value).toFixed(decimals)
-          var _int = decimals
-            ? stringified.slice(0, -1 - decimals)
-            : stringified
-          var i = _int.length % 3
-          var head = i > 0
-            ? (_int.slice(0, i) + (_int.length > 3 ? ',' : ''))
-            : ''
-          var _float = decimals
-            ? stringified.slice(-1 - decimals)
-            : ''
-          var sign = value < 0 ? '-' : ''
-          return sign + currency + head +
-            _int.slice(i).replace(digitsRE, '$1,') +
-            _float
-        }
-
     }
   }
 </script>
@@ -103,7 +79,7 @@
         -webkit-flex-wrap: wrap
         flex-wrap: wrap
         background #f0f0f0
-        justify-content:space-around
+        justify-content space-between
         li
           width 48%
           a

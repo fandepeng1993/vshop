@@ -11,6 +11,24 @@
           </div>
           <i class="closeICon" @click.prevent.stop="changeShower"></i>
         </div>
+        <div class="selectq">
+          <div>
+            <h4>选择重量</h4>
+            <ul>
+              <li @click.prevent.stop="chooseQuality(0,index)" v-for="(item,index) in specInfo" :class="[index==chooseNum[0] ? 'actived': '']" >
+                <span>{{item.storage}}公斤</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4>选择价格1</h4>
+            <ul>
+              <li @click.prevent.stop="chooseQuality(1,index)" v-for="(item,index) in specInfo" :class="[index==chooseNum[1] ? 'actived': '']" >
+                <span>{{item.storage}}公斤</span>
+              </li>
+            </ul>
+          </div>
+        </div>
         <div class="bottomNumber">
           <div>
             <h4>购买数量</h4>
@@ -60,7 +78,8 @@ export default {
       maxNumber: 99,
       imageDomainName: imageDomainName,
       minNumber: 1,
-      specInfo: []
+      specInfo: [],
+      chooseNum: ['0', '0']
     }
   },
   created() {
@@ -68,6 +87,8 @@ export default {
       console.log(JSON.parse(this.goodsEntity.specInfoStr))
       this.specInfo = JSON.parse(this.goodsEntity.specInfoStr);
     }
+  },
+  computed: {
   },
   methods: {
     changeShower() {
@@ -84,7 +105,6 @@ export default {
       let params = {}
       params.itemId=this.goodsEntity.id
       params.itemNum=this.countNum
-
       if(this.buyerType == 1) {
         //加入购物车
         addShopCarInfo(params).then((res) => {
@@ -97,31 +117,11 @@ export default {
       } else {
         //立即购买
       }
+    },
+    chooseQuality(dIndex, index) {
+      /*console.log(dIndex, index)*/
+      this.chooseNum.splice(dIndex, 1, index)
     }
-  },
-  filters:{      //数据过滤器
-      currency:function(value, currency, decimals) {
-        value = parseFloat(value)
-        if (!isFinite(value) || (!value && value !== 0)) return ''
-        currency = currency != null ? currency : '$'
-        decimals = decimals != null ? decimals : 2
-        var stringified = Math.abs(value).toFixed(decimals)
-        var _int = decimals
-          ? stringified.slice(0, -1 - decimals)
-          : stringified
-        var i = _int.length % 3
-        var head = i > 0
-          ? (_int.slice(0, i) + (_int.length > 3 ? ',' : ''))
-          : ''
-        var _float = decimals
-          ? stringified.slice(-1 - decimals)
-          : ''
-        var sign = value < 0 ? '-' : ''
-        return sign + currency + head +
-          _int.slice(i).replace(digitsRE, '$1,') +
-          _float
-      }
-
   },
   components: {
     IsatNumberoption
@@ -145,12 +145,12 @@ export default {
     z-index 106
     bottom 0px
   .bottomwrap
-    height 155px
+    height 255px
     padding 10px
     box-sizing border-box
     .bottomImg
       position relative
-      height 90px
+      height 50px
       display flex
       border-bottom 1px solid #f6f6f6
       .imgwraper
@@ -160,7 +160,7 @@ export default {
         background-color #fff
         border-radius: 3%
         position absolute
-        top -50%
+        bottom: 0%
         img
           width 100%
       .imgInfo
@@ -182,6 +182,30 @@ export default {
         background-size 100%
         background-position center
         extend-click()
+    .selectq
+      height 140px
+      overflow-y scroll
+      ul
+        display flex
+        flex-wrap wrap
+        box-sizing border-box
+        justify-content space-between
+        align-content space-around
+        height 84px
+        overflow-y: scroll
+        li
+          width 22%
+          display flex
+          align-items center
+          align-self center
+          justify-content center
+          background rgba(0,0,0,0.2)
+          border-radius 4px
+          span
+            padding 7px 0px
+            font-size 12px
+          &.actived
+            background skyblue
     .bottomNumber
       height 55px
       display flex
