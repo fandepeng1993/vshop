@@ -262,7 +262,7 @@
         display flex
         -webkit-flex-wrap wrap
         flex-wrap wrap
-        justify-content space-around
+        justify-content space-between
         li
           width 48%
           margin-top 5px
@@ -321,6 +321,7 @@
             .titleicon
               display flex
               flex-direction column
+              width calc(100% - 140px)
               .itemName
                 flex 1
                 text-overflow:inherit;

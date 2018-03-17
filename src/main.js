@@ -3,7 +3,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-
+import {filterCurrenty} from 'filter/filter'
 import 'mint-ui/lib/style.css'
 import 'common/stylus/index.styl'
 /*import Vuelazyload from 'vue-lazyload'*/
@@ -16,7 +16,7 @@ Vue.use(MintUI)
   loading: require('common/images/default.png')
 })*/
 Vue.config.productionTip = false
-
+Vue.filter('currency', filterCurrenty)
 /* 移动端点击300MS延时 */
 fastclick.attach(document.body)
 

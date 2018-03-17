@@ -5,16 +5,16 @@
     :probeType="probeType" :listenScroll="listenScroll">
       <div>
         <div class="bannerWraper" v-bind:style="{height:screenWidth+'px'}">
-          <div v-if="imgUrl.length > 0" class="slider-wrapper">
-            <slider :autoPlay="false" ref="sliderSinger" >
+          <div v-show="imgUrl.length" class="slider-wrapper">
+            <slider :autoPlay="false" ref="sliderSinger" :dataImg="imgUrl" :showDot="imgUrl.length>1 " :showLeftR="false"  :ScrollX="imgUrl.length>1" v-cloak>
               <div v-for="item in imgUrl">
                 <a :href="'#'">
-                  <img class="needsclick" width="100%" :height="screenWidth+'px'" :src="imageDomainName+item.picUrl">
+                  <img class="needsclick" width="100%" @load="loadImage" :height="screenWidth+'px'" :src="imageDomainName+item.picUrl">
                 </a>
               </div>
             </slider>
           </div>
-          <Loading v-if="!imgUrl.length"></Loading>
+          <Loading v-show="!imgUrl.length"></Loading>
         </div>
         <div class="contentWraper">
           <div class="goodsInfo">
@@ -30,7 +30,7 @@
               <li class="last">{{goodsEntity.productPlace}}</li>
             </ul>
           </div>
-          <div class="propsbox" @click.prevent.stop="alertBtbox">
+          <div class="propsbox" @click.prevent.stop="alertBtbox(buyerType)">
             <div class="propscon">
               <span>商品规格选择</span>
               <i class="icon-right"></i>
@@ -51,12 +51,13 @@
         </div>
       </div>
     </scroll>
+    <isat-backtop v-show="isShow" @backtop="backtop"></isat-backtop>
     <isat-mask @cancelMask="closeBotBox" v-show="shower"></isat-mask>
     <transition name="propUp" >
       <isat-bottombox :imgurl="imgUrl.length > 0 ? imgUrl[0].picUrl : ''" :goodsEntity="goodsEntity" class="bottombox" @closeBotBox="closeBotBox" v-show="shower" :buyerType="buyerType"></isat-bottombox>
     </transition>
     <isat-bottom @openBottombox="alertBtbox" class="fixedBottom"></isat-bottom>
-    <isat-backtop v-show="isShow" @backtop="backtop"></isat-backtop>
+
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -74,7 +75,6 @@
   import IsatShopentrance from 'components/shopentrance/shopentrance'
   import IsatShopinfo from 'components/shopinfo/shopinfo'
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
-  const digitsRE = /(\d{3})(?=\d)/g
   export default {
     data() {
       return {
@@ -83,9 +83,10 @@
         Goodstitle: '商品详情',
         screenWidth: document.documentElement.clientWidth,
         imgUrl: [],
+        checkLoad:false,
         popupVisible: true,
         shower: false,
-        buyerType: 1, //购买方式，1--购物车，2--立即购买
+        buyerType: 1, // 购买方式，1--购物车，2--立即购买
         isShow: false,
         probeType: 3,
         listenScroll: true,
@@ -112,7 +113,7 @@
           if (res.ret === '0') {
             this.goodsEntity = res.data
             let photos = res.data.photoUrls.split("|")
-            this.imgUrl.splice(0,this.imgUrl.length);
+            /*this.imgUrl.splice(0, this.imgUrl.length)*/
             for (let photo in photos) {
               if(photos[photo] != "") {
                 this.imgUrl.push({picUrl: photos[photo]})
@@ -150,36 +151,28 @@
         } else if (pos.y > -300 && this.isShow === true) {
           this.isShow = false
         }
-      }
-    },
-    filters:{      //数据过滤器
-        currency:function(value, currency, decimals) {
-          value = parseFloat(value)
-          if (!isFinite(value) || (!value && value !== 0)) return ''
-          currency = currency != null ? currency : '$'
-          decimals = decimals != null ? decimals : 2
-          var stringified = Math.abs(value).toFixed(decimals)
-          var _int = decimals
-            ? stringified.slice(0, -1 - decimals)
-            : stringified
-          var i = _int.length % 3
-          var head = i > 0
-            ? (_int.slice(0, i) + (_int.length > 3 ? ',' : ''))
-            : ''
-          var _float = decimals
-            ? stringified.slice(-1 - decimals)
-            : ''
-          var sign = value < 0 ? '-' : ''
-          return sign + currency + head +
-            _int.slice(i).replace(digitsRE, '$1,') +
-            _float
+      },
+      loadImage() {
+        console.log(123)
+        if (!this.checkLoad) {
+          this.checkLoad = true
         }
-
+      }
     },
     watch: {
       '$route': function () {
-        this.id = this.$route.params.id;
+        this.id = this.$route.params.id
+        this.imgUrl = []
+        this.checkLoad = false
         this._getItemDetail()
+      },
+      imgUrl(oldval, newval) {
+        if (!this.$refs.sliderSinger) {
+          return
+        }
+        else {
+          this.$refs.sliderSinger.update()
+        }
       }
     },
     components: {
@@ -253,7 +246,7 @@
             border-bottom: 1px solid #f5f4f3;
     .bottombox
       width 100%
-      height 200px
+      height 300px
       position fixed
       z-index 106
       bottom 0px
@@ -267,7 +260,6 @@
       position:relative
       width:100%
       overflow:hidden
-
 .propUp-enter
   transform translateY(200px)
 .propUp-enter-active

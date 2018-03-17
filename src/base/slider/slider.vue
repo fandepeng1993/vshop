@@ -190,7 +190,7 @@
     <div v-if="showDot" class="dots">
       <span class="dota" :class="{active: currentPageIndex === index }" v-for="(item, index) in dots"></span>
     </div>
-    <div class="leftRight" v-else>
+    <div class="leftRight" v-if="showLeftR">
       <span class="icon-left" @click.prevent.stop="prev()"></span>
       <span class="icon-right"  @click.prevent.stop="next()"></span>
     </div>
@@ -231,6 +231,16 @@
       speed: {
         type: Number,
         default: 400
+      },
+      dataImg: {
+      },
+      ScrollX: {
+        type: Boolean,
+        default: true
+      },
+      showLeftR: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -327,7 +337,7 @@
       _initSlide() {
         /* console.log(this.threshold) */
         this.slide = new BSscroll(this.$refs.slide, {
-          scrollX: true,
+          scrollX: this.ScrollX,
           scrollY: false,
           momentum: false,
           snap: {
