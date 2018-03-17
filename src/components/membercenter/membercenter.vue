@@ -89,14 +89,14 @@
           {pname: '奖励金', src: 'bonus.svg', link: '/Membercenter/bounty'},
           {pname: '会员卡', src: 'card.svg', link: '/Membercenter/membershipcard'},
           {pname: '积分商城', src: 'jifenshangc.svg', link: '/Membercenter/integralmall/1'},
-          {pname: '优惠券', src: '7juan.svg', link: '/Membercenter/orderstatus/allorder'},
-          {pname: '疯狂砍价', src: '4kanjia.svg', link: '/Membercenter/orderstatus/allorder'},
-          {pname: '我的拼团', src: 'pintuan.svg', link: '/Membercenter/orderstatus/allorder'},
-          {pname: '积分明细', src: 'score-icon.svg', link: '/Membercenter/integrationinfo'},
-          {pname: '购物车', src: '3gouwu.svg', link: '/Membercenter/orderstatus/allorder'},
-          {pname: '个人设置', src: '8shezhi.svg', link: '/Membercenter/orderstatus/allorder'},
-          {pname: '收货地址', src: '6map.svg', link: '/Membercenter/orderstatus/allorder'},
-          {pname: '退款/售后', src: '5tuikuan.svg', link: '/Membercenter/orderstatus/allorder'}
+          {pname: '优惠券', src: '7juan.svg', link: '/Membercenter/coupons/1'},
+          {pname: '疯狂砍价', src: '4kanjia.svg', link: '/Membercenter/crazybargaining/1'},
+          {pname: '我的拼团', src: 'pintuan.svg', link: '/Membercenter/mygroup/1'},
+          {pname: '积分明细', src: 'score-icon.svg', link: '/Membercenter/integrationinfo/1'},
+          {pname: '购物车', src: '3gouwu.svg', link: '/Shoppingcart'},
+          {pname: '个人设置', src: '8shezhi.svg', link: '/Membercenter/personalsetting'},
+          {pname: '收货地址', src: '6map.svg', link: '/Membercenter/addreceiveradd'},
+          {pname: '退款/售后', src: '5tuikuan.svg', link: '/Membercenter/afterSale'}
         ],
         allorder: [
           {text: '待付款', routeid: 'obligation'},
@@ -131,7 +131,7 @@
             this.userInfo = res.data.userInfo
           } else {
             //跳转到登录界面
-            
+
           }
         })
       },
