@@ -17,11 +17,13 @@
     "cropper": "^3.1.4",
     "fastclick": "^1.0.6",
     "jsonp": "^0.2.1",
+    "lib-flexible": "^0.3.2",
     "mint-ui": "^2.2.13",
+    "px2rem-loader": "^0.1.8",
     "vue": "^2.5.2",
     "vue-cropper": "^0.2.9",
-    "vue-router": "^3.0.1",
     "vue-lazyload": "^1.0.3",
+    "vue-router": "^3.0.1",
     "vuex": "^2.3.1"
   },
   "devDependencies": {

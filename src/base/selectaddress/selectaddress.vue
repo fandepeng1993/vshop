@@ -1,19 +1,19 @@
 <template>
-    <mt-popup
-      v-model="popupVisible"
-      :modal="false"
-      class="propus"
-      :closeOnClickModal="false"
-      position="bottom">
-      <div class="header-btn">
-        <a @click.prevent.stop="cancleProup">确定</a>
-      </div>
-      <mt-picker class="isat-picker" :showToolbar="true" :visibleItemCount="5" :itemHeight="36"
-                 :slots="myAddressSlots" @change="onMyAddressChange">
-       <!-- <p>地址3级联动：{{myAddressProvince}} {{myAddressCity}} {{myAddresscounty}}</p>-->
-        <h3>选择所在城市</h3>
-      </mt-picker>
-    </mt-popup>
+  <mt-popup
+    v-model="popupVisible"
+    :modal="false"
+    class="propus"
+    :closeOnClickModal="false"
+    position="bottom">
+    <div class="header-btn">
+      <a @click.prevent.stop="cancleProup">确定</a>
+    </div>
+    <mt-picker class="isat-picker" :showToolbar="true" :visibleItemCount="5" :itemHeight="36"
+               :slots="myAddressSlots" @change="onMyAddressChange">
+      <!-- <p>地址3级联动：{{myAddressProvince}} {{myAddressCity}} {{myAddresscounty}}</p>-->
+      <h3>选择所在城市</h3>
+    </mt-picker>
+  </mt-popup>
 </template>
 <script type="text/ecmascript-6">
   import myaddress from 'common/json/address3.json'
@@ -72,11 +72,11 @@
           this.myAddressProvince = values[0]
           this.myAddressCity = values[1]
           this.myAddresscounty = values[2]
-         /* console.log(values, picker.getSlotValues(1), picker.getSlotValue(1)) */
+          /* console.log(values, picker.getSlotValues(1), picker.getSlotValue(1)) */
         }
       },
       cancleProup() {
-        this.$emit('cancleProup')
+        this.$emit('cancleProup', 0, this.myAddressProvince + ' ' + this.myAddressCity + ' ' + this.myAddresscounty)
       }
     },
     mounted() {
@@ -92,28 +92,28 @@
 </script>
 <style scoped rel="stylesheet/stylus" lang="stylus">
   @import "~common/stylus/mixin"
-    .propus
-      width 100%
-      .header-btn
-        border-top 1px solid #a8abb0
-        border-bottom  1px solid #a8abb0
-        background-color #fff
-        overflow hidden
-        display flex
-        justify-content flex-end
-        align-items center
-        height 44px
-        a
-          color #ef2f2f
-          font-size 20px
-          extend-click()
-          margin-right 5%
-          &:active
-            color #26a2ff
-      .isat-picker
-        background-color #cfd5da
-        h3
-          line-height 40px
-          text-align center
-          color #666666
+  .propus
+    width 100%
+    .header-btn
+      border-top 1px solid #a8abb0
+      border-bottom  1px solid #a8abb0
+      background-color #fff
+      overflow hidden
+      display flex
+      justify-content flex-end
+      align-items center
+      height 44px
+      a
+        color #ef2f2f
+        font-size 20px
+        extend-click()
+        margin-right 5%
+        &:active
+          color #26a2ff
+    .isat-picker
+      background-color #cfd5da
+      h3
+        line-height 40px
+        text-align center
+        color #666666
 </style>

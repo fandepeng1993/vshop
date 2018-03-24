@@ -1,7 +1,12 @@
 <template>
+  <transition name="slidex">
     <div class="orderstate">
+      <isat-orderlist></isat-orderlist>
+    </div>
+  </transition>
+   <!-- <div class="orderstate">
       <scroll class="scrollOrder">
-        <div v-show="hasOrder">
+        <div v-show="false">
           <ul>
             <li class="order-detail" v-for="n in 10">
               <h3>订单编号：021114220220<span class="icon-right"></span><i>交易成功</i></h3>
@@ -17,13 +22,14 @@
                   <i class="number">X1</i>
                 </div>
               </div>
+              <h4>共1件商品&nbsp;&nbsp;合计：￥<span>64.00</span>&nbsp;（含运费￥0.00）</h4>
+              <div class="confirm-btn">
+                <a class="external" href="">删除订单</a><a class="on external" href="">订单详情</a>
+              </div>
             </li>
-            <h4>共1件商品&nbsp;&nbsp;合计：￥<span>64.00</span>&nbsp;（含运费￥0.00）</h4>
-            <div class="confirm-btn">
-              <a class="external" href="">删除订单</a><a class="on external" href="">订单详情</a>
-            </div>
           </ul>
         </div>
+        <isat-orderlist></isat-orderlist>
         <div v-show="!hasOrder" class="noorder">
           <div>
             <img  src="../../common/images/notice2.png" alt="">
@@ -31,31 +37,37 @@
           </div>
         </div>
       </scroll>
-    </div>
+    </div>-->
 </template>
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
+  import IsatOrderlist from 'base/baseorder/baseorder'
   export default {
     data() {
       return {
         hasOrder: false
       }
     },
+    beforeUpdate(){
+      console.log('ddddd')
+    },
+    activated() {
+      console.log(12355)
+    },
     created() {
+      console.log(345)
       this.$nextTick(() => {
-
       })
     },
     components: {
-      Scroll
+      Scroll,
+      IsatOrderlist
     }
   }
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/mixin"
   .orderstate
-    position fixed
-    top 83px
     bottom 0px
     overflow hidden
     width 100%
@@ -119,9 +131,6 @@
                 font-style normal
                 text-align right
                 color: #c3c3c3
-
-
-
       h4
         text-align right
         no-wrap()
@@ -149,4 +158,10 @@
           p
             color #8a8a8a
             margin-top 10px
+  .slidex-enter-active,.slidex-leave-active
+  transition transform  0.3s
+  .slidex-enter
+    transform translate3d(100%,0,0)
+  .slidex-leave-to
+    transform translate3d(100%,0,0)
 </style>

@@ -1,0 +1,389 @@
+<template>
+  <div class="shoppingcart">
+    <isat-publictoptitle  :titles="Goodstitle"></isat-publictoptitle>
+    <transition name="slidex">
+       <div class="shoppingcart-content" v-show="sss">
+         <div class="addrecive" v-if="isusedis">
+           <h3>
+             <span>收货人：</span>
+             <i>abc</i>
+           </h3>
+           <h3>
+             <span>联系电话：</span>
+             <i>13144556677</i>
+           </h3>
+           <p>
+             <i>收货地址：</i>
+             <span>北京东城区顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶呃呃呃呃呃呃呃</span>
+             <b @click.prevent.stop="changeAddress">更换地址 ></b>
+           </p>
+         </div>
+         <div class="noaddress" v-else>
+          <h3>
+            <div class="leftss">
+              <img src="../../common/images/add.svg" alt="">
+              <span>请填写收货地址</span>
+            </div>
+            <i class="icon-right"></i>
+          </h3>
+         </div>
+         <div class="sidai">
+         </div>
+         <div class="shopgoods">
+           <div class="shophead">
+             <img src="http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201707/2808142246.jpg" alt="">
+             <span>知硒堂商城</span>
+           </div>
+           <ul class="goodslist">
+             <li v-for="n in 3">
+               <img src="http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201712/1315020348.jpg" alt="">
+               <div class="goodintroduce">
+                 <p>【利川团堡山药】5KG/盒，粘液质高，水分低，香面</p>
+                 <h3><span>￥118.00</span><i>x1</i></h3>
+               </div>
+             </li>
+           </ul>
+           <div class="allprice">
+             <h3>
+               <span>共3件商品</span>
+               <i>小计：</i>
+               <em>
+                 <b>￥256</b>
+               </em>
+             </h3>
+           </div>
+         </div>
+         <div class="leaveWord">
+           <h3>
+             <span>买家留言：</span>
+             <textarea name="" id="" maxlength="100" rows="1" placeholder="选填，可填写您和卖家达成一致的要求"></textarea>
+           </h3>
+         </div>
+         <div class="postage">
+            <h3>
+              <span>配送方式</span>
+              <p>
+                快递费用：
+                <span>包邮</span>
+              </p>
+            </h3>
+         </div>
+         <div class="discount">
+            <h3>
+              <span>可使用200积分抵扣￥2</span>
+              <mt-switch v-model="isusedis"></mt-switch>
+            </h3>
+         </div>
+         <div class="countPrice">
+          <h3>
+            <span>合计：</span>
+            <i>￥256.00</i>
+          </h3>
+         </div>
+         <div class="payBtn">
+           <a href="javascript:void(0)">微信支付/微信代付</a>
+         </div>
+       </div>
+    </transition>
+    <transition name="slidex">
+      <div v-show="chooseadd" class="chooseadd">
+        <div class="headtop">
+          <h3>
+            <a href="javascript:void(0);" @click.prevent.stop="chooseadd=false">取消</a>
+          </h3>
+        </div>
+        <div class="addressList">
+          <ul>
+            <li v-for="n in 10">
+              <h3>
+                <strong>请问</strong>
+                <span>13144556677</span>
+              </h3>
+              <p><i>收货地址：</i><span>北京东城区呃呃呃呃呃呃呃</span></p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </transition>
+  </div>
+
+</template>
+<script  type="text/ecmascript-6">
+  import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
+  export default {
+    data() {
+      return {
+        Goodstitle: '提交订单',
+        sss: false,
+        hasAddress: false,
+        isusedis: true,
+        chooseadd: false
+      }
+    },
+    methods:{
+      changeAddress() {
+        this.chooseadd=true
+        /*this.$router.push({
+          path:'orderconfirm/chooseaddress'
+        })*/
+      }
+    },
+    mounted() {
+      var that=this
+      setTimeout(function () {
+         this.sss=true
+      }.bind(that),30)
+    },
+    components: {
+      IsatPublictoptitle
+    }
+  }
+</script>
+<style scoped lang="stylus" rel="stylesheet/stylus">
+  @import "~common/stylus/mixin"
+  .shoppingcart
+    .shoppingcart-content
+      padding-bottom: 60px
+      position fixed
+      top 40px
+      bottom 0px
+      width 100%
+      overflow-y scroll
+      z-index 105
+      background #f5f4f3
+      .addrecive
+        padding 10px
+        background #fff
+        color #666666
+        font-size 14px
+        h3
+          height 23px
+          line-height 23px
+          padding-left 23px
+          span
+          i
+            font-style normal
+        p
+          line-height 23px
+          padding-left 23px
+          background url("../../common/images/address.png") no-repeat left center
+          background-size 20px
+          i
+            font-style normal
+          b
+            margin-left 20px
+            color #999999
+      .sidai
+        background url("../../common/images/order-bg.png")
+        height 3px
+        background-repeat repeat-x
+        background-position bottom
+        background-size 34px
+      .noaddress
+        background #fff
+        h3
+          display flex
+          height 40px
+          align-items center
+          justify-content space-between
+          padding 10px
+          .leftss
+            display flex
+            align-items center
+            img
+              width 20px
+              height 20px
+              margin-right 15px
+
+
+
+      .shopgoods
+        background #fff
+        .shophead
+          display flex
+          align-items center
+          height 40px
+          padding 0 10px
+          img
+            width 24px
+            height 24px
+          span
+            font-size 14px
+        .goodslist
+          background #fafafa
+          padding 0 10px
+          li
+            display flex
+            align-items center
+            img
+              width 75px
+              height 75px
+              margin-right 10px
+              margin-bottom 10px
+              margin-top 10px
+            .goodintroduce
+              display flex
+              flex-direction column
+              justify-content space-between
+              overflow: hidden
+              p
+                color #333
+                font-size 14px
+                line-height 17px
+                overflow : hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+              h3
+                display flex
+                justify-content space-between
+                margin-top 10px
+                span
+                  no-wrap()
+                  color #ef2f2f
+                i
+                  font-style normal
+
+        .allprice
+          h3
+            display flex
+            justify-content flex-end
+            padding 0px 10px
+            overflow hidden
+            align-items center
+            height 30px
+            span
+            no-wrap()
+            i
+              font-style normal
+              padding-left 30px
+            em
+              color #ef2f2f
+              no-wrap()
+              font-style normal
+              font-size  17px
+      .leaveWord
+        background #fff
+        border-top 8px solid  #f5f4f3
+        padding 10px
+        border-bottom 1px solid  #ededed
+        h3
+          height 20px
+          display flex
+          align-items center
+          span
+            font-size 14px
+            color #4d4d4d
+          textarea
+            flex 1
+            outline none
+            resize none
+            border none
+            padding 0
+            font-size 13px
+            font-family inherit
+            padding-left 5px
+            color #4d4d4d
+      .postage
+        background #fff
+        padding 10px
+        border-bottom 1px solid  #ededed
+        h3
+          display flex
+          align-items center
+          justify-content space-between
+          height 20px
+          span
+            font-size 14px
+      .discount
+        background #fff
+        border-top 8px solid #f5f4f3;
+        padding 0px 10px
+        border-bottom 1px solid #ededed
+        h3
+          display flex
+          align-items center
+          justify-content space-between
+          height 40px
+          span
+            font-size 14px
+      .countPrice
+        background #fff
+        padding 10px
+        h3
+          display flex
+          justify-content flex-end
+          align-items center
+          height 20px
+          span
+            font-size 14px
+          i
+            color #ef2f2f
+            font-style normal
+      .payBtn
+        width: 90%;
+        margin 15px auto 0px auto
+        a
+          background: #ef2f2f;
+          display block
+          text-align center
+          color #fff
+          padding 11px 0
+          font-size 18px
+          text-decoration none
+          border-radius 3px
+
+    .chooseadd
+      position fixed
+      width 100%
+      height 100%
+      top 0px
+      bottom 0px
+      background #fff
+      z-index 110
+      .headtop
+        h3
+          height 40px
+          display flex
+          align-items center
+          justify-content flex-end
+          a
+            color #ff9e00
+            padding 5px 8px
+
+      .addressList
+        height calc(100% - 40px)
+        overflow-x: hidden
+        overflow-y scroll
+        ul
+          padding 30px 0px
+          li
+            padding 10px 10px
+            border-bottom:1px solid #bfbfbf;
+            h3
+              display flex
+              justify-content space-between
+              align-items center
+              height 30px
+              margin-bottom 5px
+              strong
+                font-size 15px
+              span
+                font-size 14px
+            p
+              margin 10px 0
+              font-size 13px
+              line-height 15px
+              i
+                font-style normal
+              span
+                font-size 13px
+
+  .slidex-enter-active,.slidex-leave-active
+    transition transform  0.3s
+  .slidex-enter
+    transform translate3d(100%,0,0)
+  .slidex-leave-to
+    transform translate3d(100%,0,0)
+</style>

@@ -6,6 +6,7 @@ import store from './store'
 import {filterCurrenty} from 'filter/filter'
 import 'mint-ui/lib/style.css'
 import 'common/stylus/index.styl'
+/*import 'lib-flexible/flexible.js'*/
 /*import Vuelazyload from 'vue-lazyload'*/
 
 import fastclick from 'fastclick'

@@ -13,8 +13,8 @@
         :fixedBox="example.fixedBox"
       ></vueCropper>
     </div>
-    <!--<img :src="example.newphoto" v-if="example.newphoto" alt="">
-    <button @click="finish('base64')" class="btn">预览(base64)</button>-->
+    <img :src="example.newphoto" v-if="example.newphoto" alt="">
+    <button @click="finish('base64')" class="btn">预览(base64)</button>
     <div class="container">
       <div class="choice">选择图片</div>
       <input type="file" id="uploads" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg($event, 1)">

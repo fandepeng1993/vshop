@@ -25,9 +25,11 @@
         :dirfalse="true"
         :isShow="false">
       </isat-infour-tab>
-      <transition name="slides">
-        <router-view></router-view>
-      </transition>
+      <router-view></router-view>
+        <!--<keep-alive>
+          <router-view v-if="!$route.meta.keepAlive"></router-view>
+        </keep-alive>
+        <router-view v-if="$route.meta.keepAlive"></router-view>-->
     </div>
   </transition>
 </template>
@@ -77,6 +79,7 @@
     background-color #fff
     top 0px
     bottom 0px
+
   .slide-enter-active,.slide-leave-active
     transition all 0.3s
   .slide-enter

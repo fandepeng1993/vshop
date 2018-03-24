@@ -181,7 +181,9 @@
           this.deleteByIds(deleteIds, deleteIndexArr)
         } else {
           //结算
-          console.log("结算")
+          this.$router.push({
+            path: '/orderconfirm'
+          })
         }
       },
       changeEdit() {
