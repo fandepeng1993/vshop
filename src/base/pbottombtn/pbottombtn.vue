@@ -8,6 +8,7 @@
 <script type="text/ecmascript-6">
   import { Toast } from 'mint-ui'
   import {mapMutations, mapGetters, mapActions} from 'vuex'
+  import {addUserAddress, updateUserAddress} from 'api/getdata'
   export default {
     props: {
       btnText: {
@@ -26,11 +27,8 @@
     methods: {
       jumpage() {
         if (this.tempcontentInfo) {
+          console.log(this.tempcontentInfo)
           // 做校验
-          /* console.log(this.contentInfo, this.checkout_arry) */
-          /* for (let z in this.checkout_arry) {
-            /!*this.checkoutfn(this.checkout_arry[z].trim(), z)*!/
-          } */
           if (this.checkout_name) {
             this.checkoutfn(this.checkout_name)
             return
@@ -50,45 +48,65 @@
           if (this.linkUrl) {
             let tempId = this.$route.params.id
             if (tempId) {
-              if (this.address[Number(tempId)].defaultAddress !== this.tempcontentInfo.defaultAddress) {
-                this.editDefaultAddress(Number(tempId))
-                this.editAddressIndexInfo({
-                  list: this.tempcontentInfo,
-                  index: tempId
-                })
-                this.$router.push({
-                  path: `/Membercenter` + this.linkUrl
-                })
-              } else {
-                this.editAddressIndexInfo({
-                  list: this.tempcontentInfo,
-                  index: tempId
-                })
-                this.$router.push({
-                  path: `/Membercenter` + this.linkUrl
-                })
-              }
+              updateUserAddress(this.tempcontentInfo).then((res) => {
+                if (res.ret === '0') {
+                  //编辑修改
+                  if (this.address[Number(tempId)].isDefault !== this.tempcontentInfo.isDefault) {
+                    this.editDefaultAddress(Number(tempId))
+                    this.editAddressIndexInfo({
+                      list: this.tempcontentInfo,
+                      index: tempId
+                    })
+                    this.$router.push({
+                      path: `/Membercenter` + this.linkUrl
+                    })
+                  } else {
+                    this.editAddressIndexInfo({
+                      list: this.tempcontentInfo,
+                      index: tempId
+                    })
+                    this.$router.push({
+                      path: `/Membercenter` + this.linkUrl
+                    })
+                  }
+                } else {
+                  this.checkoutfn('提交失败')
+                }
+              });
             } else {
+              //添加
               let tempLen = this.address.length
               if (tempLen <= 0) {
-                this.tempcontentInfo.defaultAddress = true
-                this.set_Address(this.tempcontentInfo)
-              } else {
-                if (this.checkout_defaultaddress) {
-                  this.set_Address(this.tempcontentInfo)
-                  this.editDefaultAddress(tempLen)
-                } else {
-                  this.set_Address(this.tempcontentInfo)
-                }
+                this.tempcontentInfo.isDefault = 1
               }
-              /* console.log(this.address) */
-              this.$router.push({
-                path: `/Membercenter` + this.linkUrl
-              })
+              //发起提交地址信息
+              addUserAddress(this.tempcontentInfo).then((res) => {
+                if (res.ret === '0') {
+                  this.tempcontentInfo.id = res.data.id
+                  if (tempLen <= 0) {
+                    this.set_Address(this.tempcontentInfo)
+                  } else {
+                    if (this.checkout_defaultaddress) {
+                      this.set_Address(this.tempcontentInfo)
+                      this.editDefaultAddress(0)
+                    } else {
+                      this.set_Address(this.tempcontentInfo)
+                    }
+                  }
+                  /* console.log(this.address) */
+
+                  this.$router.push({
+                    path: `/Membercenter` + this.linkUrl
+                  })
+                } else {
+                  this.checkoutfn('提交失败')
+                }
+              });
             }
           }
         } else {
           if (this.linkUrl) {
+            //此外组件保存按钮
             this.$router.push({
               path: `/Membercenter` + this.linkUrl
             })
@@ -113,18 +131,11 @@
       tempcontentInfo() {
         return this.contentInfo
       },
-      checkout_arry() {
-        let temp_arry = []
-        for (let i in this.tempcontentInfo.defaultInfos) {
-          temp_arry.push(this.tempcontentInfo.defaultInfos[i].value.trim())
-        }
-        return temp_arry
-      },
       checkout_defaultaddress() {
-        return this.tempcontentInfo.defaultAddress
+        return this.tempcontentInfo.isDefault
       },
       checkout_name() {
-        var tempV = this.checkout_arry[0]
+        var tempV = this.tempcontentInfo.receiverName.trim()
         if (tempV) {
           if (tempV.length >= 2 && tempV.length <= 8) {
             return false
@@ -136,7 +147,7 @@
         }
       },
       checkout_concat() {
-        var tempN = this.checkout_arry[1]
+        var tempN =  this.tempcontentInfo.receiverMobile.trim()
         var reg = /^1[345789]\d{9}$/
         if (tempN) {
           if (reg.test(tempN)) {
@@ -149,7 +160,7 @@
         }
       },
       checkout_address() {
-        var tempadd = this.checkout_arry[2]
+        var tempadd = this.tempcontentInfo.receiverProvince.trim()
         if (tempadd) {
           return false
         } else {
@@ -157,7 +168,7 @@
         }
       },
       checkout_addressInfo() {
-        var tempaddinfo = this.checkout_arry[3]
+        var tempaddinfo = this.tempcontentInfo.receiverAddress.trim()
         if (tempaddinfo) {
           if (tempaddinfo.length >= 5) {
             return false

@@ -8,13 +8,13 @@
             <li v-for="(item, index) in address">
               <div class="all">
                 <div class="add-detail">
-                  <p><i>{{item.defaultInfos[0].value}}</i><span>{{item.defaultInfos[1].value}}</span></p>
-                  <p><span><mt-badge v-if="item.defaultAddress" type="warning" class="defaultmt" size="small">默认</mt-badge>{{item.defaultInfos[2].value}}{{item.defaultInfos[3].value}}</span></p>
+                  <p><i>{{item.receiverName}}</i><span>{{item.receiverMobile}}</span></p>
+                  <p><span><mt-badge v-if="item.isDefault===1" type="warning" class="defaultmt" size="small">默认</mt-badge>{{item.receiverProvince+item.receiverCity+item.receiverDistrict+item.receiverAddress}}</span></p>
                 </div>
                 <div class="confirm">
                   <p>
                     <span class="span" @click.prevent.stop="checkedThis(index)">
-                      <i :class="{on: item.defaultAddress}"></i>
+                      <i :class="{on: item.isDefault}"></i>
                       默认地址
                     </span>
                     <b>
@@ -33,10 +33,12 @@
   </transition>
 </template>
 <script type="text/ecmascript-6">
+  import { Toast } from 'mint-ui'
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   import Scroll from 'base/scroll/scroll'
   import {mapActions, mapGetters} from 'vuex'
   import IsatPbottombtn from 'base/pbottombtn/pbottombtn'
+  import {deleteUserAddress, setDefaultUserAddr} from 'api/getdata'
   import { MessageBox } from 'mint-ui'
   export default {
     data() {
@@ -58,7 +60,24 @@
       ...mapGetters(['address'])
     },
     methods: {
+      checkoutfn(value) {
+        Toast({
+          message: value,
+          duration: 1000
+        })
+      },
+      _setDefaultUserAddr(index) {
+        setDefaultUserAddr({id: this.address[index].id}).then((res) => {
+          if (res.ret === '0') {
+            this.editDefaultAddress(index)
+            this.checkoutfn('设置默认成功')
+          } else {
+            this.checkoutfn('设置默认失败')
+          }
+        });
+      },
       checkedThis(index) {
+        console.log(index)
         if (!this.address[index].defaultAddress) {
           MessageBox({
             title: '',
@@ -67,7 +86,11 @@
             closeOnClickModal: false
           }).then(action => {
             if (action === 'confirm') {
-              this.editDefaultAddress(index)
+              //this.editDefaultAddress(index)
+              //提交默认
+              this._setDefaultUserAddr(index)
+
+
             } else {
               return
             }
@@ -78,6 +101,7 @@
       },
       editAddressList(index) {
         /* this.$emit('editAddress', index) */
+        console.log(index)
         this.$router.push({
           path: `addreceiveradd/${index}`,
           query: {
@@ -93,8 +117,18 @@
           closeOnClickModal: false
         }).then(action => {
           if (action === 'confirm') {
-            this.deleteAddress(index)
-            this.editDefaultAddress(0)
+            deleteUserAddress({ids: this.address[index].id}).then((res) => {
+              if (res.ret === '0') {
+                this.deleteAddress(index)
+                //this.editDefaultAddress(0)
+
+                //提交默认
+                this._setDefaultUserAddr(0)
+                this.checkoutfn('删除成功')
+              } else {
+                this.checkoutfn('提交失败')
+              }
+            });
           } else {
             return
           }
