@@ -163,7 +163,7 @@ export function updateUserAddress(params) {
 }
 
 // 删除用户收货地址的接口
-// id（*）=主键id
+// ids（*）=主键id列表
 export function deleteUserAddress(params) {
   const url = domainName + '/f/interface/wemall/userRelated/deleteUserAddress'
   return sendPost(url, params);

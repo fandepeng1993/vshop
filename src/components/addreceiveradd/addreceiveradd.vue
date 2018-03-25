@@ -2,27 +2,42 @@
   <transition name="slide">
     <div class="membershipcard" >
       <isat-publictoptitle :isback="true" :titles="titlesname"></isat-publictoptitle>
-      <div @click="contentInfo.showAddressProup=false" class="wraperpage">
+      <div @click="showAddressProup=false" class="wraperpage">
         <ul class="wraperm">
-          <li v-for="item in contentInfo.defaultInfos">
+          <li>
             <div class="wraper">
-              <span v-if="item.textinfo">{{item.textinfo}}</span>
-              <input type="text" v-if="item.type === 'input'" :placeholder="item.placeholder" v-model="item.value"/>
-              <div class="address" v-if="item.type === 'address'" @click.prevent.stop="contentInfo.showAddressProup=true">
-                <span v-if="item.value">{{item.value}}</span>
-                <span v-else class="addEdit">{{item.placeholder}}</span>
+              <span>收货人</span>
+              <input type="text"  placeholder="请输入收货人姓名" v-model="newdata.receiverName"/>
+            </div>
+          </li>
+          <li >
+            <div class="wraper">
+              <span>联系电话</span>
+              <input type="text"  placeholder="请输入手机号" v-model="newdata.receiverMobile"/>
+            </div>
+          </li>
+          <li >
+            <div class="wraper">
+              <span>所在地区</span>
+              <div class="address" @click.prevent.stop="showAddressProup=true">
+                <span v-if="newdata.receiverProvince">{{newdata.receiverProvince + newdata.receiverCity + newdata.receiverDistrict}}</span>
+                <span v-else class="addEdit">修改/添加</span>
                 <i class="icon-right"></i>
               </div>
-              <textarea v-if="item.type === 'textarea'" v-model="item.value" minlength="5" :placeholder="item.placeholder" name="" id="" ></textarea>
+            </div>
+          </li>
+          <li >
+            <div class="wraper">
+              <textarea  v-model="newdata.receiverAddress" minlength="5" placeholder="填写详细地址，不少于5个字" name="" id="" ></textarea>
             </div>
           </li>
         </ul>
         <mt-cell title="设置为默认" >
-          <mt-switch v-model="contentInfo.defaultAddress"></mt-switch>
+          <mt-switch v-model="defaultAddress"></mt-switch>
         </mt-cell>
       </div>
-      <isat-pbottombtn :linkUrl="'/receiveraddress'" :btnText="'保存'" :contentInfo="contentInfo"></isat-pbottombtn>
-      <isat-selectaddress :popupVisible="contentInfo.showAddressProup" @cancleProup="cancleproup">
+      <isat-pbottombtn :linkUrl="'/receiveraddress'" :btnText="'保存'" :contentInfo="newdata"></isat-pbottombtn>
+      <isat-selectaddress :popupVisible="showAddressProup" @cancleProup="cancleproup">
       </isat-selectaddress>
     </div>
   </transition>
@@ -36,15 +51,23 @@
   export default {
     data() {
       return {
-        contentinfos: {
-          defaultAddress: false,
-          showAddressProup: false,
-          defaultInfos: [
-            {textinfo: '收货人', type: 'input', name: 'rname', placeholder: '请输入收货人姓名', value: ''},
-            {textinfo: '联系电话', type: 'input', name: 'rnumber', placeholder: '请输入手机号', value: ''},
-            {textinfo: '所在地区', type: 'address', name: 'address', placeholder: '修改/添加', value: ''},
-            {textinfo: '', type: 'textarea', name: 'infoaddress', placeholder: '填写详细地址，不少于5个字', value: ''}
-          ]
+        showAddressProup: false,
+        defaultAddress:false,
+        newdatas: {
+          createDate:'',
+          id:'',
+          isDefault:0,
+          receiverAddress:'',
+          receiverCity:'',
+          receiverCountry:'中国',
+          receiverDistrict:'',
+          receiverMobile:'',
+          receiverName:'',
+          receiverPhone:'',
+          receiverProvince:'',
+          receiverZip: '',
+          updateDate:'',
+          user:{}
         }
       }
     },
@@ -57,39 +80,39 @@
     created() {
     },
     computed: {
-      contentInfo() {
+      newdata() {
         var tempId = this.$route.params.id
         if (tempId) {
-          var tempThis = this.contentinfos
+          var tempThis = this.newdatas
           var tempState = this.address[Number(tempId)]
+          if(tempState.isDefault===1) {
+            this.defaultAddress=true
+          }
           for (let j in tempThis) {
-            if (j === 'defaultInfos') {
-              for (let z in tempState[j]) {
-                for (let m in tempState[j][z]) {
-                  tempThis[j][z][m] = tempState[j][z][m]
-                }
-              }
-              /* tempThis[j] = tempState[j].slice() */
-              /* console.log(tempThis[j]) */
-            } else {
-              tempThis[j] = tempState[j]
-            }
+            tempThis[j] = tempState[j]
           }
           return tempThis
         } else {
-          return this.contentinfos
+          return this.newdatas
         }
       },
-      defaultAddress() {
-        return this.contentInfo.defaultAddress
-      },
+  /*    defaultAddress:{
+        // getter
+        get: function() {
+          return this.newdata.isDefault===1
+        },
+        // setter
+        set: function(newValue) {
+          this.newdata.isDefault = newValue?1:0
+        }
+      },*/
       titlesname() {
-        let tempval = this.$route.params.id
+/*        let tempval = this.$route.params.id
         if (tempval) {
           return '修改收货地址'
         } else {
           return '添加收货地址'
-        }
+        }*/
       },
       ...mapGetters([
         'address'
@@ -97,12 +120,37 @@
     },
     methods: {
       cancleproup(index, value) {
-        this.contentInfo.defaultInfos[2].value = value
-        this.contentInfo.showAddressProup = false
+        let tempaddress=value.split(' ')
+        this.newdata.receiverProvince=tempaddress[0]
+        this.newdata.receiverCity=tempaddress[1]
+        this.newdata.receiverDistrict=tempaddress[2]
+        /*this.contentInfo.defaultInfos[2].value = value*/
+        this.showAddressProup = false
       }
     },
     watch: {
-      defaultAddress(newval, oldval) {
+        defaultAddress(newval, oldval) {
+          let temp = this.$route.params.id
+          if (temp && this.address[Number(temp)].isDefault && oldval) {
+            MessageBox({
+              title: '',
+              message: '默认的地址不能直接修改成普通地址',
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+                this.newdata.isDefault = 1
+                this.defaultAddress=true
+              } else {
+                return
+              }
+            })
+          } else {
+            this.newdata.isDefault = newval?1:0
+          }
+
+        }
+/*      defaultAddress(newval, oldval) {
         let temp = this.$route.params.id
         if (temp && this.address[Number(temp)].defaultAddress && oldval) {
           MessageBox({
@@ -118,7 +166,7 @@
             }
           })
         }
-      }
+      }*/
     },
     components: {
       IsatPublictoptitle,

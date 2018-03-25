@@ -19,14 +19,14 @@ const mutations = {
     state.address = alladdress
   },
   [types.SET_ADDRESS](state, address) {
-    state.address.push(address)
+    state.address.unshift(address)
   },
   [types.EDIT_ADDRESS](state, index) {
     for (let i in state.address) {
       if (Number(i) === index) {
-        state.address[i].defaultAddress = true
+        state.address[i].isDefault = 1
       } else {
-        state.address[i].defaultAddress = false
+        state.address[i].isDefault = 0
       }
     }
   },
