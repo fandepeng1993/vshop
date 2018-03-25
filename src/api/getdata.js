@@ -169,6 +169,63 @@ export function deleteUserAddress(params) {
   return sendPost(url, params);
 }
 
+// 根据购物车id列表生成订单的接口
+// shopCarIds（*）=购物车id列表
+export function generateOrderByShopCarIds(params) {
+  const url = domainName + '/f/interface/wemall/order/generateOrderByShopCarIds'
+  return sendPost(url, params);
+}
+
+// 根据单个商品生成订单的接口
+// itemId（*）=商品id
+// itemNum（*）=商品数量
+// itemSpecIds=商品属性id列表
+export function generateOrderByItem(params) {
+  const url = domainName + '/f/interface/wemall/order/generateOrderByItem'
+  return sendPost(url, params);
+}
+
+// 更新订单地址的接口
+// userAddressId（*）=收货地址id
+// orderNo（*）=订单号
+export function updateOrderAddress(params) {
+  const url = domainName + '/f/interface/wemall/order/updateOrderAddress'
+  return sendPost(url, params);
+}
+
+// 根据订单号和付款方式获取预付款id及付款签名信息的接口
+// paymentType（*）=付款方式
+// orderNo（*）=订单号
+export function getPrepareIdForPay(params) {
+  const url = domainName + '/f/interface/wemall/order/getPrepareIdForPay'
+  return sendPost(url, params);
+}
+
+// 取消订单的接口
+// orderNo（*）=订单号
+export function cancelOrder(params) {
+  const url = domainName + '/f/interface/wemall/order/cancelOrder'
+  return sendPost(url, params);
+}
+
+// 用户确认收货的接口
+// orderNo（*）=订单号
+export function alreadyReceived(params) {
+  const url = domainName + '/f/interface/wemall/order/alreadyReceived'
+  return sendPost(url, params);
+}
+
+// 用户评论订单商品的接口
+// orderNo（*）=订单号
+// itemId（*）=商品id
+// buyerScore（*）=买家评分
+// buyerMessage=买家留言
+export function commentItem(params) {
+  const url = domainName + '/f/interface/wemall/order/commentItem'
+  return sendPost(url, params);
+}
+
+
 function sendPost(url, params) {
   const data = params
   console.log("传参为：", params);
