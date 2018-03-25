@@ -15,6 +15,9 @@ const mutations = {
   [types.SET_EXAMPLE](state, example) {
     state.example = example
   },
+  [types.SET_ALLADDRESS](state, alladdress) {
+    state.address = alladdress
+  },
   [types.SET_ADDRESS](state, address) {
     state.address.push(address)
   },

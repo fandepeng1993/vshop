@@ -107,6 +107,68 @@ export function getBountyInfoList(params) {
   return sendPost(url, params);
 }
 
+
+// 获取用户收货地址列表的接口
+// isDefault=是否默认（1--默认，0--非默认）
+export function getUserAddressList(params) {
+  const url = domainName + '/f/interface/wemall/userRelated/getUserAddressList'
+  return sendPost(url, params);
+}
+
+// 获取用户收货地址详情的接口
+// id（*）=主键id
+export function getUserAddressDetail(params) {
+  const url = domainName + '/f/interface/wemall/userRelated/getUserAddressDetail'
+  return sendPost(url, params);
+}
+
+// 添加用户收货地址的接口
+// receiverCountry（*）=国家
+// receiverProvince（*）=省份
+// receiverCity（*）=城市
+// receiverDistrict（*）=区县
+// receiverAddress（*）=收货地址
+// receiverZip（*）=邮编
+// receiverName（*）=收货人姓名
+// receiverMobile（*）=收货人手机
+// receiverPhone（*）=收货人电话
+// isDefault（*）=是否默认（1--默认，0--非默认）
+export function addUserAddress(params) {
+  const url = domainName + '/f/interface/wemall/userRelated/addUserAddress'
+  return sendPost(url, params);
+}
+
+// 设置默认用户收货地址的接口
+// id（*）=主键id
+export function setDefaultUserAddr(params) {
+  const url = domainName + '/f/interface/wemall/userRelated/setDefaultUserAddr'
+  return sendPost(url, params);
+}
+
+// 更新用户收货地址的接口
+// id（*）=主键id
+// receiverCountry（*）=国家
+// receiverProvince（*）=省份
+// receiverCity（*）=城市
+// receiverDistrict（*）=区县
+// receiverAddress（*）=收货地址
+// receiverZip（*）=邮编
+// receiverName（*）=收货人姓名
+// receiverMobile（*）=收货人手机
+// receiverPhone（*）=收货人电话
+// isDefault（*）=是否默认（1--默认，0--非默认）
+export function updateUserAddress(params) {
+  const url = domainName + '/f/interface/wemall/userRelated/updateUserAddress'
+  return sendPost(url, params);
+}
+
+// 删除用户收货地址的接口
+// id（*）=主键id
+export function deleteUserAddress(params) {
+  const url = domainName + '/f/interface/wemall/userRelated/deleteUserAddress'
+  return sendPost(url, params);
+}
+
 function sendPost(url, params) {
   const data = params
   console.log("传参为：", params);
