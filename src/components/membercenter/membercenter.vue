@@ -78,8 +78,8 @@
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import {imageDomainName} from 'api/config'
-  import {getCurrentUser} from 'api/getdata'
-  import {mapGetters} from 'vuex'
+  import {getCurrentUser, getUserAddressList} from 'api/getdata'
+  import {mapGetters,mapMutations} from 'vuex'
   export default {
     data() {
       return {
@@ -114,6 +114,7 @@
     },
     created() {
       this._getCurrentUser()
+      this._getUserAddressList()
     },
     computed: {
       allImageSrc() {
@@ -139,6 +140,15 @@
           }
         })
       },
+      _getUserAddressList() {
+
+        getUserAddressList().then((res) => {
+          if (res.ret === '0') {
+            this.setalladdress(res.data.list)
+          }
+          console.log(this.address)
+        })
+      },
       lastLoad(index) {
         if (index >= this.allorder.length - 1) {
           this.$refs.membercenyerscroll.refresh()
@@ -153,6 +163,8 @@
       linkpage(param) {
         this.checkedname = param.pname
         /* console.log(param.ordername) */
+
+
         if (param.pname === '收货地址') {
           if (this.address.length <= 0) {
             this.$router.push({
@@ -171,7 +183,10 @@
             }
           })
         }
-      }
+      },
+      ...mapMutations({
+      setalladdress:'SET_ALLADDRESS'
+      })
     },
     components: {
       Scroll
