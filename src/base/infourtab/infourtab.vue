@@ -1,7 +1,8 @@
 <template>
   <div class="infourtab">
     <div v-for="item in datastab" v-if="!(item.name===vhiddenName)" class="tab-item">
-      <router-link tag="div" :to="item.srcfirst + dirPath + item.srclast">
+      <!--<router-link tag="div" :to="item.srcfirst + dirPath + item.srclast">-->
+      <router-link tag="div" @click.native="flushCom" :to="item.srcfirst + dirPath + item.srclast">
         <p class="tab-link">{{item.name}}</p>
       </router-link>
     </div>
@@ -15,7 +16,7 @@
     <router-link tag="div" class="tab-item" :to="'/Groupgoods/'+dirPath+'/price'">
       <p class="tab-link">价格</p>
     </router-link>-->
-    <div class="changeIcon" @click="exchangeIc" v-show="isShow">
+    <div class="changeIcon" @click="exchangeIc" v-if="isShow">
       <i :class="{'icon-caidan': !menuIcon, 'icon-icon122': menuIcon}" ></i>
     </div>
     <div class="datesearch" @click.prevent.stop="checkDate" v-if="datesearh">
@@ -63,6 +64,9 @@
       },
       checkDate() {
         this.$emit('checkDate')
+      },
+      flushCom() {
+        /*this.$router.go(0);*/
       }
     },
     computed: {

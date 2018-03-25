@@ -7,8 +7,9 @@
 <script type="text/ecmascript-6">
   import IsatSearchbox from 'components/searchbox/searchbox'
   import IsatConhomepage from 'components/conhomepage/conhomepage'
-
   export default {
+    activated(){
+    },
     components: {
       IsatSearchbox,
       IsatConhomepage

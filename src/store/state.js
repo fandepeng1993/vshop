@@ -1,6 +1,8 @@
 const state = {
   loginstate: true,
   titlesname: '',
-  checkedstate: []
+  checkedstate: [],
+  example: [],
+  address: []
 }
 export default state

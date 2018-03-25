@@ -37,6 +37,11 @@ import Mygrouplist from 'components/mygrouplist/mygrouplist'
 import Personalsetting from 'components/personalsetting/personalsetting'
 import Personalsettingpage from 'components/personalsettingpage/personalsettingpage'
 import UploadImg from 'components/uploadImg/uploadImg'
+import afterSale from 'components/afterSale/afterSale'
+import aftercontent from 'components/aftercontent/aftercontent'
+import orderconfirm from 'components/orderconfirm/orderconfirm'
+import orderdetail from 'components/orderdetail/orderdetail'
+import chooseaddress from 'base/chooseaddress/chooseaddress'
 Vue.use(Router)
 
 export default new Router({
@@ -60,12 +65,19 @@ export default new Router({
     {
       path: '/Membercenter',
       component: Membercenter,
+     /*meta: {
+        keepAlive: true // 不需要缓存
+      },*/
       children: [
         {
           path: 'orderstatus',
           component: Orderstatus,
           children: [
-            {path: ':id', component: Singerorderstate, name: 'orderstate'},
+            {
+              path: ':id',
+              component: Singerorderstate,
+              name: 'orderstate'
+            },
             {
               path: '',
               redirect: 'allorder'
@@ -182,6 +194,20 @@ export default new Router({
         {
           path: 'addreceiveradd',
           component: Addreceiveradd
+        },
+        {
+          path: 'addreceiveradd/:id',
+          component: Addreceiveradd
+        },
+        {
+          path: 'afterSale',
+          component: afterSale,
+          children: [
+            {
+              path: ':id',
+              component: aftercontent
+            }
+          ]
         }
       ]
     },
@@ -193,6 +219,26 @@ export default new Router({
         mms: '购物车'
       },
       name: 'shopcart'
+    },
+    {
+      path: '/orderconfirm',
+      component: orderconfirm,
+      children: [
+        {
+          path: 'chooseaddress',
+          component: chooseaddress
+        }
+      ]
+     /* meta: {
+        keepAlive: true // 不需要缓存
+      }*/
+    },
+    {
+      path:'/orderdetail/:id',
+      component: orderdetail
+      /*meta: {
+        keepAlive: true // 不需要缓存
+      }*/
     },
     {
       path: '/login',

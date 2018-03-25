@@ -72,13 +72,14 @@
           </div>
         </div>
       </scroll>
-    <router-view :titlesname="checkedname"></router-view>
+      <router-view :titlesname="checkedname"></router-view>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import {imageDomainName} from 'api/config'
   import {getCurrentUser} from 'api/getdata'
+  import {mapGetters} from 'vuex'
   export default {
     data() {
       return {
@@ -95,8 +96,8 @@
           {pname: '积分明细', src: 'score-icon.svg', link: '/Membercenter/integrationinfo/1'},
           {pname: '购物车', src: '3gouwu.svg', link: '/Shoppingcart'},
           {pname: '个人设置', src: '8shezhi.svg', link: '/Membercenter/personalsetting'},
-          {pname: '收货地址', src: '6map.svg', link: '/Membercenter/addreceiveradd'},
-          {pname: '退款/售后', src: '5tuikuan.svg', link: '/Membercenter/afterSale'}
+          {pname: '收货地址', src: '6map.svg', link: '/Membercenter/receiveraddress', link2: '/Membercenter/addreceiveradd'},
+          {pname: '退款/售后', src: '5tuikuan.svg', link: '/Membercenter/afterSale/1'}
         ],
         allorder: [
           {text: '待付款', routeid: 'obligation'},
@@ -121,7 +122,10 @@
           temparray.push({src: require('../../common/images/memberimage/' + this.allImglist[i])})
         }
         return temparray
-      }
+      },
+      ...mapGetters([
+        'address'
+      ])
     },
     methods: {
       //取数据，并放入购物车数组中。
@@ -148,13 +152,25 @@
       },
       linkpage(param) {
         this.checkedname = param.pname
-        /*console.log(param.ordername)*/
-        this.$router.push({
-          path: param.link,
-          query: {
-            ordername: param.ordername
+        /* console.log(param.ordername) */
+        if (param.pname === '收货地址') {
+          if (this.address.length <= 0) {
+            this.$router.push({
+              path: param.link2
+            })
+          } else {
+            this.$router.push({
+              path: param.link
+            })
           }
-        })
+        } else {
+          this.$router.push({
+            path: param.link,
+            query: {
+              ordername: param.ordername
+            }
+          })
+        }
       }
     },
     components: {
