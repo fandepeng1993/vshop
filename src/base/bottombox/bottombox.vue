@@ -16,18 +16,18 @@
             <h4>选择重量</h4>
             <ul>
               <li @click.prevent.stop="chooseQuality(0,index)" v-for="(item,index) in specInfo" :class="[index==chooseNum[0] ? 'actived': '']" >
-                <span>{{item.storage}}公斤</span>
+                <span>{{item.specInfoName}}公斤</span>
               </li>
             </ul>
           </div>
-          <div>
+          <!-- <div>
             <h4>选择价格1</h4>
             <ul>
               <li @click.prevent.stop="chooseQuality(1,index)" v-for="(item,index) in specInfo" :class="[index==chooseNum[1] ? 'actived': '']" >
-                <span>{{item.storage}}公斤</span>
+                <span>{{item.specInfoName}}公斤</span>
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
         <div class="bottomNumber">
           <div>
@@ -105,6 +105,7 @@ export default {
       let params = {}
       params.itemId=this.goodsEntity.id
       params.itemNum=this.countNum
+      params.itemSpecIds = this.goodsEntity.itemSpecIds
       if(this.buyerType == 1) {
         //加入购物车
         addShopCarInfo(params).then((res) => {
@@ -121,6 +122,9 @@ export default {
     chooseQuality(dIndex, index) {
       /*console.log(dIndex, index)*/
       this.chooseNum.splice(dIndex, 1, index)
+      this.goodsEntity.currentPrice = this.specInfo[index].price;
+      this.goodsEntity.storage = this.specInfo[index].storage;
+      this.goodsEntity.itemSpecIds = this.specInfo[index].id;
     }
   },
   components: {
