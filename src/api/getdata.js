@@ -170,9 +170,10 @@ export function deleteUserAddress(params) {
 }
 
 // 根据购物车id列表生成订单的接口
-// shopCarIds（*）=购物车id列表
-export function generateOrderByShopCarIds(params) {
+// shopCarStr（*）=购物车json字符串
+export function generateOrderByShopCarIds(shopCarStr) {
   const url = domainName + '/f/interface/wemall/order/generateOrderByShopCarIds'
+  const params = {shopCarStr: shopCarStr}
   return sendPost(url, params);
 }
 
@@ -196,6 +197,7 @@ export function updateOrderAddress(params) {
 // 根据订单号和付款方式获取预付款id及付款签名信息的接口
 // paymentType（*）=付款方式
 // orderNo（*）=订单号
+// buyerMessage=买家留言
 export function getPrepareIdForPay(params) {
   const url = domainName + '/f/interface/wemall/order/getPrepareIdForPay'
   return sendPost(url, params);
@@ -203,21 +205,22 @@ export function getPrepareIdForPay(params) {
 
 // 取消订单的接口
 // orderNo（*）=订单号
-export function cancelOrder(params) {
+export function cancelOrder(orderNo) {
   const url = domainName + '/f/interface/wemall/order/cancelOrder'
+  const params = {orderNo: orderNo}
   return sendPost(url, params);
 }
 
 // 用户确认收货的接口
 // orderNo（*）=订单号
-export function alreadyReceived(params) {
+export function alreadyReceived(orderNo) {
   const url = domainName + '/f/interface/wemall/order/alreadyReceived'
+  const params = {orderNo: orderNo}
   return sendPost(url, params);
 }
 
 // 用户评论订单商品的接口
-// orderNo（*）=订单号
-// itemId（*）=商品id
+// id（*）=订单商品id
 // buyerScore（*）=买家评分
 // buyerMessage=买家留言
 export function commentItem(params) {
@@ -227,8 +230,9 @@ export function commentItem(params) {
 
 // 根据订单号获取订单详情的接口
 // orderNo（*）=订单号
-export function getOrderDetail(params) {
+export function getOrderDetail(orderNo) {
   const url = domainName + '/f/interface/wemall/order/getOrderDetail'
+  const params = {orderNo: orderNo}
   return sendPost(url, params);
 }
 

@@ -62,7 +62,7 @@
   import IsatNumberoption from 'base/numberoption/numberoption'
   import {mapGetters, mapMutations} from 'vuex'
   import {imageDomainName} from 'api/config'
-  import {getShopCarList, removeShopCarInfo} from 'api/getdata'
+  import {getShopCarList, removeShopCarInfo, generateOrderByShopCarIds} from 'api/getdata'
   export default {
     data() {
       return {
@@ -188,8 +188,24 @@
           this.deleteByIds(deleteIds, deleteIndexArr)
         } else {
           //结算
-          this.$router.push({
-            path: '/orderconfirm'
+          console.log(this.tempchecked);
+          console.log(this.shopArray);
+          let choseShopCarStr = "";
+          for(let i=this.tempchecked.length-1; i>=0; i--) {
+            if(this.tempchecked[i]) {
+              choseShopCarStr = choseShopCarStr + this.shopArray[i].id + "|" + this.shopArray[i].haschoiceNumber + ",";
+            }
+          }
+
+          if(choseShopCarStr.length > 0) choseShopCarStr = choseShopCarStr.substring(0, choseShopCarStr.length-1);
+          generateOrderByShopCarIds(choseShopCarStr).then((res) => {
+            if (res.ret === '0') {
+              this.$router.push({
+                path: '/orderconfirm/'+res.data.orderNo
+              })
+            } else {
+              alert(res.retMsg);
+            }
           })
         }
       },

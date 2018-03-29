@@ -6,15 +6,15 @@
          <div class="addrecive" v-if="isusedis">
            <h3>
              <span>收货人：</span>
-             <i>abc</i>
+             <i>{{orderInfo.wemallOrderAddress.receiverName}}</i>
            </h3>
            <h3>
              <span>联系电话：</span>
-             <i>13144556677</i>
+             <i>{{orderInfo.wemallOrderAddress.receiverMobile}}</i>
            </h3>
            <p>
              <i>收货地址：</i>
-             <span>北京东城区顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶呃呃呃呃呃呃呃</span>
+             <span>{{orderInfo.wemallOrderAddress.receiverProvince + orderInfo.wemallOrderAddress.receiverCity + orderInfo.wemallOrderAddress.receiverDistrict + orderInfo.wemallOrderAddress.receiverAddress}}</span>
              <b @click.prevent.stop="changeAddress">更换地址 ></b>
            </p>
          </div>
@@ -35,11 +35,12 @@
              <span>知硒堂商城</span>
            </div>
            <ul class="goodslist">
-             <li v-for="n in 3">
-               <img src="http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201712/1315020348.jpg" alt="">
+             <li v-for="orderItem in orderInfo.orderItemList">
+               <img :src="imageDomainName+orderItem.photo" alt="">
                <div class="goodintroduce">
-                 <p>【利川团堡山药】5KG/盒，粘液质高，水分低，香面</p>
-                 <h3><span>￥118.00</span><i>x1</i></h3>
+                 <p>{{orderItem.title}}</p>
+                 <p>{{orderItem.itemsData}}</p>
+                 <h3><span>￥{{((orderItem.totalFee/orderItem.itemNum)/100).toFixed(2)}}</span><i>x{{orderItem.itemNum}}</i></h3>
                </div>
              </li>
            </ul>
@@ -48,7 +49,7 @@
                <span>共3件商品</span>
                <i>小计：</i>
                <em>
-                 <b>￥256</b>
+                 <b>￥{{((orderInfo.wemallOrder.orderPrice-orderInfo.wemallOrder.freightPrice)/100).toFixed(2)}}</b>
                </em>
              </h3>
            </div>
@@ -64,20 +65,21 @@
               <span>配送方式</span>
               <p>
                 快递费用：
-                <span>包邮</span>
+                <span v-if="orderInfo.wemallOrder.freightPrice == 0">包邮</span>
+                <span v-if="orderInfo.wemallOrder.freightPrice != 0">￥{{(orderInfo.wemallOrder.freightPrice/100).toFixed(2)}}</span>
               </p>
             </h3>
          </div>
-         <div class="discount">
+         <!-- <div class="discount">
             <h3>
               <span>可使用200积分抵扣￥2</span>
               <mt-switch v-model="isusedis"></mt-switch>
             </h3>
-         </div>
+         </div> -->
          <div class="countPrice">
           <h3>
             <span>合计：</span>
-            <i>￥256.00</i>
+            <i>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</i>
           </h3>
          </div>
          <div class="payBtn">
@@ -110,17 +112,37 @@
 </template>
 <script  type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
+  import {getOrderDetail} from 'api/getdata'
+  import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     data() {
       return {
+        orderNo: "",
+        orderInfo: {
+          orderItemList: [],
+          wemallOrder: {},
+          wemallOrderAddress: {}
+        },
         Goodstitle: '提交订单',
         sss: false,
         hasAddress: false,
         isusedis: true,
-        chooseadd: false
+        chooseadd: false,
+        imageDomainName: imageDomainName,
       }
     },
+    created() {
+      this.orderNo = this.$route.params.id;
+      this._getOrderDetail()
+    },
     methods:{
+      _getOrderDetail() {
+        getOrderDetail(this.orderNo).then((res) => {
+          if (res.ret === '0') {
+            this.orderInfo = res.data;
+          }
+        })
+      },
       changeAddress() {
         this.chooseadd=true
         /*this.$router.push({
@@ -136,7 +158,13 @@
     },
     components: {
       IsatPublictoptitle
-    }
+    },
+    watch: {
+      '$route': function () {
+        this.orderNo = this.$route.params.id;
+        this._getOrderDetail()
+      }
+    },
   }
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">

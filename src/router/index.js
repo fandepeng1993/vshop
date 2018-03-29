@@ -221,7 +221,7 @@ export default new Router({
       name: 'shopcart'
     },
     {
-      path: '/orderconfirm',
+      path: '/orderconfirm/:id',
       component: orderconfirm,
       children: [
         {

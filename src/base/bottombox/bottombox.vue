@@ -12,7 +12,7 @@
           <i class="closeICon" @click.prevent.stop="changeShower"></i>
         </div>
         <div class="selectq">
-          <div>
+          <div v-if="specInfo.length > 0">
             <h4>选择重量</h4>
             <ul>
               <li @click.prevent.stop="chooseQuality(0,index)" v-for="(item,index) in specInfo" :class="[index==chooseNum[0] ? 'actived': '']" >
