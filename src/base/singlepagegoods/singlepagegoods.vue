@@ -57,7 +57,6 @@
       <isat-bottombox :imgurl="imgUrl.length > 0 ? imgUrl[0].picUrl : ''" :goodsEntity="goodsEntity" class="bottombox" @closeBotBox="closeBotBox" v-show="shower" :buyerType="buyerType"></isat-bottombox>
     </transition>
     <isat-bottom @openBottombox="alertBtbox" class="fixedBottom"></isat-bottom>
-
   </div>
 </template>
 <script type="text/ecmascript-6">

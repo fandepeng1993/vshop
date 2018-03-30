@@ -16,6 +16,7 @@
               <img @load="loadLast(index)" :src="imageDomainName+item.imgurl">
               <div class="h3">
                 <h4>{{item.name}}</h4>
+                <h4 v-if="item.itemSpecs!=null">规格：{{item.itemSpecs[0].specInfoName}}</h4>
                 <span><i>¥</i>{{item.price.toFixed(2)}}</span>
                 <isat-numberoption
                   :dataIndex="index"
@@ -61,7 +62,7 @@
   import IsatNumberoption from 'base/numberoption/numberoption'
   import {mapGetters, mapMutations} from 'vuex'
   import {imageDomainName} from 'api/config'
-  import {getShopCarList, removeShopCarInfo} from 'api/getdata'
+  import {getShopCarList, removeShopCarInfo, generateOrderByShopCarIds} from 'api/getdata'
   export default {
     data() {
       return {
@@ -133,9 +134,15 @@
               obj.id = arr[i].id
               obj.name = arr[i].item.name
               obj.imgurl = arr[i].item.photo
-              obj.price = arr[i].item.currentPrice/100
+              if(arr[i].itemSpecs){
+                  obj.price = arr[i].itemSpecs[0].price/100
+              }else{
+                  obj.price = arr[i].item.currentPrice/100
+              }
+              
               obj.haschoiceNumber = arr[i].itemNum
               obj.stock = arr[i].item.storage
+              obj.itemSpecs = arr[i].itemSpecs
               this.shopArray.push(obj);
             }
           }
@@ -181,8 +188,24 @@
           this.deleteByIds(deleteIds, deleteIndexArr)
         } else {
           //结算
-          this.$router.push({
-            path: '/orderconfirm'
+          console.log(this.tempchecked);
+          console.log(this.shopArray);
+          let choseShopCarStr = "";
+          for(let i=this.tempchecked.length-1; i>=0; i--) {
+            if(this.tempchecked[i]) {
+              choseShopCarStr = choseShopCarStr + this.shopArray[i].id + "|" + this.shopArray[i].haschoiceNumber + ",";
+            }
+          }
+
+          if(choseShopCarStr.length > 0) choseShopCarStr = choseShopCarStr.substring(0, choseShopCarStr.length-1);
+          generateOrderByShopCarIds(choseShopCarStr).then((res) => {
+            if (res.ret === '0') {
+              this.$router.push({
+                path: '/orderconfirm/'+res.data.orderNo
+              })
+            } else {
+              alert(res.retMsg);
+            }
           })
         }
       },

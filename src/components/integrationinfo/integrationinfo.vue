@@ -23,7 +23,8 @@
           </ul>
         </div>
         <i class="topdistance"></i>
-        <isat-infour-tab class="tabInfo" :datastab="datastab" @checkDate="checkeDate" :datesearh="true" :isShow="false" :dirfalse="true"></isat-infour-tab>
+        <!--<isat-infour-tab class="tabInfo" :datastab="datastab" @checkDate="checkeDate" :datesearh="true" :isShow="false" :dirfalse="true"></isat-infour-tab>-->
+        <isat-infour-tab class="tabInfo" :datastab="datastab" :isShow="false" :dirfalse="true"></isat-infour-tab>
         <i class="topdistance"></i>
         <router-view></router-view>
       </div>
