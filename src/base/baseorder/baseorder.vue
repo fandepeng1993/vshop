@@ -296,6 +296,7 @@
                     height 75px
                 .centerInfo
                   display flex
+                  width calc(100% - 85px)
                   flex-direction column
                   justify-content space-around
                   p
@@ -304,13 +305,16 @@
                     line-height 17px
                     overflow : hidden;
                     text-overflow: ellipsis;
+                    max-height 50px;
                     display: -webkit-box;
                     -webkit-line-clamp: 3;
                     -webkit-box-orient: vertical;
                   span
                     text-align right
                     font-size 14px
+                    color #777
                   strong
+                    color #ef2f2f
                     font-size 14px
                     text-align right
             .shopPrices

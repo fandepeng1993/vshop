@@ -41,7 +41,7 @@ import afterSale from 'components/afterSale/afterSale'
 import aftercontent from 'components/aftercontent/aftercontent'
 import orderconfirm from 'components/orderconfirm/orderconfirm'
 import orderdetail from 'components/orderdetail/orderdetail'
-import chooseaddress from 'base/chooseaddress/chooseaddress'
+/*import chooseaddress from 'base/chooseaddress/chooseaddress'*/
 Vue.use(Router)
 
 export default new Router({
@@ -222,13 +222,13 @@ export default new Router({
     },
     {
       path: '/orderconfirm/:id',
-      component: orderconfirm,
+      component: orderconfirm/*,
       children: [
         {
           path: 'chooseaddress',
           component: chooseaddress
         }
-      ]
+      ]*/
      /* meta: {
         keepAlive: true // 不需要缓存
       }*/
