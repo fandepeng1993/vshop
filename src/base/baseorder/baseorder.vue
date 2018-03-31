@@ -4,13 +4,15 @@
       <div class="address-list">
         <ul class="orderList">
           <li v-for="orderInfo in orderList">
-            <h3 class="headh3" @click.prevent.stop="gotoOrderDeatil(orderInfo.wemallOrder.orderNo)">
+            <h3 class="headh3" @click.prevent.stop="gotoOrderDeatil(orderInfo)">
               <div class="headorder">
                 <span>订单号：</span>
                 <i>{{orderInfo.wemallOrder.orderNo}} </i>
                 <b class="icon-right"></b>
               </div>
-              <em class="red" >等待付款</em>
+              <em class="red" v-if="orderInfo.wemallOrder.status == 1">等待买家付款</em>
+              <em class="red" v-if="orderInfo.wemallOrder.status == 2">等待卖家发货</em>
+              <em class="red" v-if="orderInfo.wemallOrder.status == 3">等待买家收货</em>
             </h3>
             <!--<div class="wrapperL">
               <div class="stateList">
@@ -40,7 +42,7 @@
               </div>
               <i class="icon-right"></i>
             </div>
-            <div v-for="orderItem in orderInfo.orderItemList" class="shopInfo" @click.prevent.stop="gotoOrderDeatil(n)">
+            <div v-for="orderItem in orderInfo.orderItemList" class="shopInfo" @click.prevent.stop="gotoItemDeatil(orderItem.itemId)">
               <!--<p class="headTop">
                 <span>欣皓妮阳创意礼品专营店</span>
                 <i class="icon-right"></i>
@@ -66,9 +68,16 @@
               <h3>
                 <i>微信支付</i>
                 <span>合计：<b>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</b></span>
-                <div class="dbBtn">
+                <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 1">
                   <a class="cancel" href="javascript:void(0);" @click.prevent.stop="cancelOrder(orderInfo.wemallOrder.orderNo)">取消订单</a>
                   <a class="buy external red" href="javascript:void(0);" @click.prevent.stop="payOrder(orderInfo.wemallOrder.orderNo)">立即支付</a>
+                </div>
+                <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 2">
+                  <a class="cancel" href="javascript:void(0);" >等待发货</a>
+                  <a class="buy external red" href="javascript:void(0);" @click.prevent.stop="cancelOrderForAlreadyPaid(orderInfo.wemallOrder.orderNo)">确认取消订单</a>
+                </div>
+                <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 3">
+                  <a class="cancel" href="javascript:void(0);" @click.prevent.stop="receiveOrder(orderInfo.wemallOrder.orderNo)">确认收货</a>
                 </div>
               </h3>
             </div>
@@ -81,7 +90,7 @@
 
 <script>
   import Scroll from 'base/scroll/scroll'
-  import {getOrderList, cancelOrder, getPrepareIdForPay} from 'api/getdata'
+  import {getOrderList, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, receiveOrder} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     name: "baseorder",
@@ -94,79 +103,138 @@
         }],
         pageNo: 1,
         pageSize: 1000,
-        imageDomainName: imageDomainName
+        imageDomainName: imageDomainName,
+        listType: ""
       }
     },
     activated(){
      /* console.log(123)*/
     },
     created() {
-      console.log(345888)
       this._getOrderList();
     },
     methods: {
       _getOrderList() {
+        let listType = this.$route.params.id;
+
         let params = {}
         params.pageNo = this.pageNo;
         params.pageSize = this.pageSize;
+
+        if(listType == "obligation") {
+          params.status = 1;
+        } else if(listType == "waitsendgood") {
+          params.status = 2;
+        } else if(listType == "waitreceivgood") {
+          params.status = 3;
+        } else if(listType == "waitevaluated") {
+          params.status = 4;
+        }
         //status (*）=状态（1、未付款，2、已付款，3、已发货，4、已收货，5、已评论，6、交易退货，7、交易关闭，8、已取消）
         //params.status = 
         getOrderList(params).then((res) => {
           if (res.ret === '0') {
-            this.orderList = res.data;
-            for(let orderInfo in this.orderList) {
-              if(orderInfo.wemallOrder.status == "1") {
+            this.orderList = res.data.list;
+            for(let index in this.orderList) {
+              let orderInfo = this.orderList[index];
+              if(orderInfo.wemallOrder.status == 1) {
                 orderInfo.wemallOrder.statusStr = "未付款";
-              } else if(orderInfo.wemallOrder.status == "2") {
+              } else if(orderInfo.wemallOrder.status == 2) {
                 orderInfo.wemallOrder.statusStr = "已付款，待发货";
-              } else if(orderInfo.wemallOrder.status == "3") {
+              } else if(orderInfo.wemallOrder.status == 3) {
                 orderInfo.wemallOrder.statusStr = "已发货，待收货";
-              } else if(orderInfo.wemallOrder.status == "4") {
+              } else if(orderInfo.wemallOrder.status == 4) {
                 orderInfo.wemallOrder.statusStr = "已收货，待评价";
-              } else if(orderInfo.wemallOrder.status == "5") {
+              } else if(orderInfo.wemallOrder.status == 5) {
                 orderInfo.wemallOrder.statusStr = "已评价";
-              } else if(orderInfo.wemallOrder.status == "6") {
+              } else if(orderInfo.wemallOrder.status == 6) {
                 orderInfo.wemallOrder.statusStr = "已退货";
-              } else if(orderInfo.wemallOrder.status == "7") {
+              } else if(orderInfo.wemallOrder.status == 7) {
                 orderInfo.wemallOrder.statusStr = "已关闭";
-              } else if(orderInfo.wemallOrder.status == "8") {
-                orderInfo.wemallOrder.statusStr = "已取消";
+              } else if(orderInfo.wemallOrder.status == 8) {
+                orderInfo.wemallOrder.statusStr = "未付款，已取消";
+              } else if(orderInfo.wemallOrder.status == 9) {
+                orderInfo.wemallOrder.statusStr = "已付款，已取消";
               }
             }
           }
         })
       },
-      cancelOrder() {
+      cancelOrder(orderNo) {
         //取消订单
-        cancelOrder(this.orderNo).then((res) => {
+        cancelOrder(orderNo).then((res) => {
           if (res.ret === '0') {
             alert("订单取消成功");
+            this._getOrderList();
+          } else {
+            alert(res.retMsg);
           }
         })
       },
-      payOrder() {
+      payOrder(orderNo) {
         //付款
         let params = {};
         params.paymentType = 0;
-        params.orderNo = this.orderNo;
+        params.orderNo = orderNo;
         getPrepareIdForPay(params).then((res) => {
           if (res.ret === '0') {
             if(res.data.needPay == "0") {
               alert("订单付款成功");
+              this.$router.push({
+                path: `/Membercenter/orderstatus/waitsendgood`
+              })
             } else {
               console.log("获取预付款id和签名成功", res.data);
             }
+          } else {
+            alert(res.retMsg);
           }
         })
       },
-      gotoOrderDeatil(index) {
+      cancelOrderForAlreadyPaid(orderNo) {
+        cancelOrderForAlreadyPaid(orderNo).then((res) => {
+          if (res.ret === '0') {
+            alert("取消已付款订单成功");
+            this._getOrderList();
+          } else {
+            alert(res.retMsg);
+          }
+        })
+      },
+      receiveOrder(orderNo) {
+        alreadyReceived(orderNo).then((res) => {
+          if (res.ret === '0') {
+            alert("确认收货成功");
+            this._getOrderList();
+          } else {
+            alert(res.retMsg);
+          }
+        })
+      },
+      gotoOrderDeatil(orderInfo) {
+        if(orderInfo.wemallOrder.status == 1 ||
+            orderInfo.wemallOrder.status == 2 ||
+            orderInfo.wemallOrder.status == 3
+          ) {
+          let orderNo = orderInfo.wemallOrder.orderNo;
+          this.$router.push({
+            path: `/orderdetail/`+orderNo
+          })
+        }
+      },
+      gotoItemDeatil(itemId) {
         this.$router.push({
-          path: `/orderdetail/${index}`
+          path: `/Goodsdetail/`+itemId
         })
       }
     },
     components: {
       Scroll
+    },
+    watch: {
+      '$route': function () {
+        this._getOrderList();
+      }
     }
   }
 </script>

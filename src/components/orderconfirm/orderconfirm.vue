@@ -3,7 +3,7 @@
     <isat-publictoptitle  :titles="Goodstitle"></isat-publictoptitle>
     <transition name="slidex">
        <div class="shoppingcart-content" v-show="sss">
-         <div class="addrecive" v-if="isusedis">
+         <div class="addrecive" v-if="!isusedis">
            <h3>
              <span>收货人：</span>
              <i>{{orderInfo.wemallOrderAddress.receiverName}}</i>
@@ -35,11 +35,11 @@
              <span>知硒堂商城</span>
            </div>
            <ul class="goodslist">
-             <li v-for="orderItem in orderInfo.orderItemList">
+             <li v-for="orderItem in orderInfo.orderItemList" @click.prevent.stop="gotoItemDeatil(orderItem.itemId)">
                <img :src="imageDomainName+orderItem.photo" alt="">
                <div class="goodintroduce">
                  <p>{{orderItem.title}}</p>
-                 <p>{{orderItem.itemsData}}</p>
+                 <p>{{orderItem.itemsDataStr}}</p>
                  <h3><span>￥{{((orderItem.totalFee/orderItem.itemNum)/100).toFixed(2)}}</span><i>x{{orderItem.itemNum}}</i></h3>
                </div>
              </li>
@@ -57,7 +57,7 @@
          <div class="leaveWord">
            <h3>
              <span>买家留言：</span>
-             <textarea name="" id="" maxlength="100" rows="1" placeholder="选填，可填写您和卖家达成一致的要求"></textarea>
+             <textarea name="" id="" v-model="buyerMessage" maxlength="100" rows="1" placeholder="选填，可填写您和卖家达成一致的要求"></textarea>
            </h3>
          </div>
          <div class="postage">
@@ -112,7 +112,7 @@
 </template>
 <script  type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
-  import {getOrderDetail, getPrepareIdForPay} from 'api/getdata'
+  import {getOrderDetail, getPrepareIdForPay, jsonToObj} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     data() {
@@ -128,7 +128,8 @@
         hasAddress: false,
         isusedis: true,
         chooseadd: false,
-        imageDomainName: imageDomainName
+        imageDomainName: imageDomainName,
+        buyerMessage: ""
       }
     },
     created() {
@@ -140,6 +141,21 @@
         getOrderDetail(this.orderNo).then((res) => {
           if (res.ret === '0') {
             this.orderInfo = res.data;
+            for(let index in this.orderInfo.orderItemList) {
+
+              let orderItem = this.orderInfo.orderItemList[index];
+              orderItem.itemsDataStr = "";
+              let itemsDataObj = jsonToObj(orderItem.itemsData);
+              if(itemsDataObj && itemsDataObj.length > 0) {
+                for(let i in itemsDataObj) {
+                  if(orderItem.itemsDataStr == "") {
+                    orderItem.itemsDataStr =  itemsDataObj[i].specName + "：" + itemsDataObj[i].specInfoName;
+                  } else {
+                    orderItem.itemsDataStr =  + "；" + itemsDataObj[i].specName + "：" + itemsDataObj[i].specInfoName;
+                  }
+                }
+              }
+            }
           }
         })
       },
@@ -154,14 +170,25 @@
         let params = {};
         params.paymentType = 0;
         params.orderNo = this.orderNo;
+        params.buyerMessage = this.buyerMessage;
         getPrepareIdForPay(params).then((res) => {
           if (res.ret === '0') {
             if(res.data.needPay == "0") {
               alert("订单付款成功");
+              this.$router.push({
+                path: `/Membercenter/orderstatus/waitsendgood`
+              })
             } else {
               console.log("获取预付款id和签名成功", res.data);
             }
+          } else {
+            alert(res.retMsg);
           }
+        })
+      },
+      gotoItemDeatil(itemId) {
+        this.$router.push({
+          path: `/Goodsdetail/`+itemId
         })
       }
     },

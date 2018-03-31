@@ -16,7 +16,7 @@
               <img @load="loadLast(index)" :src="imageDomainName+item.imgurl">
               <div class="h3">
                 <h4>{{item.name}}</h4>
-                <h4 v-if="item.itemSpecs!=null">规格：{{item.itemSpecs[0].specInfoName}}</h4>
+                <h4 v-if="item.itemSpecs!=null && item.itemSpecs.length > 0">规格：{{item.itemSpecs[0].specInfoName}}</h4>
                 <span><i>¥</i>{{item.price.toFixed(2)}}</span>
                 <isat-numberoption
                   :dataIndex="index"
@@ -134,7 +134,7 @@
               obj.id = arr[i].id
               obj.name = arr[i].item.name
               obj.imgurl = arr[i].item.photo
-              if(arr[i].itemSpecs){
+              if(arr[i].itemSpecs && arr[i].itemSpecs.length > 0){
                   obj.price = arr[i].itemSpecs[0].price/100
               }else{
                   obj.price = arr[i].item.currentPrice/100

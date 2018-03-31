@@ -107,12 +107,12 @@
         }
       },*/
       titlesname() {
-/*        let tempval = this.$route.params.id
+        let tempval = this.$route.params.id
         if (tempval) {
           return '修改收货地址'
         } else {
           return '添加收货地址'
-        }*/
+        }
       },
       ...mapGetters([
         'address'

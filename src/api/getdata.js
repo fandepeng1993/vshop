@@ -211,6 +211,14 @@ export function cancelOrder(orderNo) {
   return sendPost(url, params);
 }
 
+// 已付款取消订单的接口
+// orderNo（*）=订单号
+export function cancelOrderForAlreadyPaid(orderNo) {
+  const url = domainName + '/f/interface/wemall/order/cancelOrderForAlreadyPaid'
+  const params = {orderNo: orderNo}
+  return sendPost(url, params);
+}
+
 // 用户确认收货的接口
 // orderNo（*）=订单号
 export function alreadyReceived(orderNo) {
@@ -244,9 +252,20 @@ export function getOrderList(params) {
 }
 
 
+
+export function jsonToObj(str) {
+  return JSON.parse(str);
+}
+
+export function objToJson(obj) {
+  return JSON.stringify(obj);
+}
+
+
 function sendPost(url, params) {
   const data = params
   console.log("传参为：", params);
+  console.log(url)
 
   // 格式化参数形式，用于post方式提交
   let ret = ''

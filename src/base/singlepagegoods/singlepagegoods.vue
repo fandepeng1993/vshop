@@ -37,8 +37,9 @@
             </div>
           </div>
           <isat-appraise :itemId="id"></isat-appraise>
-          <isat-shopentrance></isat-shopentrance>
-          <isat-shopinfo @refreshscroll="refreshscroll"></isat-shopinfo>
+          <!-- <isat-shopentrance></isat-shopentrance> -->
+          <div id="descDiv" v-html="goodsEntity.desc"></div>
+          <!-- <isat-shopinfo @refreshscroll="refreshscroll"></isat-shopinfo>
           <!--<mt-popup
             v-model="popupVisible"
             position="top"
@@ -111,6 +112,8 @@
         getItemDetail(this.id).then((res) => {
           if (res.ret === '0') {
             this.goodsEntity = res.data
+            this.goodsEntity.desc = this.HTMLDecode(this.goodsEntity.desc);
+
             let photos = res.data.photoUrls.split("|")
             /*this.imgUrl.splice(0, this.imgUrl.length)*/
             for (let photo in photos) {
@@ -118,7 +121,15 @@
                 this.imgUrl.push({picUrl: photos[photo]})
               }
             }
-            console.log(this.imgUrl)
+            
+            this.$nextTick(function(){
+              let imgs = document.getElementById("descDiv").getElementsByTagName("img");
+              console.log(imgs.length);
+              for (let i = 0; i < imgs.length; i++) {
+                  console.log(imgs[i]);
+                  imgs[i].setAttribute("src", this.imageDomainName + imgs[i].getAttribute("src"));
+              }
+            })
           }
         })
       },
@@ -156,7 +167,14 @@
         if (!this.checkLoad) {
           this.checkLoad = true
         }
-      }
+      },
+      HTMLDecode(text) { 
+        var temp = document.createElement("div"); 
+        temp.innerHTML = text; 
+        var output = temp.innerText || temp.textContent; 
+        temp = null; 
+        return output; 
+      } 
     },
     watch: {
       '$route': function () {

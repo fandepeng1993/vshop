@@ -6,7 +6,9 @@
         <div class="shoppingcart-content">
           <div class="stateGoods">
             <div class="tipcontent">
-              <p>等待买家付款</p>
+              <p v-if="orderInfo.wemallOrder.status == 1">等待买家付款</p>
+              <p v-if="orderInfo.wemallOrder.status == 2">等待卖家发货</p>
+              <p v-if="orderInfo.wemallOrder.status == 3">等待买家收货</p>
               <!-- <span>0小时0分钟后支付过期</span> -->
             </div>
           </div>
@@ -63,7 +65,7 @@
           <div class="address-list">
             <ul class="orderList">
               <li v-for="n in 1">
-                <h3 class="headh3" @click.prevent.stop="gotoOederDeatil(n)">
+                <h3 class="headh3" >
                   <div class="headorder">
                     <span>订单号：</span>
                     <i>{{orderInfo.wemallOrder.orderNo}} </i>
@@ -94,7 +96,7 @@
                   </div>
                   <i class="icon-right"></i>
                 </div>
-                <div v-for="orderItem in orderInfo.orderItemList" class="shopInfo" @click.prevent.stop="gotoOederDeatil(orderItem)">
+                <div v-for="orderItem in orderInfo.orderItemList" class="shopInfo" @click.prevent.stop="gotoItemDeatil(orderItem.itemId)">
                   <!--<p class="headTop">
                     <span>欣皓妮阳创意礼品专营店</span>
                     <i class="icon-right"></i>
@@ -159,9 +161,15 @@
             </h3>
           </div>
           <div class="btnDb">
-            <h3>
+            <h3 v-if="orderInfo.wemallOrder.status == 1">
               <a class="external" href="javascript:void(0)" @click.prevent.stop="cancelOrder()">取消订单</a>
               <a class="external pay" href="javascript:void(0)" @click.prevent.stop="payOrder()">付款</a>
+            </h3>
+            <h3 v-if="orderInfo.wemallOrder.status == 2">
+              <a class="external pay" href="javascript:void(0)" @click.prevent.stop="cancelOrderForAlreadyPaid(orderInfo.wemallOrder.orderNo)>确认取消订单</a>
+            </h3>
+            <h3 v-if="orderInfo.wemallOrder.status == 3">
+              <a class="external" href="javascript:void(0)" @click.prevent.stop="receiveOrder(orderInfo.wemallOrder.orderNo)">确认收货</a>
             </h3>
           </div>
      <!--     <div class="discount">
@@ -185,7 +193,7 @@
 </template>
 <script  type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
-  import {getOrderDetail, cancelOrder, getPrepareIdForPay} from 'api/getdata'
+  import {getOrderDetail, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, receiveOrder} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     data() {
@@ -220,6 +228,11 @@
         cancelOrder(this.orderNo).then((res) => {
           if (res.ret === '0') {
             alert("订单取消成功");
+            this.$router.push({
+              path: `/Membercenter/orderstatus/allorder`
+            })
+          } else {
+            alert(res.retMsg);
           }
         })
       },
@@ -232,10 +245,44 @@
           if (res.ret === '0') {
             if(res.data.needPay == "0") {
               alert("订单付款成功");
+              this.$router.push({
+                path: `/Membercenter/orderstatus/waitsendgood`
+              })
             } else {
               console.log("获取预付款id和签名成功", res.data);
             }
+          } else {
+            alert(res.retMsg);
           }
+        })
+      },
+      cancelOrderForAlreadyPaid(orderNo) {
+        cancelOrderForAlreadyPaid(orderNo).then((res) => {
+          if (res.ret === '0') {
+            alert("取消已付款订单成功");
+            this.$router.push({
+              path: `/Membercenter/orderstatus/allorder`
+            })
+          } else {
+            alert(res.retMsg);
+          }
+        })
+      },
+      receiveOrder(orderNo) {
+        alreadyReceived(orderNo).then((res) => {
+          if (res.ret === '0') {
+            alert("确认收货成功");
+            this.$router.push({
+              path: `/Membercenter/orderstatus/allorder`
+            })
+          } else {
+            alert(res.retMsg);
+          }
+        })
+      },
+      gotoItemDeatil(itemId) {
+        this.$router.push({
+          path: `/Goodsdetail/`+itemId
         })
       }
     },
