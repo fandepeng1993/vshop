@@ -104,6 +104,7 @@
               <p><i>收货地址：</i><span>北京东城区呃呃呃呃呃呃呃</span></p>
             </li>
           </ul>
+          <h3 class="addnewaddress"><span @click.prevent.stop="addnewADD">新增收获地址</span></h3>
         </div>
       </div>
     </transition>
@@ -148,6 +149,9 @@
         /*this.$router.push({
           path:'orderconfirm/chooseaddress'
         })*/
+      },
+      addnewADD() {
+        console.log(123)
       }
     },
     mounted() {
@@ -384,6 +388,10 @@
         height calc(100% - 40px)
         overflow-x: hidden
         overflow-y scroll
+        .addnewaddress
+          padding-bottom 80px
+          color #ff9e00
+          font-size 18px
         ul
           padding 30px 0px
           li
