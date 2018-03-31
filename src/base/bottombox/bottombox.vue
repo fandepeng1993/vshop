@@ -55,7 +55,7 @@
 <script type="text/ecmascript-6">
 import IsatNumberoption from 'base/numberoption/numberoption'
 import {imageDomainName} from 'api/config'
-import {addShopCarInfo} from 'api/getdata'
+import {addShopCarInfo, generateOrderByItem} from 'api/getdata'
 const digitsRE = /(\d{3})(?=\d)/g
 export default {
   props: {
@@ -117,6 +117,15 @@ export default {
         })
       } else {
         //立即购买
+        generateOrderByItem(params).then((res) => {
+          if (res.ret === '0') {
+            this.$router.push({
+              path: '/orderconfirm/'+res.data.orderNo
+            })
+          } else {
+            alert(res.retMsg);
+          }
+        })
       }
     },
     chooseQuality(dIndex, index) {

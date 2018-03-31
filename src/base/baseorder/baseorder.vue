@@ -3,14 +3,14 @@
     <scroll class="address-content">
       <div class="address-list">
         <ul class="orderList">
-          <li v-for="n in 10">
-            <h3 class="headh3" @click.prevent.stop="gotoOederDeatil(n)">
+          <li v-for="orderInfo in orderList">
+            <h3 class="headh3" @click.prevent.stop="gotoOrderDeatil(orderInfo.wemallOrder.orderNo)">
               <div class="headorder">
                 <span>订单号：</span>
-                <i>73525263712 </i>
+                <i>{{orderInfo.wemallOrder.orderNo}} </i>
                 <b class="icon-right"></b>
               </div>
-              <em class="red">等待付款</em>
+              <em class="red" >等待付款</em>
             </h3>
             <!--<div class="wrapperL">
               <div class="stateList">
@@ -30,34 +30,45 @@
             </div>-->
             <div class="orderinfo">
               <div class="orderaddress">
-                <p>【苏州市】 您的订单已到达京东【苏州陆家分拣中心】</p>
-                <small>2018-03-23 20:26:47</small>
+                <!-- <p>【苏州市】 您的订单已到达京东【苏州陆家分拣中心】</p>
+                <small>2018-03-23 20:26:47</small> -->
+                <p>
+                  <span>状态：</span>
+                  <i class="psz">{{orderInfo.wemallOrder.statusStr}}</i>
+                </p>
+                <small>{{orderInfo.wemallOrder.updateDate}}</small>
               </div>
               <i class="icon-right"></i>
             </div>
-            <div v-for="n in 3" class="shopInfo" @click.prevent.stop="gotoOederDeatil(n)">
+            <div v-for="orderItem in orderInfo.orderItemList" class="shopInfo" @click.prevent.stop="gotoOrderDeatil(n)">
               <!--<p class="headTop">
                 <span>欣皓妮阳创意礼品专营店</span>
                 <i class="icon-right"></i>
               </p>-->
               <div class="shopImg">
                 <div class="leftInfodiv">
-                  <img src="http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201712/1315020348.jpg" alt="">
+                  <img :src="imageDomainName+orderItem.photo" alt="">
                 </div>
                 <div class="centerInfo">
-                  <p>【买1送3 买2送10】 死神辣条 整蛊恶搞愚人节地狱死亡辣条魔鬼辣条送女友男生日礼物 买一送三(1盒加1包共4根外加2颗棒棒糖)</p>
-                  <span>1 件</span>
-                  <strong>￥118.00元</strong>
+                  <p>{{orderItem.title}}</p>
+                  <span>{{orderItem.itemNum}} 件</span>
+                  <strong>￥{{((orderItem.totalFee)/100).toFixed(2)}}</strong>
                 </div>
               </div>
+            </div>
+            <div class="orderinfo">
+              <div>
+                <span>运费：</span>
+              </div>
+              <div>￥{{(orderInfo.wemallOrder.freightPrice/100).toFixed(2)}}</div>
             </div>
             <div class="shopPrices">
               <h3>
                 <i>微信支付</i>
-                <span>合计：<b>￥118</b></span>
+                <span>合计：<b>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</b></span>
                 <div class="dbBtn">
-                  <a class="cancel" href="javascript:void(0);">取消订单</a>
-                  <a class="buy external red" href="javascript:void(0);">立即支付</a>
+                  <a class="cancel" href="javascript:void(0);" @click.prevent.stop="cancelOrder(orderInfo.wemallOrder.orderNo)">取消订单</a>
+                  <a class="buy external red" href="javascript:void(0);" @click.prevent.stop="payOrder(orderInfo.wemallOrder.orderNo)">立即支付</a>
                 </div>
               </h3>
             </div>
@@ -70,16 +81,85 @@
 
 <script>
   import Scroll from 'base/scroll/scroll'
+  import {getOrderList, cancelOrder, getPrepareIdForPay} from 'api/getdata'
+  import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     name: "baseorder",
+    data() {
+      return {
+        orderList: [{
+          orderItemList: [],
+          wemallOrder: {},
+          wemallOrderAddress: {}
+        }],
+        pageNo: 1,
+        pageSize: 1000,
+        imageDomainName: imageDomainName
+      }
+    },
     activated(){
      /* console.log(123)*/
     },
     created() {
       console.log(345888)
+      this._getOrderList();
     },
     methods: {
-      gotoOederDeatil(index) {
+      _getOrderList() {
+        let params = {}
+        params.pageNo = this.pageNo;
+        params.pageSize = this.pageSize;
+        //status (*）=状态（1、未付款，2、已付款，3、已发货，4、已收货，5、已评论，6、交易退货，7、交易关闭，8、已取消）
+        //params.status = 
+        getOrderList(params).then((res) => {
+          if (res.ret === '0') {
+            this.orderList = res.data;
+            for(let orderInfo in this.orderList) {
+              if(orderInfo.wemallOrder.status == "1") {
+                orderInfo.wemallOrder.statusStr = "未付款";
+              } else if(orderInfo.wemallOrder.status == "2") {
+                orderInfo.wemallOrder.statusStr = "已付款，待发货";
+              } else if(orderInfo.wemallOrder.status == "3") {
+                orderInfo.wemallOrder.statusStr = "已发货，待收货";
+              } else if(orderInfo.wemallOrder.status == "4") {
+                orderInfo.wemallOrder.statusStr = "已收货，待评价";
+              } else if(orderInfo.wemallOrder.status == "5") {
+                orderInfo.wemallOrder.statusStr = "已评价";
+              } else if(orderInfo.wemallOrder.status == "6") {
+                orderInfo.wemallOrder.statusStr = "已退货";
+              } else if(orderInfo.wemallOrder.status == "7") {
+                orderInfo.wemallOrder.statusStr = "已关闭";
+              } else if(orderInfo.wemallOrder.status == "8") {
+                orderInfo.wemallOrder.statusStr = "已取消";
+              }
+            }
+          }
+        })
+      },
+      cancelOrder() {
+        //取消订单
+        cancelOrder(this.orderNo).then((res) => {
+          if (res.ret === '0') {
+            alert("订单取消成功");
+          }
+        })
+      },
+      payOrder() {
+        //付款
+        let params = {};
+        params.paymentType = 0;
+        params.orderNo = this.orderNo;
+        getPrepareIdForPay(params).then((res) => {
+          if (res.ret === '0') {
+            if(res.data.needPay == "0") {
+              alert("订单付款成功");
+            } else {
+              console.log("获取预付款id和签名成功", res.data);
+            }
+          }
+        })
+      },
+      gotoOrderDeatil(index) {
         this.$router.push({
           path: `/orderdetail/${index}`
         })
