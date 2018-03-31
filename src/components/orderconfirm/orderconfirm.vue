@@ -46,7 +46,7 @@
            </ul>
            <div class="allprice">
              <h3>
-               <span>共3件商品</span>
+               <span>共{{orderInfo.orderItemList.length}}件商品</span>
                <i>小计：</i>
                <em>
                  <b>￥{{((orderInfo.wemallOrder.orderPrice-orderInfo.wemallOrder.freightPrice)/100).toFixed(2)}}</b>
@@ -83,7 +83,7 @@
           </h3>
          </div>
          <div class="payBtn">
-           <a href="javascript:void(0)">微信支付/微信代付</a>
+           <a href="javascript:void(0)" @click.prevent.stop="payOrder()">微信支付/微信代付</a>
          </div>
        </div>
     </transition>
@@ -113,7 +113,7 @@
 </template>
 <script  type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
-  import {getOrderDetail} from 'api/getdata'
+  import {getOrderDetail, getPrepareIdForPay} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     data() {
@@ -129,7 +129,7 @@
         hasAddress: false,
         isusedis: true,
         chooseadd: false,
-        imageDomainName: imageDomainName,
+        imageDomainName: imageDomainName
       }
     },
     created() {
@@ -152,6 +152,21 @@
       },
       addnewADD() {
         console.log(123)
+      },
+      payOrder() {
+        //付款
+        let params = {};
+        params.paymentType = 0;
+        params.orderNo = this.orderNo;
+        getPrepareIdForPay(params).then((res) => {
+          if (res.ret === '0') {
+            if(res.data.needPay == "0") {
+              alert("订单付款成功");
+            } else {
+              console.log("获取预付款id和签名成功", res.data);
+            }
+          }
+        })
       }
     },
     mounted() {
@@ -168,7 +183,7 @@
         this.orderNo = this.$route.params.id;
         this._getOrderDetail()
       }
-    },
+    }
   }
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">

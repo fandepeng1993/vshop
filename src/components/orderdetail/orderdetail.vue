@@ -7,21 +7,21 @@
           <div class="stateGoods">
             <div class="tipcontent">
               <p>等待买家付款</p>
-              <span>0小时0分钟后支付过期</span>
+              <!-- <span>0小时0分钟后支付过期</span> -->
             </div>
           </div>
           <div class="addrecive" v-if="isusedis">
             <h3>
               <span>收货人：</span>
-              <i>abc</i>
+              <i>{{orderInfo.wemallOrderAddress.receiverName}}</i>
             </h3>
             <h3>
               <span>联系电话：</span>
-              <i>13144556677</i>
+              <i>{{orderInfo.wemallOrderAddress.receiverMobile}}</i>
             </h3>
             <p>
               <i>收货地址：</i>
-              <span>北京东城区顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶呃呃呃呃呃呃呃</span>
+              <span>{{orderInfo.wemallOrderAddress.receiverProvince + orderInfo.wemallOrderAddress.receiverCity + orderInfo.wemallOrderAddress.receiverDistrict + orderInfo.wemallOrderAddress.receiverAddress}}</span>
               <b v-if="false">更换地址 ></b>
             </p>
           </div>
@@ -66,7 +66,7 @@
                 <h3 class="headh3" @click.prevent.stop="gotoOederDeatil(n)">
                   <div class="headorder">
                     <span>订单号：</span>
-                    <i>73525263712 </i>
+                    <i>{{orderInfo.wemallOrder.orderNo}} </i>
                     <b class="icon-right"></b>
                   </div>
                   <em class="red" v-if="false">等待付款</em>
@@ -94,19 +94,20 @@
                   </div>
                   <i class="icon-right"></i>
                 </div>
-                <div v-for="n in 2" class="shopInfo" @click.prevent.stop="gotoOederDeatil(n)">
+                <div v-for="orderItem in orderInfo.orderItemList" class="shopInfo" @click.prevent.stop="gotoOederDeatil(orderItem)">
                   <!--<p class="headTop">
                     <span>欣皓妮阳创意礼品专营店</span>
                     <i class="icon-right"></i>
                   </p>-->
                   <div class="shopImg">
                     <div class="leftInfodiv">
-                      <img src="http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201712/1315020348.jpg" alt="">
+                      <img :src="imageDomainName+orderItem.photo" alt="">
                     </div>
                     <div class="centerInfo">
-                      <p>【买1送3 买2送10】 死神辣条 整蛊恶搞愚人节地狱死亡辣条魔鬼辣条送女友男生日礼物 买一送三(1盒加1包共4根外加2颗棒棒糖)</p>
-                      <span>1 件</span>
-                      <strong>￥118.00元</strong>
+                      <p>{{orderItem.title}}</p>
+                      <p>{{orderItem.itemsData}}</p>
+                      <span>{{orderItem.itemNum}} 件</span>
+                      <strong>￥{{(orderItem.totalFee/100).toFixed(2)}}</strong>
                     </div>
                   </div>
                 </div>
@@ -114,11 +115,11 @@
                   <h3>
                     <p>
                       <span>运费（快递）</span>
-                      <span>¥0.00</span>
+                      <span>￥{{(orderInfo.wemallOrder.freightPrice/100).toFixed(2)}}</span>
                     </p>
                     <div class="allPrice">
                       <span>订单总价</span>
-                      <span>¥469.00</span>
+                      <span>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</span>
                     </div>
                   </h3>
                 </div>
@@ -136,16 +137,16 @@
                 <div class="appriec">
                   <h4>
                     <p>实付款（含运费）</p>
-                    <span>¥469.00</span>
+                    <span>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</span>
                   </h4>
                 </div>
               </li>
             </ul>
           </div>
           <div class="leaveWord">
-            <h3>
+            <!-- <h3>
               <span>积分</span>反<i>469积分</i>
-            </h3>
+            </h3> -->
             <div class="dbconcat">
               <a class="external online-service" href="javascript:void(0)">联系卖家</a>
               <a href="javascript:void(0)" class="phone">拨打电话</a>
@@ -153,14 +154,14 @@
           </div>
           <div class="postage">
             <h3>
-              <p>订单编号：2435298779776321</p>
-              <p>创建时间：2018-03-24 15:47:12</p>
+              <p>订单编号：{{orderInfo.wemallOrder.orderNo}}</p>
+              <p>创建时间：{{orderInfo.wemallOrder.createDate}}</p>
             </h3>
           </div>
           <div class="btnDb">
             <h3>
-              <a class="external" href="javascript:void(0)">取消订单</a>
-              <a class="external pay" href="javascript:void(0)">付款</a>
+              <a class="external" href="javascript:void(0)" @click.prevent.stop="cancelOrder()">取消订单</a>
+              <a class="external pay" href="javascript:void(0)" @click.prevent.stop="payOrder()">付款</a>
             </h3>
           </div>
      <!--     <div class="discount">
@@ -184,13 +185,58 @@
 </template>
 <script  type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
+  import {getOrderDetail, cancelOrder, getPrepareIdForPay} from 'api/getdata'
+  import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     data() {
       return {
+        orderNo: "",
+        orderInfo: {
+          orderItemList: [],
+          wemallOrder: {},
+          wemallOrderAddress: {}
+        },
         Goodstitle: '订单详情',
         sss: false,
         hasAddress: false,
-        isusedis: true
+        isusedis: true,
+        imageDomainName: imageDomainName
+      }
+    },
+    created() {
+      this.orderNo = this.$route.params.id;
+      this._getOrderDetail()
+    },
+    methods:{
+      _getOrderDetail() {
+        getOrderDetail(this.orderNo).then((res) => {
+          if (res.ret === '0') {
+            this.orderInfo = res.data;
+          }
+        })
+      },
+      cancelOrder() {
+        //取消订单
+        cancelOrder(this.orderNo).then((res) => {
+          if (res.ret === '0') {
+            alert("订单取消成功");
+          }
+        })
+      },
+      payOrder() {
+        //付款
+        let params = {};
+        params.paymentType = 0;
+        params.orderNo = this.orderNo;
+        getPrepareIdForPay(params).then((res) => {
+          if (res.ret === '0') {
+            if(res.data.needPay == "0") {
+              alert("订单付款成功");
+            } else {
+              console.log("获取预付款id和签名成功", res.data);
+            }
+          }
+        })
       }
     },
     activated() {
@@ -204,6 +250,12 @@
     },
     components: {
       IsatPublictoptitle
+    },
+    watch: {
+      '$route': function () {
+        this.orderNo = this.$route.params.id;
+        this._getOrderDetail()
+      }
     }
   }
 </script>
