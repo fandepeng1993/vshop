@@ -68,6 +68,7 @@
     },
     created() {
       this.goodsId = this.$route.params
+      this.formatUrl()
      /* console.log(this.$route, this.$router) */
     },
     mounted() {
@@ -87,8 +88,19 @@
       },
       back() {
         this.$router.back()
+      },
+      formatUrl() {
+        let dirPath = this.$route.params.id;
+        for(let i in this.datastab) {
+          let item = this.datastab[i]
+          if(dirPath == "search") {
+            if(this.$route.query.searchkey && item.srclast.indexOf("searchkey=") == -1) {
+              item.srclast = item.srclast + "?searchkey=" + this.$route.query.searchkey;
+            }
+          }
+        }
+        console.log(this.datastab);
       }
-
     },
     components: {
       IsatInfourTab,

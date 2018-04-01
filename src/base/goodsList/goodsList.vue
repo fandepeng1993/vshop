@@ -72,27 +72,6 @@
             price: '¥118.00',
             havesale: '2',
             linkUrl: 'lichuan'
-          },
-          {
-            picurl: 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201711/2711405629.jpg',
-            name: '【贡水白柚】15KG/袋，恩施八宝之一，口感细腻',
-            price: '¥108.00',
-            havesale: '24',
-            linkUrl: 'gongshui'
-          },
-          {
-            picurl: 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/3019423519.jpg',
-            name: '【深山土蜂蜜】甜到心窝的蜂蜜, 500g',
-            price: '¥146.00',
-            havesale: '53',
-            linkUrl: 'shenshan'
-          },
-          {
-            picurl: 'http://file.jjiehao.com//files/87ef8d06/1331c0e77c4376cf28a4b45c961/201710/1000544428.jpg',
-            name: '【恩施小黄豆】恩施传统品种“十月黄”',
-            price: '¥15.00',
-            havesale: '12',
-            linkUrl: 'enshi'
           }
         ],
         isShow: false,
@@ -179,7 +158,11 @@
         this.searchItemParams.orderBy = "currentPrice ASC";
       }
 
-      if(this.$route.params.id != "allbaby") {
+      if(this.$route.params.id == "allbaby") {
+        
+      } else if(this.$route.params.id == "search") {
+        this.searchItemParams.name = this.$route.query.searchkey
+      } else {
         this.searchItemParams.sortId = this.$route.params.id;  //商品类别id
       }
       this.searchItemParams.isOnShelf = 1;//是否上架

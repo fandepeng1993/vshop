@@ -23,7 +23,7 @@
         this.$router.push({
           path: '/Groupgoods/search',
           query: {
-            seachkey: this.searchVal
+            searchkey: this.searchVal
           }
         })
       },
