@@ -26,6 +26,7 @@
 </template>
 <script type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
+  import { Toast, MessageBox } from 'mint-ui'
   import vueCropper from 'vue-cropper'
   export default {
     data () {
@@ -59,7 +60,17 @@
         //上传图片
         var file = e.target.files[0]
         if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
-          alert('图片类型必须是.gif,jpeg,jpg,png,bmp中的一种')
+          MessageBox({
+            title: '',
+            message: '图片类型必须是.gif,jpeg,jpg,png,bmp中的一种',
+            showCancelButton: false,
+            closeOnClickModal: false
+          }).then(action => {
+            if (action === 'confirm') {
+            } else {
+              return
+            }
+          })
           return false
         }
         var reader = new FileReader()

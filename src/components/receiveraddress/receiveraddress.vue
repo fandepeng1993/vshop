@@ -33,13 +33,12 @@
   </transition>
 </template>
 <script type="text/ecmascript-6">
-  import { Toast } from 'mint-ui'
+  import { Toast, MessageBox } from 'mint-ui'
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   import Scroll from 'base/scroll/scroll'
   import {mapActions, mapGetters} from 'vuex'
   import IsatPbottombtn from 'base/pbottombtn/pbottombtn'
   import {deleteUserAddress, setDefaultUserAddr, updateOrderAddress} from 'api/getdata'
-  import { MessageBox } from 'mint-ui'
   export default {
     data() {
       return {

@@ -1,7 +1,7 @@
 <template>
   <div class="incomeIndetail">
     <scroll class="incomeIndetailscroll">
-      <ul v-show="bountyInfoList.length > 0">
+      <ul v-show="bountyInfoList.length > 0" class="content-ul">
         <!-- <li v-for="n in 15" style="line-height: 30px">{{n.toString()}}</li> -->
         <li class="case" v-for="item in bountyInfoList">
            <h3>
@@ -81,6 +81,22 @@
       overflow hidden
       height 100%
       width 100%
+      .content-ul
+        .case
+          padding 16px 11px
+          border 1px solid #f3f3f3
+          background #fff
+          h3
+            display flex
+            justify-content space-between
+            align-items center
+            margin-bottom 10px
+          p
+            display flex
+            justify-content space-between
+            align-items center
+            font-size 10px
+            color #999999
       .hasNodata
         text-align center
         background-color #fff

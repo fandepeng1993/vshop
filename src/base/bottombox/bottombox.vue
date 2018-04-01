@@ -54,6 +54,7 @@
 </template>
 <script type="text/ecmascript-6">
 import IsatNumberoption from 'base/numberoption/numberoption'
+import { Toast, MessageBox } from 'mint-ui'
 import {imageDomainName} from 'api/config'
 import {addShopCarInfo, generateOrderByItem} from 'api/getdata'
 const digitsRE = /(\d{3})(?=\d)/g
@@ -112,9 +113,20 @@ export default {
         //加入购物车
         addShopCarInfo(params).then((res) => {
           if (res.ret === '0') {
-            console.log(res.retMsg)
-            alert(res.retMsg)
-            this.changeShower()
+            /* console.log(res.retMsg)
+            alert(res.retMsg) */
+            MessageBox({
+              title: '',
+              message: res.retMsg,
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+                this.changeShower()
+              } else {
+                return
+              }
+            })
           }
         })
       } else {
@@ -125,7 +137,17 @@ export default {
               path: '/orderconfirm/'+res.data.orderNo
             })
           } else {
-            alert(res.retMsg);
+            MessageBox({
+              title: '',
+              message: res.retMsg,
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+              } else {
+                return
+              }
+            })
           }
         })
       }

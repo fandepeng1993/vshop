@@ -1,7 +1,7 @@
 <template>
   <div class="searchTitle">
     <div class="searchbar" :class="{'searchbar-active':isActive}" ref="searchbar">
-      <a class="searchbar-cancel external" href="javascript:void(0)">搜索</a>
+      <a class="searchbar-cancel external" href="javascript:void(0)" @click.prevent.stop="executeSearch()">搜索</a>
       <div class="search-input">
         <label class="icon-search" for="search"></label>
         <input  @blur="isActive=!isActive"  @focus="getFocus" id="search" v-model="query" :placeholder="placeholder">
@@ -35,6 +35,16 @@
       }, 200))
     },
     methods: {
+      executeSearch() {
+        if(this.query != "") {
+          this.$router.push({
+            path: '/Groupgoods/search',
+            query: {
+              searchkey: this.query
+            }
+          })
+        }
+      },
       getFocus() {
         this.isActive = true
       },

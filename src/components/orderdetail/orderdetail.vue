@@ -195,6 +195,7 @@
 </template>
 <script  type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
+  import { Toast, MessageBox } from 'mint-ui'
   import {getOrderDetail, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, alreadyReceived, jsonToObj} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   export default {
@@ -245,12 +246,32 @@
         //取消订单
         cancelOrder(this.orderNo).then((res) => {
           if (res.ret === '0') {
-            alert("订单取消成功");
+            MessageBox({
+              title: '',
+              message: '订单取消成功',
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+              } else {
+                return
+              }
+            })
             this.$router.push({
               path: `/Membercenter/orderstatus/allorder`
             })
           } else {
-            alert(res.retMsg);
+            MessageBox({
+              title: '',
+              message: res.retMsg,
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+              } else {
+                return
+              }
+            }) 
           }
         })
       },
@@ -262,7 +283,17 @@
         getPrepareIdForPay(params).then((res) => {
           if (res.ret === '0') {
             if(res.data.needPay == "0") {
-              alert("订单付款成功");
+              MessageBox({
+                title: '',
+                message: '订单付款成功',
+                showCancelButton: false,
+                closeOnClickModal: false
+              }).then(action => {
+                if (action === 'confirm') {
+                } else {
+                  return
+                }
+              })  
               this.$router.push({
                 path: `/Membercenter/orderstatus/waitsendgood`
               })
@@ -270,31 +301,81 @@
               console.log("获取预付款id和签名成功", res.data);
             }
           } else {
-            alert(res.retMsg);
+            MessageBox({
+              title: '',
+              message: res.retMsg,
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+              } else {
+                return
+              }
+            }) 
           }
         })
       },
       cancelOrderForAlreadyPaid(orderNo) {
         cancelOrderForAlreadyPaid(orderNo).then((res) => {
           if (res.ret === '0') {
-            alert("取消已付款订单成功");
+            MessageBox({
+              title: '',
+              message: '取消已付款订单成功',
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+              } else {
+                return
+              }
+            }) 
             this.$router.push({
               path: `/Membercenter/orderstatus/allorder`
             })
           } else {
-            alert(res.retMsg);
+            MessageBox({
+              title: '',
+              message: res.retMsg,
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+              } else {
+                return
+              }
+            })
           }
         })
       },
       receiveOrder(orderNo) {
         alreadyReceived(orderNo).then((res) => {
           if (res.ret === '0') {
-            alert("确认收货成功");
+            MessageBox({
+              title: '',
+              message: '确认收货成功',
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+              } else {
+                return
+              }
+            })
             this.$router.push({
               path: `/Membercenter/orderstatus/allorder`
             })
           } else {
-            alert(res.retMsg);
+            MessageBox({
+              title: '',
+              message: res.retMsg,
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+              } else {
+                return
+              }
+            })
           }
         })
       },

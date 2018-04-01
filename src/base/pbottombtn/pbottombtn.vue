@@ -22,10 +22,16 @@
       contentInfo: {
         type: Object,
         default: () => {}
-      }
+      },
+      callback: {}
     },
     methods: {
       jumpage() {
+        if(this.callback) {
+          this.callback();
+          return;
+        }
+
         if (this.tempcontentInfo) {
           console.log(this.tempcontentInfo)
           // 做校验

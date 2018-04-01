@@ -1,7 +1,7 @@
 <template>
   <div class="shopenter">
     <div class="shopTop">
-      <h3><i class="shopImg"></i><span>知硒堂商城</span></h3>
+      <h3><i class="shopImg"></i><span>ISAT创作团队</span></h3>
     </div>
     <ul class="shopcontent">
       <li>
@@ -19,13 +19,13 @@
     </ul>
     <div class="shopbottom">
       <div class="shopbtn">
-        <a @click.prevent.stop="">
+        <a @click.prevent.stop="checkgroup">
           <img src="../../common/images/menu.png" alt="">
           <span>查看分组</span>
         </a>
       </div>
       <div class="shopbtn">
-        <a>
+        <a @click.prevent.stop="enterHome">
           <img src="../../common/images/store.png" alt="">
           <span>进店逛逛</span>
         </a>
@@ -34,7 +34,20 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-export default {}
+export default {
+   methods: {
+    checkgroup() {
+      this.$route.push({
+        path:'/Groupgoods'
+      })
+    },
+    enterHome() {
+      this.$route.push({
+        path:'/Homepage'
+      })
+    }
+  }
+}
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/mixin"

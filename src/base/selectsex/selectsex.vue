@@ -52,7 +52,7 @@
         this.sex = values[0]
       },
       cancleProup() {
-        this.$emit('cancleProup', 2, this.sex)
+        this.$emit('cancleProup', "sex", this.sex)
       }
     },
     mounted() {

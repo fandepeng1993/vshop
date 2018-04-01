@@ -5,7 +5,7 @@
         <div>
           <div class="shopTop" ref="topsbox" data-fdp="fdp">
             <i :class="{'on': isallchecked}" @click.prevent.stop="allchecked"></i>
-            <h3>知硒堂商城</h3>
+            <h3>ISAT创作团队</h3>
             <span :style="changeImg" @click.prevent.stop="changeEdit">{{edittext}}</span>
             <!--<span :style="{backgroundImage:'url(../../common/images/'+ noimg +'.png)'}" @click.prevent.stop="changeEdit">{{edittext}}</span>-->
           </div>
@@ -57,6 +57,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+  import { Toast, MessageBox } from 'mint-ui'
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   import Scroll from 'base/scroll/scroll'
   import IsatNumberoption from 'base/numberoption/numberoption'
@@ -80,7 +81,6 @@
     created() {
        /* console.log(this.$route, this.$router) */
       /* console.log(this) */
-      this.setInitcheckstate()
       this._getShopCarList()
       /* this.setCheckedstate(this.tempchecked) */
     },
@@ -144,6 +144,7 @@
               obj.stock = arr[i].item.storage
               obj.itemSpecs = arr[i].itemSpecs
               this.shopArray.push(obj);
+              this.setInitcheckstate()
             }
           }
         })
@@ -204,7 +205,17 @@
                 path: '/orderconfirm/'+res.data.orderNo
               })
             } else {
-              alert(res.retMsg);
+              MessageBox({
+                title: '',
+                message: res.retMsg,
+                showCancelButton: false,
+                closeOnClickModal: false
+              }).then(action => {
+                if (action === 'confirm') {
+                } else {
+                  return
+                }
+              })
             }
           })
         }
@@ -232,13 +243,24 @@
         //执行删除
         removeShopCarInfo(ids).then((res) => {
           if (res.ret === '0') {
-            alert(res.retMsg)
-            //界面数据上执行删除
-            for(let i=0; i<deleteIndexArr.length; i++) {
-              console.log(deleteIndexArr[i])
-              this.shopArray.splice(deleteIndexArr[i], 1)
-              this.tempchecked.splice(deleteIndexArr[i], 1)
-            }
+              MessageBox({
+                title: '',
+                message: res.retMsg,
+                showCancelButton: false,
+                closeOnClickModal: false
+              }).then(action => {
+                if (action === 'confirm') {
+                  //界面数据上执行删除
+                  for(let i=0; i<deleteIndexArr.length; i++) {
+                    console.log(deleteIndexArr[i])
+                    this.shopArray.splice(deleteIndexArr[i], 1)
+                    this.tempchecked.splice(deleteIndexArr[i], 1)
+                  }
+                } else {
+                  return
+                }
+              })
+
           }
         })
       },
@@ -270,11 +292,18 @@
     },
     watch: {
       tempchecked(newval) {
-        if (newval.indexOf(false) >= 0) {
-          this.isallchecked = false
-          return
+        if(newval.length > 0) {
+          if (newval.indexOf(false) >= 0) {
+            this.isallchecked = false
+            return
+          }else {
+            console.log(newval)
+            this.isallchecked = true
+          }
+        }else {
+            this.isallchecked = false
         }
-        this.isallchecked = true
+        
       },
       '$route': function () {
         this._getShopCarList()

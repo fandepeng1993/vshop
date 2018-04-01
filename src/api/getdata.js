@@ -251,6 +251,16 @@ export function getOrderList(params) {
   return sendPost(url, params);
 }
 
+// 保存用户信息的接口。
+// id（*）
+// mobile
+// userName
+// nickName
+// sex
+export function updateWemallUserInfo(params) {
+  const url = domainName + '/f/interface/wemall/user/updateWemallUserInfo'
+  return sendPost(url, params);
+}
 
 
 export function jsonToObj(str) {

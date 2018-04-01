@@ -9,13 +9,14 @@
       <scroll class="scroll-conent">
         <div>
           <ul class="settingwrap">
-            <li @click.prevent.stop="slectli(item,index)" :class="{on: index === 5 ||index === personalInfo.length - 1}" v-for="(item, index) in personalInfo">
+            <li @click.prevent.stop="selectli(item,index)" :class="{on: index === 5 ||index === personalInfo.length - 1}" v-for="(item, index) in personalInfo">
               <div class="setLeft">
                 <img  :src="require('../../common/images/setting/' + item.icon.slice(0,-4) + item.icon.slice(-4))"/>
                 <span>{{item.name}}</span>
               </div>
               <div class="setRight">
-                <img v-if="item.avatar" :src="require('../../common/images/setting/' + item.avatar.slice(0,-4) + item.avatar.slice(-4))"/>
+                <!-- <img v-if="item.avatar" :src="require('../../common/images/setting/' + item.avatar.slice(0,-4) + item.avatar.slice(-4))"/> -->
+                <img v-if="item.avatar" :src="item.avatar"/>
                 <span v-else>{{item.info}}</span>
                 <i v-show="item.right" class="icon-right"></i>
               </div>
@@ -23,12 +24,12 @@
           </ul>
         </div>
       </scroll>
-      <isat-selectaddress :popupVisible="showList[0]" @cancleProup="cancleproup">
+      <!-- <isat-selectaddress :popupVisible="showList[0]" @cancleProup="cancleproup">
       </isat-selectaddress>
-      <event-calendar :popupVisible="showList[1]" @cancleProup="cancleproup"></event-calendar>
-      <isat-selectsex :popupVisible="showList[2]" @cancleProup="cancleproup">
+      <event-calendar :popupVisible="showList[1]" @cancleProup="cancleproup"></event-calendar> -->
+      <isat-selectsex :popupVisible="showList[0]" @cancleProup="cancleproup">
       </isat-selectsex>
-      <isat-pbottombtn :btnText="'保存'"></isat-pbottombtn>
+      <isat-pbottombtn :btnText="'保存'" :callback="callback"></isat-pbottombtn>
       <!--<a class="footerbox">
         <span>保存</span>
       </a>-->
@@ -43,11 +44,17 @@
   import IsatSelectsex from 'base/selectsex/selectsex'
   import IsatPbottombtn from 'base/pbottombtn/pbottombtn'
   import EventCalendar from 'base/eventcalendar/eventcalendar'
+  import {imageDomainName} from 'api/config'
+  import {getCurrentUser, updateWemallUserInfo} from 'api/getdata'
+  import { Toast, MessageBox } from 'mint-ui'
   export default {
     data() {
       return {
-        showList: [false, false, false],
+        showList: [false],
         IndexData: -1,
+        userInfo: {},
+        imageDomainName: imageDomainName,
+        callback: function() {},
         personalInfo: [
           {
             icon: 'setting-1.png',
@@ -60,9 +67,9 @@
             icon: 'phone-num.svg',
             name: '手机号',
             right: true,
-            info: '18204049887'
+            info: ''
           },
-          {
+          /*{
             icon: 'setting-4.png',
             name: '常住城市',
             right: true,
@@ -73,25 +80,25 @@
             name: '生日',
             right: true,
             info: '2000-12-07'
-          },
+          },*/
           {
             icon: 'setting-6.png',
             name: '性别',
             right: true,
-            info: '男'
+            info: ''
           },
           {
             icon: 'setting-7.png',
             name: '真实姓名',
             right: true,
-            info: '李邓珂'
+            info: ''
           },
           {
             icon: 'setting-8.png',
             name: '昵称',
             right: true,
-            info: '田丰'
-          },
+            info: ''
+          }/*,
           {
             icon: 'setting-9.png',
             name: '修改密码',
@@ -103,30 +110,100 @@
             name: '退出登录',
             right: true,
             info: ''
-          }
+          }*/
         ]
       }
     },
     created() {
+      let that = this;
       /* console.log(this.personalInfo[0].icon.slice(0, -4) + this.personalInfo[0].icon.slice(-4)) */
       this.hidenall()
+      this._getCurrentUser()
+      this.callback = function() {
+        let params = {}
+        console.log(that.userInfo)
+        params.id = that.userInfo.id;
+        params.mobile = that.personalInfo[1].info;
+        params.userName = that.personalInfo[3].info;
+        params.nickName = that.personalInfo[4].info
+        params.sex = that.personalInfo[2].info == "男" ? "1" : "0";
+        updateWemallUserInfo(params).then((res) => {
+          if (res.ret === '0') {
+            alert("保存成功");
+            that._getCurrentUser();
+          } else {
+            alert(res.retMsg);
+          }
+        })
+      }
     },
     methods: {
-      slectli(item, index) {
+      _getCurrentUser() {
+        getCurrentUser().then((res) => {
+          if (res.ret === '0') {
+            this.userInfo = res.data.userInfo
+            this.personalInfo[0].avatar = this.userInfo.headImgUrl
+            this.personalInfo[1].info = typeof(this.userInfo.mobile) == "undefined" ? "" : this.userInfo.mobile;
+            this.personalInfo[2].info = typeof(this.userInfo.sex) == "undefined" ? "" : (this.userInfo.sex == "1" ? "男" : "女");
+            this.personalInfo[3].info = typeof(this.userInfo.userName) == "undefined" ? "" : this.userInfo.userName;
+            this.personalInfo[4].info = typeof(this.userInfo.nickName) == "undefined" ? "" : this.userInfo.nickName;
+
+          } else {
+            //跳转到登录界面
+
+          }
+        })
+      },
+      selectli(item, index) {
         this.hidenall()
         let tempIndex = index - 2
-        if (tempIndex >= 0 && tempIndex < 3) {
+
+        if(index == 0) {
+          //头像
+        } else if(index == 1) {
+          //手机
+          MessageBox.prompt('修改手机号','').then(({ value, action }) => {
+            this.personalInfo[1].info = value;
+          },(err)=>{
+            console.log(err)
+          })
+        } else if(index == 2) {
+          //性别
+          this.showList.splice(0, 1, true)
+        } else if(index == 3) {
+          //真实姓名
+          MessageBox.prompt('修改真实姓名','').then(({ value, action }) => {
+            this.personalInfo[3].info = (value ==  null ? "" : value);
+          },(err)=>{
+            console.log(err)
+          })
+        } else if(index == 4) {
+          //昵称
+          MessageBox.prompt('修改昵称','').then(({ value, action }) => {
+            this.personalInfo[4].info = (value ==  null ? "" : value);
+          },(err)=>{
+            console.log(err)
+          })
+        }
+
+        /* if (tempIndex >= 0 && tempIndex < 3) {
           this.showList.splice(tempIndex, 1, true)
-        } else if (tempIndex === -2 || tempIndex === 3) {
+        } else if (tempIndex === -1 ) {
+            
           this.$router.push({
             path: `/Membercenter/personalsetting/${tempIndex + 2}`
           })
+        } else if (tempIndex === -2 || tempIndex === 3) {
+         
         } else {
           this.hidenall()
-        }
+        } */
       },
       cancleproup(index, value) {
-        this.personalInfo[index + 2].info = value
+        if(index == "sex") {
+          this.personalInfo[2].info = value
+        }
+        //this.personalInfo[index + 2].info = value
         this.hidenall()
       },
       hidenall() {

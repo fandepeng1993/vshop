@@ -115,6 +115,7 @@
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   import {getOrderDetail, getPrepareIdForPay, jsonToObj} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
+  import { Toast, MessageBox } from 'mint-ui'
   export default {
     data() {
       return {
@@ -201,7 +202,7 @@
         getPrepareIdForPay(params).then((res) => {
           if (res.ret === '0') {
             if(res.data.needPay == "0") {
-              alert("订单付款成功");
+              this.checkoutfn("订单付款成功");
               this.$router.push({
                 path: `/Membercenter/orderstatus/waitsendgood`
               })
@@ -209,13 +210,19 @@
               console.log("获取预付款id和签名成功", res.data);
             }
           } else {
-            alert(res.retMsg);
+            this.checkoutfn(res.retMsg);
           }
         })
       },
       gotoItemDeatil(itemId) {
         this.$router.push({
           path: `/Goodsdetail/`+itemId
+        })
+      },
+      checkoutfn(value) {
+        Toast({
+          message: value,
+          duration: 1000
         })
       }
     },

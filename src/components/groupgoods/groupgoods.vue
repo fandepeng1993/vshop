@@ -17,12 +17,13 @@
             </isat-searchtitle>
             </div>
 
-           <div id="isat2"  v-show="!query">
+          
+           <div id="isat2" >
              <isat-babylist @select="selectGoodsId" :babyListdata="babyListdata">
              </isat-babylist>
            </div>
 
-           <div id="isat3" ref="searchResult" class="search-result" v-show="query">
+           <div id="isat3" ref="searchResult" class="search-result" v-show="false" >
              <isat-babylist ref="suggest" @select="selectGoodsId" @listScroll="blurInput" :babyListdata="babyListdata2.concat(babyListdata2)"  :query="query"></isat-babylist>
            </div>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="wraper">
-    <scroll class="address-content">
-      <div class="address-list">
+    <scroll class="address-content" v-if="orderList.length">
+      <div class="address-list" >
         <ul class="orderList">
           <li v-for="orderInfo in orderList">
             <h3 class="headh3" @click.prevent.stop="gotoOrderDeatil(orderInfo)">
@@ -86,11 +86,18 @@
         </ul>
       </div>
     </scroll>
+    <div class="noorder">
+      <div style="text-align: center;">
+        <img  src="../../common/images/notice2.png" alt="">
+        <p>您还没有该项的订单哦</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   import Scroll from 'base/scroll/scroll'
+  import {Toast, MessageBox} from 'mint-ui'
   import {getOrderList, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, alreadyReceived, jsonToObj} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   export default {
@@ -181,10 +188,10 @@
         //取消订单
         cancelOrder(orderNo).then((res) => {
           if (res.ret === '0') {
-            alert("订单取消成功");
+            this.checkoutfn("订单取消成功");
             this._getOrderList();
           } else {
-            alert(res.retMsg);
+            this.checkoutfn(res.retMsg);
           }
         })
       },
@@ -196,7 +203,7 @@
         getPrepareIdForPay(params).then((res) => {
           if (res.ret === '0') {
             if(res.data.needPay == "0") {
-              alert("订单付款成功");
+              this.checkoutfn("订单付款成功");
               this.$router.push({
                 path: `/Membercenter/orderstatus/waitsendgood`
               })
@@ -204,27 +211,27 @@
               console.log("获取预付款id和签名成功", res.data);
             }
           } else {
-            alert(res.retMsg);
+            this.checkoutfn(res.retMsg);
           }
         })
       },
       cancelOrderForAlreadyPaid(orderNo) {
         cancelOrderForAlreadyPaid(orderNo).then((res) => {
           if (res.ret === '0') {
-            alert("取消已付款订单成功");
+            this.checkoutfn("取消已付款订单成功");
             this._getOrderList();
           } else {
-            alert(res.retMsg);
+            this.checkoutfn(res.retMsg);
           }
         })
       },
       receiveOrder(orderNo) {
         alreadyReceived(orderNo).then((res) => {
           if (res.ret === '0') {
-            alert("确认收货成功");
+            this.checkoutfn("确认收货成功");
             this._getOrderList();
           } else {
-            alert(res.retMsg);
+            this.checkoutfn(res.retMsg);
           }
         })
       },
@@ -242,6 +249,12 @@
       gotoItemDeatil(itemId) {
         this.$router.push({
           path: `/Goodsdetail/`+itemId
+        })
+      },
+      checkoutfn(value) {
+        Toast({
+          message: value,
+          duration: 1000
         })
       }
     },
@@ -344,7 +357,8 @@
               i
                 align-self center
                 color #666
-                font-size 18px
+                font-size: 14px;
+                font-style: normal;
             .shopInfo
               padding  0px 10px
               background #f5f5f5
