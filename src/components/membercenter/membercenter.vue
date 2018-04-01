@@ -168,11 +168,17 @@
         if (param.pname === '收货地址') {
           if (this.address.length <= 0) {
             this.$router.push({
-              path: param.link2
+              path: param.link2,
+              query:{
+                type:1
+              }
             })
           } else {
             this.$router.push({
-              path: param.link
+              path: param.link,
+              query:{
+                type:1
+              }
             })
           }
         } else {

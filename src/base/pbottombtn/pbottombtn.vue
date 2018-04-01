@@ -8,7 +8,7 @@
 <script type="text/ecmascript-6">
   import { Toast } from 'mint-ui'
   import {mapMutations, mapGetters, mapActions} from 'vuex'
-  import {addUserAddress, updateUserAddress} from 'api/getdata'
+  import {addUserAddress, updateUserAddress, updateOrderAddress} from 'api/getdata'
   export default {
     props: {
       btnText: {
@@ -57,17 +57,14 @@
                       list: this.tempcontentInfo,
                       index: tempId
                     })
-                    this.$router.push({
-                      path: `/Membercenter` + this.linkUrl
-                    })
+                    
+                    this.$router.back()
                   } else {
                     this.editAddressIndexInfo({
                       list: this.tempcontentInfo,
                       index: tempId
                     })
-                    this.$router.push({
-                      path: `/Membercenter` + this.linkUrl
-                    })
+                    this.$router.back()
                   }
                 } else {
                   this.checkoutfn('提交失败')
@@ -95,9 +92,22 @@
                   }
                   /* console.log(this.address) */
 
-                  this.$router.push({
-                    path: `/Membercenter` + this.linkUrl
-                  })
+                  if(this.$route.query.type == 2 && this.$route.query.fromListPage != 1) {
+                    //是从订单选择收货地址跳过来的，执行设置订单收货地址
+                    let params = {}
+                    params.userAddressId = res.data.id
+                    params.orderNo = this.$route.query.orderNo
+                    updateOrderAddress(params).then((result) => {
+                      if (result.ret === '0') {
+                        this.$router.back()
+                      }
+                    });
+
+                  } else {
+                    this.$router.push({
+                      path: this.linkUrl
+                    })
+                  }
                 } else {
                   this.checkoutfn('提交失败')
                 }

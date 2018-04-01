@@ -36,7 +36,7 @@
           <mt-switch v-model="defaultAddress"></mt-switch>
         </mt-cell>
       </div>
-      <isat-pbottombtn :linkUrl="'/receiveraddress'" :btnText="'保存'" :contentInfo="newdata"></isat-pbottombtn>
+      <isat-pbottombtn :linkUrl="linkUrl" :btnText="'保存'" :contentInfo="newdata"></isat-pbottombtn>
       <isat-selectaddress :popupVisible="showAddressProup" @cancleProup="cancleproup">
       </isat-selectaddress>
     </div>
@@ -52,6 +52,7 @@
     data() {
       return {
         showAddressProup: false,
+        linkUrl:'/Membercenter/receiveraddress',
         defaultAddress:false,
         newdatas: {
           createDate:'',
@@ -78,6 +79,7 @@
       // console.log(456)
     },
     created() {
+      this.linkUrl = this.linkUrl + '?type=' + this.$route.query.type + "&orderNo=" + this.$route.query.orderNo;
     },
     computed: {
       newdata() {

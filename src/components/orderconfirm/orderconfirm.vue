@@ -3,7 +3,7 @@
     <isat-publictoptitle  :titles="Goodstitle"></isat-publictoptitle>
     <transition name="slidex">
        <div class="shoppingcart-content" v-show="sss">
-         <div class="addrecive" v-if="!isusedis">
+         <div class="addrecive" v-if="isUseDefault">
            <h3>
              <span>收货人：</span>
              <i>{{orderInfo.wemallOrderAddress.receiverName}}</i>
@@ -19,7 +19,7 @@
            </p>
          </div>
          <div class="noaddress" v-else>
-          <h3>
+          <h3 @click.prevent.stop="changeAddress">
             <div class="leftss">
               <img src="../../common/images/add.svg" alt="">
               <span>请填写收货地址</span>
@@ -73,7 +73,7 @@
          <!-- <div class="discount">
             <h3>
               <span>可使用200积分抵扣￥2</span>
-              <mt-switch v-model="isusedis"></mt-switch>
+              <mt-switch v-model="isUseDefault"></mt-switch>
             </h3>
          </div> -->
          <div class="countPrice">
@@ -127,7 +127,7 @@
         Goodstitle: '提交订单',
         sss: false,
         hasAddress: false,
-        isusedis: true,
+        isUseDefault: false,
         chooseadd: false,
         imageDomainName: imageDomainName,
         buyerMessage: ""
@@ -157,14 +157,37 @@
                 }
               }
             }
+
+            //判断收货地址
+            if(this.orderInfo.wemallOrderAddress) {
+              this.isUseDefault = true;
+            }
           }
         })
       },
       changeAddress() {
-        this.chooseadd=true
+        //this.chooseadd=true
         /*this.$router.push({
           path:'orderconfirm/chooseaddress'
         })*/
+
+        if (this.isUseDefault) {
+            this.$router.push({
+              path: '/Membercenter/receiveraddress',
+              query:{
+                type:2,
+                orderNo:this.orderNo
+              }
+            })
+          } else {
+            this.$router.push({
+              path: '/Membercenter/addreceiveradd',
+              query:{
+                type:2,
+                orderNo:this.orderNo
+              }
+            })
+          }
       },
       addnewADD() {
         console.log(123)

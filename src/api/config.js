@@ -12,6 +12,6 @@ export const options = {
 
 export const ERR_OK = 0
 
-export const domainName = 'http://ldkservice.tunnel.qydev.com'
+export const domainName = 'http://wemallservice.vipgz1.idcfengye.com'
 
-export const imageDomainName = 'http://ldkservice.tunnel.qydev.com'
+export const imageDomainName = 'http://wemallservice.vipgz1.idcfengye.com'

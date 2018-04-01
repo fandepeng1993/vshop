@@ -15,7 +15,7 @@
           <div class="text-box">
             <p>{{item.currentPrice/100 | currency('￥')}}</p>
             <p class="hasSale ">{{item.salesNum}}件已售</p>
-            <div  @click.prevent.stop.self="addShopping" class="icon-gouwuche "></div>
+            <div v-if="false" @click.prevent.stop.self="addShopping" class="icon-gouwuche "></div>
           </div>
         </li>
       </ul>
@@ -96,6 +96,7 @@
           .text-box
             position relative
             padding-left 15px
+            text-align right
             p
               margin 5px 0
               &.hasSale

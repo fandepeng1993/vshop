@@ -82,11 +82,13 @@ export default {
       chooseNum: ['0', '0']
     }
   },
+  activated() {
+  },
   created() {
-    if(this.goodsEntity.specInfoStr) {
+    /* if(this.goodsEntity.specInfoStr) {
       console.log(JSON.parse(this.goodsEntity.specInfoStr))
       this.specInfo = JSON.parse(this.goodsEntity.specInfoStr);
-    }
+    } */
   },
   computed: {
   },
@@ -140,6 +142,12 @@ export default {
     IsatNumberoption
   },
   watch: {
+    goodsEntity: function() {
+      if(this.goodsEntity.specInfoStr) {
+        console.log(JSON.parse(this.goodsEntity.specInfoStr))
+        this.specInfo = JSON.parse(this.goodsEntity.specInfoStr);
+      }
+    },
     '$route': function () {
       if(this.goodsEntity.specInfoStr) {
         console.log(JSON.parse(this.goodsEntity.specInfoStr))

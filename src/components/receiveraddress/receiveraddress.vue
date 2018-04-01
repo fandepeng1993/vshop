@@ -7,7 +7,7 @@
           <ul>
             <li v-for="(item, index) in address">
               <div class="all">
-                <div class="add-detail">
+                <div class="add-detail" @click.prevent.stop="clickUserAddress(item.id)">
                   <p><i>{{item.receiverName}}</i><span>{{item.receiverMobile}}</span></p>
                   <p><span><mt-badge v-if="item.isDefault===1" type="warning" class="defaultmt" size="small">默认</mt-badge>{{item.receiverProvince+item.receiverCity+item.receiverDistrict+item.receiverAddress}}</span></p>
                 </div>
@@ -28,7 +28,7 @@
           </ul>
         </div>
       </scroll>
-      <isat-pbottombtn :linkUrl="'/addreceiveradd'" :btnText="'添加收获地址'" ></isat-pbottombtn>
+      <isat-pbottombtn :linkUrl="addLinkUrl" :btnText="'添加收获地址'" ></isat-pbottombtn>
     </div>
   </transition>
 </template>
@@ -38,11 +38,12 @@
   import Scroll from 'base/scroll/scroll'
   import {mapActions, mapGetters} from 'vuex'
   import IsatPbottombtn from 'base/pbottombtn/pbottombtn'
-  import {deleteUserAddress, setDefaultUserAddr} from 'api/getdata'
+  import {deleteUserAddress, setDefaultUserAddr, updateOrderAddress} from 'api/getdata'
   import { MessageBox } from 'mint-ui'
   export default {
     data() {
       return {
+        addLinkUrl:'/addreceiveradd',
         titlesname: '收货地址管理'
       }
     },
@@ -54,7 +55,7 @@
       console.log(123)
     },
     created() {
-      console.log(123)
+      this.addLinkUrl = this.addLinkUrl + '?type=' + this.$route.query.type + "&orderNo=" + this.$route.query.orderNo + "&fromListPage=1";
     },
     computed: {
       ...mapGetters(['address'])
@@ -133,6 +134,20 @@
             return
           }
         })
+      },
+      clickUserAddress(id) {
+        if(this.$route.query.type == 2) {
+          let params = {}
+          params.userAddressId = id
+          params.orderNo = this.$route.query.orderNo
+          updateOrderAddress(params).then((result) => {
+            if (result.ret === '0') {
+              this.$router.push({
+                path: '/orderconfirm/' + params.orderNo
+              })
+            }
+          });
+        }
       },
       ...mapActions([
         'editDefaultAddress',

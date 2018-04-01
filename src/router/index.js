@@ -218,20 +218,23 @@ export default new Router({
       props: {
         mms: '购物车'
       },
-      name: 'shopcart'
+      name: 'shopcart',
+      meta: {
+        keepAlive: true // 不需要缓存
+      }
     },
     {
       path: '/orderconfirm/:id',
-      component: orderconfirm/*,
+      component: orderconfirm,/*,
       children: [
         {
           path: 'chooseaddress',
           component: chooseaddress
         }
       ]*/
-     /* meta: {
+      meta: {
         keepAlive: true // 不需要缓存
-      }*/
+      }
     },
     {
       path:'/orderdetail/:id',
@@ -280,6 +283,9 @@ export default new Router({
     {
       path: '/Goodsdetail',
       component: Goodsdetail,
+      meta: {
+        keepAlive: true // 不需要缓存
+      },
       children: [
         {
           path: ':id',

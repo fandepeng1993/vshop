@@ -47,10 +47,14 @@
         this.$router.back()
       },
       handleperson() {
-        console.log('person')
+        this.$router.push({
+          path:'/Membercenter'
+        })
       },
       handleshop() {
-        console.log('shop')
+        this.$router.push({
+          path:'/Shoppingcart'
+        })
       }
     }
   }

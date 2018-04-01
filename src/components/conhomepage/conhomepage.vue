@@ -61,7 +61,7 @@
         if (!this.$refs.conhomepage) {
           return
         }
-        console.log(123)
+        
         this.getScreenWidth()
       })
     },

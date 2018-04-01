@@ -53,6 +53,7 @@
                 </div>
                 <div class="centerInfo">
                   <p>{{orderItem.title}}</p>
+                  <p>{{orderItem.itemsDataStr}}</p>
                   <span>{{orderItem.itemNum}} 件</span>
                   <strong>￥{{((orderItem.totalFee)/100).toFixed(2)}}</strong>
                 </div>
@@ -77,7 +78,7 @@
                   <a class="buy external red" href="javascript:void(0);" @click.prevent.stop="cancelOrderForAlreadyPaid(orderInfo.wemallOrder.orderNo)">确认取消订单</a>
                 </div>
                 <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 3">
-                  <a class="cancel" href="javascript:void(0);" @click.prevent.stop="receiveOrder(orderInfo.wemallOrder.orderNo)">确认收货</a>
+                  <a class="buy" href="javascript:void(0);" @click.prevent.stop="receiveOrder(orderInfo.wemallOrder.orderNo)">确认收货</a>
                 </div>
               </h3>
             </div>
@@ -90,7 +91,7 @@
 
 <script>
   import Scroll from 'base/scroll/scroll'
-  import {getOrderList, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, receiveOrder} from 'api/getdata'
+  import {getOrderList, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, alreadyReceived, jsonToObj} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     name: "baseorder",
@@ -155,6 +156,22 @@
                 orderInfo.wemallOrder.statusStr = "未付款，已取消";
               } else if(orderInfo.wemallOrder.status == 9) {
                 orderInfo.wemallOrder.statusStr = "已付款，已取消";
+              }
+
+              //规范规格数据
+              for(let index in orderInfo.orderItemList) {
+                let orderItem =  orderInfo.orderItemList[index];
+                orderItem.itemsDataStr = "";
+                let itemsDataObj = jsonToObj(orderItem.itemsData);
+                if(itemsDataObj && itemsDataObj.length > 0) {
+                  for(let i in itemsDataObj) {
+                    if(orderItem.itemsDataStr == "") {
+                      orderItem.itemsDataStr =  itemsDataObj[i].specName + "：" + itemsDataObj[i].specInfoName;
+                    } else {
+                      orderItem.itemsDataStr =  + "；" + itemsDataObj[i].specName + "：" + itemsDataObj[i].specInfoName;
+                    }
+                  }
+                }
               }
             }
           }

@@ -1,6 +1,5 @@
 <template>
   <div class="mask" @click.prevent.stop="cancelMask">
-    mask
   </div>
 </template>
 <script type="text/ecmascript-6">

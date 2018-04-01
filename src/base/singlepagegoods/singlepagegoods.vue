@@ -124,9 +124,7 @@
             
             this.$nextTick(function(){
               let imgs = document.getElementById("descDiv").getElementsByTagName("img");
-              console.log(imgs.length);
               for (let i = 0; i < imgs.length; i++) {
-                  console.log(imgs[i]);
                   imgs[i].setAttribute("src", this.imageDomainName + imgs[i].getAttribute("src"));
               }
             })

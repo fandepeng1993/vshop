@@ -23,7 +23,7 @@
                   <div class="itemBotom">
                     <p class="itemPrice">{{item.currentPrice/100 | currency('￥')}}</p>
                     <p class="itemHasale">{{item.salesNum}}件已售</p>
-                    <i class="icon-gouwuche"></i>
+                    <i class="icon-gouwuche" v-if="false"></i>
                   </div>
                 </div>
               </li>
@@ -284,6 +284,8 @@
             .itemBotom
               position relative
               padding-left 10px
+              padding-right 10px
+              text-align right
               .itemPrice
                 color #ef2f2f
                 margin 5px 0

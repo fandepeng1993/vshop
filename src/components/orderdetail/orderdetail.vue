@@ -6,9 +6,9 @@
         <div class="shoppingcart-content">
           <div class="stateGoods">
             <div class="tipcontent">
-              <p v-if="orderInfo.wemallOrder.status == 1">等待买家付款</p>
-              <p v-if="orderInfo.wemallOrder.status == 2">等待卖家发货</p>
-              <p v-if="orderInfo.wemallOrder.status == 3">等待买家收货</p>
+              <p v-if="orderInfo.wemallOrder.status === 1">等待买家付款</p>
+              <p v-if="orderInfo.wemallOrder.status === 2">等待卖家发货</p>
+              <p v-if="orderInfo.wemallOrder.status === 3">等待买家收货</p>
               <!-- <span>0小时0分钟后支付过期</span> -->
             </div>
           </div>
@@ -107,7 +107,7 @@
                     </div>
                     <div class="centerInfo">
                       <p>{{orderItem.title}}</p>
-                      <p>{{orderItem.itemsData}}</p>
+                      <p>{{orderItem.itemsDataStr}}</p>
                       <span>{{orderItem.itemNum}} 件</span>
                       <strong>￥{{(orderItem.totalFee/100).toFixed(2)}}</strong>
                     </div>
@@ -161,15 +161,17 @@
             </h3>
           </div>
           <div class="btnDb">
-            <h3 v-if="orderInfo.wemallOrder.status == 1">
+            <h3 v-if="orderInfo.wemallOrder.status === 1">
               <a class="external" href="javascript:void(0)" @click.prevent.stop="cancelOrder()">取消订单</a>
               <a class="external pay" href="javascript:void(0)" @click.prevent.stop="payOrder()">付款</a>
             </h3>
-            <h3 v-if="orderInfo.wemallOrder.status == 2">
-              <a class="external pay" href="javascript:void(0)" @click.prevent.stop="cancelOrderForAlreadyPaid(orderInfo.wemallOrder.orderNo)>确认取消订单</a>
+
+            <h3 v-if="orderInfo.wemallOrder.status === 2">
+              <a class="external" href="javascript:void(0)" >等待发货</a>
+              <a class="external pay" href="javascript:void(0)" @click.prevent.stop="cancelOrderForAlreadyPaid(orderInfo.wemallOrder.orderNo)">确认取消订单</a>
             </h3>
-            <h3 v-if="orderInfo.wemallOrder.status == 3">
-              <a class="external" href="javascript:void(0)" @click.prevent.stop="receiveOrder(orderInfo.wemallOrder.orderNo)">确认收货</a>
+            <h3 v-if="orderInfo.wemallOrder.status === 3">
+              <a class="external pay" href="javascript:void(0)" @click.prevent.stop="receiveOrder(orderInfo.wemallOrder.orderNo)">确认收货</a>
             </h3>
           </div>
      <!--     <div class="discount">
@@ -193,7 +195,7 @@
 </template>
 <script  type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
-  import {getOrderDetail, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, receiveOrder} from 'api/getdata'
+  import {getOrderDetail, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, alreadyReceived, jsonToObj} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     data() {
@@ -220,6 +222,22 @@
         getOrderDetail(this.orderNo).then((res) => {
           if (res.ret === '0') {
             this.orderInfo = res.data;
+
+            //规范规格数据
+            for(let index in this.orderInfo.orderItemList) {
+              let orderItem = this.orderInfo.orderItemList[index];
+              orderItem.itemsDataStr = "";
+              let itemsDataObj = jsonToObj(orderItem.itemsData);
+              if(itemsDataObj && itemsDataObj.length > 0) {
+                for(let i in itemsDataObj) {
+                  if(orderItem.itemsDataStr == "") {
+                    orderItem.itemsDataStr =  itemsDataObj[i].specName + "：" + itemsDataObj[i].specInfoName;
+                  } else {
+                    orderItem.itemsDataStr =  + "；" + itemsDataObj[i].specName + "：" + itemsDataObj[i].specInfoName;
+                  }
+                }
+              }
+            }
           }
         })
       },
@@ -301,7 +319,9 @@
     watch: {
       '$route': function () {
         this.orderNo = this.$route.params.id;
-        this._getOrderDetail()
+        if(this.$route.fullPath.indexOf("orderdetail") != -1) {
+          this._getOrderDetail()
+        }
       }
     }
   }
