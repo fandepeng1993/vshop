@@ -10,9 +10,10 @@
                 <i>{{orderInfo.wemallOrder.orderNo}} </i>
                 <b class="icon-right"></b>
               </div>
-              <em class="red" v-if="orderInfo.wemallOrder.status == 1">等待买家付款</em>
-              <em class="red" v-if="orderInfo.wemallOrder.status == 2">等待卖家发货</em>
-              <em class="red" v-if="orderInfo.wemallOrder.status == 3">等待买家收货</em>
+              <em class="red" v-if="orderInfo.wemallOrder.status == 1 && orderInfo.wemallOrder.applyForReject != '1'">等待买家付款</em>
+              <em class="red" v-if="orderInfo.wemallOrder.status == 2 && orderInfo.wemallOrder.applyForReject != '1'">等待卖家发货</em>
+              <em class="red" v-if="orderInfo.wemallOrder.status == 3 && orderInfo.wemallOrder.applyForReject != '1'">等待买家收货</em>
+              <em class="red" v-if="orderInfo.wemallOrder.applyForReject == '1' && orderInfo.wemallOrder.status <= 5">已提交退货申请</em>
             </h3>
             <!--<div class="wrapperL">
               <div class="stateList">
@@ -69,16 +70,19 @@
               <h3>
                 <i>微信支付</i>
                 <span>合计：<b>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</b></span>
-                <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 1">
+                <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 1 && listType != '2' && orderInfo.wemallOrder.applyForReject != '1'">
                   <a class="cancel" href="javascript:void(0);" @click.prevent.stop="cancelOrder(orderInfo.wemallOrder.orderNo)">取消订单</a>
                   <a class="buy external red" href="javascript:void(0);" @click.prevent.stop="payOrder(orderInfo.wemallOrder.orderNo)">立即支付</a>
                 </div>
-                <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 2">
+                <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 2 && listType != '2' && orderInfo.wemallOrder.applyForReject != '1'">
                   <a class="cancel" href="javascript:void(0);" >等待发货</a>
                   <a class="buy external red" href="javascript:void(0);" @click.prevent.stop="cancelOrderForAlreadyPaid(orderInfo.wemallOrder.orderNo)">确认取消订单</a>
                 </div>
-                <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 3">
+                <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 3 && listType != '2' && orderInfo.wemallOrder.applyForReject != '1'">
                   <a class="buy" href="javascript:void(0);" @click.prevent.stop="receiveOrder(orderInfo.wemallOrder.orderNo)">确认收货</a>
+                </div>
+                <div class="dbBtn" v-if="listType == '2' && orderInfo.wemallOrder.applyForReject != '1'">
+                  <a class="buy" href="javascript:void(0);" @click.prevent.stop="applyForReject(orderInfo.wemallOrder.orderNo)">提交退货申请</a>
                 </div>
               </h3>
             </div>
@@ -98,17 +102,13 @@
 <script>
   import Scroll from 'base/scroll/scroll'
   import {Toast, MessageBox} from 'mint-ui'
-  import {getOrderList, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, alreadyReceived, jsonToObj} from 'api/getdata'
+  import {getOrderList, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, alreadyReceived, applyForReject, jsonToObj} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     name: "baseorder",
     data() {
       return {
-        orderList: [{
-          orderItemList: [],
-          wemallOrder: {},
-          wemallOrderAddress: {}
-        }],
+        orderList: [],
         pageNo: 1,
         pageSize: 1000,
         imageDomainName: imageDomainName,
@@ -123,21 +123,34 @@
     },
     methods: {
       _getOrderList() {
+        //订单列表页面
         let listType = this.$route.params.id;
-
-        let params = {}
+        this.listType = listType;
+        let params = {};
         params.pageNo = this.pageNo;
         params.pageSize = this.pageSize;
 
-        if(listType == "obligation") {
-          params.status = 1;
-        } else if(listType == "waitsendgood") {
-          params.status = 2;
-        } else if(listType == "waitreceivgood") {
-          params.status = 3;
-        } else if(listType == "waitevaluated") {
-          params.status = 4;
+        if(this.$route.fullPath.indexOf("afterSale") != -1) {
+          //退款退货页面
+          if(listType == "1") {
+            //退款
+            params.status = 2;
+          } else if(listType == "2") {
+            //退货
+            params.statusList = "3,4,5";
+          }
+        } else {
+          if(listType == "obligation") {
+            params.status = 1;
+          } else if(listType == "waitsendgood") {
+            params.status = 2;
+          } else if(listType == "waitreceivgood") {
+            params.status = 3;
+          } else if(listType == "waitevaluated") {
+            params.status = 4;
+          }
         }
+
         //status (*）=状态（1、未付款，2、已付款，3、已发货，4、已收货，5、已评论，6、交易退货，7、交易关闭，8、已取消）
         //params.status = 
         getOrderList(params).then((res) => {
@@ -163,6 +176,10 @@
                 orderInfo.wemallOrder.statusStr = "未付款，已取消";
               } else if(orderInfo.wemallOrder.status == 9) {
                 orderInfo.wemallOrder.statusStr = "已付款，已取消";
+              }
+
+              if(orderInfo.wemallOrder.applyForReject == '1' && orderInfo.wemallOrder.status <= 5) {
+                orderInfo.wemallOrder.statusStr = orderInfo.wemallOrder.statusStr + "（已提交退货申请）"
               }
 
               //规范规格数据
@@ -235,10 +252,20 @@
           }
         })
       },
+      applyForReject(orderNo) {
+        applyForReject(orderNo).then((res) => {
+          if (res.ret === '0') {
+            this.checkoutfn("提交退货申请成功");
+            this._getOrderList();
+          } else {
+            this.checkoutfn(res.retMsg);
+          }
+        })
+      },
       gotoOrderDeatil(orderInfo) {
-        if(orderInfo.wemallOrder.status == 1 ||
+        if(this.listType != '2' && orderInfo.wemallOrder.applyForReject != '1' && (orderInfo.wemallOrder.status == 1 ||
             orderInfo.wemallOrder.status == 2 ||
-            orderInfo.wemallOrder.status == 3
+            orderInfo.wemallOrder.status == 3)
           ) {
           let orderNo = orderInfo.wemallOrder.orderNo;
           this.$router.push({

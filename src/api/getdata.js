@@ -198,6 +198,9 @@ export function updateOrderAddress(params) {
 // paymentType（*）=付款方式
 // orderNo（*）=订单号
 // buyerMessage=买家留言
+// activityId=活动id
+// activityType=活动类别
+// scoreUsageNum=使用积分数
 export function getPrepareIdForPay(params) {
   const url = domainName + '/f/interface/wemall/order/getPrepareIdForPay'
   return sendPost(url, params);
@@ -235,6 +238,15 @@ export function commentItem(params) {
   const url = domainName + '/f/interface/wemall/order/commentItem'
   return sendPost(url, params);
 }
+
+// 用户提交退货申请的接口
+// orderNo（*）=订单号
+export function applyForReject(orderNo) {
+  const url = domainName + '/f/interface/wemall/order/applyForReject'
+  const params = {orderNo: orderNo}
+  return sendPost(url, params);
+}
+
 
 // 根据订单号获取订单详情的接口
 // orderNo（*）=订单号
