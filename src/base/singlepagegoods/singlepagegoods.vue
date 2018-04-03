@@ -176,10 +176,12 @@
     },
     watch: {
       '$route': function () {
-        this.id = this.$route.params.id
-        this.imgUrl = []
-        this.checkLoad = false
-        this._getItemDetail()
+        if(this.$route.fullPath.indexOf("Goodsdetail") != -1) {
+          this.id = this.$route.params.id
+          this.imgUrl = []
+          this.checkLoad = false
+          this._getItemDetail()
+        }
       },
       imgUrl(oldval, newval) {
         if (!this.$refs.sliderSinger) {

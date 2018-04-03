@@ -59,7 +59,9 @@
     },
     watch: {
       '$route': function () {
-        this._getBuyerCommentList()
+        if(this.$route.fullPath.indexOf("Goodsdetail") != -1) {
+          this._getBuyerCommentList()
+        }
       }
     }
   }

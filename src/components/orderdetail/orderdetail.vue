@@ -280,7 +280,10 @@
         let params = {};
         params.paymentType = 0;
         params.orderNo = this.orderNo;
-        getPrepareIdForPay(params).then((res) => {
+        this.$router.push({
+          path: `/orderconfirm/`+this.orderNo
+        })
+        /* getPrepareIdForPay(params).then((res) => {
           if (res.ret === '0') {
             if(res.data.needPay == "0") {
               MessageBox({
@@ -313,7 +316,7 @@
               }
             }) 
           }
-        })
+        }) */
       },
       cancelOrderForAlreadyPaid(orderNo) {
         cancelOrderForAlreadyPaid(orderNo).then((res) => {

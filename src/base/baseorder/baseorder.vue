@@ -217,7 +217,11 @@
         let params = {};
         params.paymentType = 0;
         params.orderNo = orderNo;
-        getPrepareIdForPay(params).then((res) => {
+        this.$router.push({
+          path: `/orderconfirm/`+orderNo
+        })
+
+        /* getPrepareIdForPay(params).then((res) => {
           if (res.ret === '0') {
             if(res.data.needPay == "0") {
               this.checkoutfn("订单付款成功");
@@ -230,7 +234,7 @@
           } else {
             this.checkoutfn(res.retMsg);
           }
-        })
+        }) */
       },
       cancelOrderForAlreadyPaid(orderNo) {
         cancelOrderForAlreadyPaid(orderNo).then((res) => {
@@ -290,7 +294,9 @@
     },
     watch: {
       '$route': function () {
-        this._getOrderList();
+        if(this.$route.fullPath.indexOf("orderstatus") != -1) {
+          this._getOrderList();
+        }
       }
     }
   }

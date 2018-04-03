@@ -1,21 +1,84 @@
 <template>
   <div class="couponslist">
-    <scroll class="scroll-content" v-show="false">
+    <scroll class="scroll-content" v-if="activityList.length > 0">
       <ul>
-        <li v-for="n in 100" style="line-height: 30px">{{n.toString()}}</li>
+        <!-- <li v-for="activity in activityList" style="line-height: 30px">{{activity.name}}</li> -->
+
+        <li class="case" v-for="activity in activityList" @click.prevent.stop="gotoItemsForActivity(activity)">
+         <h3>
+           <span>{{activity.name}}</span>
+         </h3>
+         <h3>
+           <span>活动时间：{{activity.startDate}}~{{activity.endDate}}</span>
+         </h3>
+         <p>
+           <span>{{activity.remarks}}</span>
+         </p>
+       </li>
       </ul>
     </scroll>
-    <div class="noData" v-show="true">
+    <div class="noData" v-if="activityList.length == 0">
       <div class="img">
         <img src="../../common/images/nodata.png">
       </div>
-      <div class="text-gray">暂无拼团</div>
+      <div class="text-gray">暂无活动</div>
     </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
+  import {findListByActivityType} from 'api/getdata'
+  import {ERR_OK, imageDomainName} from 'api/config'
   export default {
+    data() {
+      return {
+        activityList: [],
+        pageNo: 1,
+        pageSize: 1000,
+        imageDomainName: imageDomainName,
+        nexttitle: ""
+      }
+    },
+    activated(){
+     /* console.log(123)*/
+    },
+    created() {
+      this._findListByActivityType();
+    },
+    methods: {
+      _findListByActivityType() {
+        let activityType = this.$route.params.id;
+        //获取活动列表
+        findListByActivityType(activityType).then((res) => {
+          if (res.ret === '0') {
+            this.activityList = res.data.list
+          }
+        })
+      },
+      gotoItemsForActivity(activity) {
+        //跳转到商品列表页面，展示对应活动的参与商品
+        this.$router.push({
+          path: `/Groupgoods/activity`,
+          query: {
+            activityId: activity.id,
+            activityType: this.$route.params.id
+          }
+        })
+      },
+      checkoutfn(value) {
+        Toast({
+          message: value,
+          duration: 1000
+        })
+      }
+    },
+    watch: {
+      '$route': function () {
+        if(this.$route.fullPath.indexOf("mygroup") != -1) {
+          this._findListByActivityType();
+        }
+      }
+    },
     components: {
       Scroll
     }

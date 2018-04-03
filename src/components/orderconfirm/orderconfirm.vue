@@ -56,6 +56,14 @@
          </div>
          <div class="leaveWord">
            <h3>
+             <span>活动选择：</span>
+             <select name="activitySelect" id="" v-model="activity" maxlength="100" @change="chooseActivity()">
+                <option v-for="activityInfo in orderInfo.activityList" :value="activityInfo.idStr">{{activityInfo.activity.name}}</option>
+             </select>
+           </h3>
+         </div>
+         <div class="leaveWord"> 
+           <h3>
              <span>买家留言：</span>
              <textarea name="" id="" v-model="buyerMessage" maxlength="100" rows="1" placeholder="选填，可填写您和卖家达成一致的要求"></textarea>
            </h3>
@@ -76,10 +84,22 @@
               <mt-switch v-model="isUseDefault"></mt-switch>
             </h3>
          </div> -->
+         <div class="postage">
+            <h3>
+              <span>最多可使用{{orderInfo.userCurScoreNum > orderInfo.canUseTotalScore ? orderInfo.canUseTotalScore : orderInfo.userCurScoreNum}}积分抵扣</span>
+              <span>积分与人民币兑换比例：{{orderInfo.scoreRate}}</span>
+            </h3>
+         </div>
+         <div class="leaveWord">
+            <h3>
+              <span>使用积分数</span>
+              <textarea name="" id="" @blur="useScore()" v-model="useScoreNum" maxlength="100" rows="1" placeholder="选填，可填写您使用的积分数"></textarea>
+            </h3>
+         </div>
          <div class="countPrice">
           <h3>
             <span>合计：</span>
-            <i>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</i>
+            <i>￥{{lastPrice}}</i>
           </h3>
          </div>
          <div class="payBtn">
@@ -131,7 +151,10 @@
         isUseDefault: false,
         chooseadd: false,
         imageDomainName: imageDomainName,
-        buyerMessage: ""
+        buyerMessage: "",
+        activity: "",
+        lastPrice: "",
+        useScoreNum: ""
       }
     },
     created() {
@@ -163,6 +186,13 @@
             if(this.orderInfo.wemallOrderAddress) {
               this.isUseDefault = true;
             }
+
+            //判断收货地址
+            for(let index in this.orderInfo.activityList) {
+              let activityInfo = this.orderInfo.activityList[index];
+              activityInfo.idStr = activityInfo.activityId + "_" + activityInfo.activityType;
+            }
+            this.lastPrice = (this.orderInfo.wemallOrder.orderPrice/100).toFixed(2);
           }
         })
       },
@@ -199,6 +229,14 @@
         params.paymentType = 0;
         params.orderNo = this.orderNo;
         params.buyerMessage = this.buyerMessage;
+
+        if(this.activity != "") {
+          params.activityId=this.activity.split("_")[0];
+          params.activityType=this.activity.split("_")[1];
+        }
+        if(this.useScoreNum != 0 && this.useScoreNum != "") {
+          params.scoreUsageNum=this.useScoreNum;
+        }
         getPrepareIdForPay(params).then((res) => {
           if (res.ret === '0') {
             if(res.data.needPay == "0") {
@@ -219,6 +257,29 @@
           path: `/Goodsdetail/`+itemId
         })
       },
+      chooseActivity() {
+        for(let index in this.orderInfo.activityList) {
+          let activityInfo = this.orderInfo.activityList[index];
+          let idStr = activityInfo.activityId + "_" + activityInfo.activityType;
+          if(this.activity == idStr) {
+            this.lastPrice = (activityInfo.joinPrice/100).toFixed(2);
+            if(this.useScoreNum != 0 || this.useScoreNum != "") {
+              this.lastPrice = this.lastPrice - this.useScoreNum/this.orderInfo.scoreRate;
+              if(this.lastPrice < 0) this.lastPrice = 0;
+            }
+          }
+        }
+      },
+      useScore() {
+        let maxScore = this.orderInfo.userCurScoreNum > this.orderInfo.canUseTotalScore ? this.orderInfo.canUseTotalScore : this.orderInfo.userCurScoreNum;
+        if(maxScore < this.useScoreNum) {
+          this.checkoutfn("使用积分数不可超过最大使用积分值！");
+          this.useScoreNum = 0;
+          return;
+        }
+
+        this.chooseActivity();
+      },
       checkoutfn(value) {
         Toast({
           message: value,
@@ -237,8 +298,11 @@
     },
     watch: {
       '$route': function () {
-        this.orderNo = this.$route.params.id;
-        this._getOrderDetail()
+        if(this.$route.fullPath.indexOf("orderconfirm") != -1) {
+          this.orderNo = this.$route.params.id;
+          this._getOrderDetail()
+        }
+        
       }
     }
   }

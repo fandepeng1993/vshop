@@ -18,8 +18,8 @@
     data() {
       return {
         datastab: [
-          {name: '我参与的拼团', srcfirst: '/Membercenter/mygroup/', srclast: '1'},
-          {name: '我发起的拼团', srcfirst: '/Membercenter/mygroup/', srclast: '2'}
+          {name: '满减送', srcfirst: '/Membercenter/mygroup/', srclast: '2'},
+          {name: '限时打折', srcfirst: '/Membercenter/mygroup/', srclast: '3'}
         ]
       }
     },

@@ -66,8 +66,10 @@
     },
     watch: {
       '$route': function () {
-        this.id = this.$route.params.id;
-        this._getScoreInfoList()
+        if(this.$route.fullPath.indexOf("integrationinfo") != -1) {
+          this.id = this.$route.params.id;
+          this._getScoreInfoList()
+        }
       }
     }
   }

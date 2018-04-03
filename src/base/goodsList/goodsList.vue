@@ -48,7 +48,7 @@
   import Loading from 'base/loading/loading'
   import IsatBacktop from 'base/backtop/backtop'
   import {imageDomainName} from 'api/config'
-  import {getItemList} from 'api/getdata'
+  import {getItemList, findItemsByActivity} from 'api/getdata'
   let TIMER = ''
   const digitsRE = /(\d{3})(?=\d)/g
   export default {
@@ -89,19 +89,77 @@
       }
     },
     methods: {
+      initParams() {
+        console.log(this.$route)
+
+        if(this.$route.fullPath.indexOf("comprehensive") != -1) {
+          //综合
+          this.searchItemParams.orderBy = "";
+        } else if(this.$route.fullPath.indexOf("salesVolume") != -1) {
+          //销量
+          this.searchItemParams.orderBy = "salesNum DESC";
+        } else if(this.$route.fullPath.indexOf("newProduct") != -1) {
+          //新品
+          this.searchItemParams.orderBy = "";
+          this.searchItemParams.isNew = 1;
+        } else if(this.$route.fullPath.indexOf("price") != -1) {
+          //价格
+          this.searchItemParams.orderBy = "currentPrice ASC";
+        }
+
+        if(this.$route.params.id == "allbaby") {
+          
+        } else if(this.$route.params.id == "search") {
+          this.searchItemParams.name = this.$route.query.searchkey
+        } else if(this.$route.params.id == "activity") {
+          //活动商品
+          this.searchItemParams.activityId = this.$route.query.activityId
+          this.searchItemParams.activityType = this.$route.query.activityType
+        } else if(this.$route.fullPath.indexOf("integralmall") != -1) {
+          //积分商城
+          if(this.$route.params.id == "1") {
+            //积分抵扣
+            delete this.searchItemParams.canUseScoreExchange;
+            this.searchItemParams.canUseScoreDeduct = 1;
+          } else if(this.$route.params.id == "2") {
+            //积分兑换
+            delete this.searchItemParams.canUseScoreDeduct;
+            this.searchItemParams.canUseScoreExchange = 1;
+          }
+        } else {
+          this.searchItemParams.sortId = this.$route.params.id;  //商品类别id
+        }
+        this.searchItemParams.isOnShelf = 1;//是否上架
+
+        //this.searchItemParams.isNew = 1;//是否新品
+        //this.searchItemParams.canUseBounty = 1;//是否可用奖励金
+        //this.searchItemParams.canUseCoupon = 1;//是否可用优惠券
+        //this.searchItemParams.canUseScoreDeduct = 1;//是否可用积分抵扣
+        //this.searchItemParams.canUseScoreExchange = 1;//是否可用积分兑换
+      },
       _getItemList() {
         this.searchItemParams.pageNo = this.pageNo;
         this.searchItemParams.pageSize = this.pageSize;
 
-        getItemList(this.searchItemParams).then((res) => {
-          if (res.ret === '0') {
-            if(res.data.list.length > 0) {
-              this.goodsList = this.goodsList.concat(res.data.list)
-            } else {
-              this.pageNo--;
+        if(this.$route.params.id == "activity") {
+          findItemsByActivity(this.searchItemParams).then((res) => {
+            if (res.ret === '0') {
+              if(res.data.list.length > 0) {
+                this.goodsList = res.data.list
+              }
             }
-          }
-        })
+          })
+        } else {
+          getItemList(this.searchItemParams).then((res) => {
+            if (res.ret === '0') {
+              if(res.data.list.length > 0) {
+                this.goodsList = this.goodsList.concat(res.data.list)
+              } else {
+                this.pageNo--;
+              }
+            }
+          })
+        }
       },
       scroll(pos) {
         if (pos.y < -300 && this.isShow === false) {
@@ -141,38 +199,7 @@
       }
     },
     created() {
-      /*console.log(this.$route)*/
-
-      if(this.$route.fullPath.indexOf("comprehensive") != -1) {
-        //综合
-        this.searchItemParams.orderBy = "";
-      } else if(this.$route.fullPath.indexOf("salesVolume") != -1) {
-        //销量
-        this.searchItemParams.orderBy = "salesNum DESC";
-      } else if(this.$route.fullPath.indexOf("newProduct") != -1) {
-        //新品
-        this.searchItemParams.orderBy = "";
-        this.searchItemParams.isNew = 1;
-      } else if(this.$route.fullPath.indexOf("price") != -1) {
-        //价格
-        this.searchItemParams.orderBy = "currentPrice ASC";
-      }
-
-      if(this.$route.params.id == "allbaby") {
-        
-      } else if(this.$route.params.id == "search") {
-        this.searchItemParams.name = this.$route.query.searchkey
-      } else {
-        this.searchItemParams.sortId = this.$route.params.id;  //商品类别id
-      }
-      this.searchItemParams.isOnShelf = 1;//是否上架
-
-      //this.searchItemParams.isNew = 1;//是否新品
-      //this.searchItemParams.canUseBounty = 1;//是否可用奖励金
-      //this.searchItemParams.canUseCoupon = 1;//是否可用优惠券
-      //this.searchItemParams.canUseScoreDeduct = 1;//是否可用积分抵扣
-      //this.searchItemParams.canUseScoreExchange = 1;//是否可用积分兑换
-
+      this.initParams();
       this._getItemList();
     },
     components: {
@@ -196,8 +223,14 @@
           clearTimeout(TIMER)
           return
         }
+      },
+      '$route': function () {
+        if(this.$route.fullPath.indexOf("integralmall") != -1 ||
+          this.$route.fullPath.indexOf("Groupgoods") != -1) {
+          this.initParams();
+          this._getItemList();
+        }
       }
-
     },
     filters:{      //数据过滤器
         currency:function(value, currency, decimals) {
@@ -221,7 +254,6 @@
             _int.slice(i).replace(digitsRE, '$1,') +
             _float
         }
-
     }
   }
 </script>

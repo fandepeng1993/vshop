@@ -97,6 +97,10 @@
             if(this.$route.query.searchkey && item.srclast.indexOf("searchkey=") == -1) {
               item.srclast = item.srclast + "?searchkey=" + this.$route.query.searchkey;
             }
+          } else {
+            if(this.$route.fullPath.indexOf("?") != -1) {
+              item.srclast = item.srclast + this.$route.fullPath.substring(this.$route.fullPath.indexOf("?"));
+            }
           }
         }
         console.log(this.datastab);

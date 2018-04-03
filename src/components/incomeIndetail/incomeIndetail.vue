@@ -65,8 +65,10 @@
     },
     watch: {
       '$route': function () {
-        this.id = this.$route.params.id;
-        this._getBountyInfoList()
+        if(this.$route.fullPath.indexOf("bounty") != -1) {
+          this.id = this.$route.params.id;
+          this._getBountyInfoList()
+        }
       }
     }
   }

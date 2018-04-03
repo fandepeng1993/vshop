@@ -306,7 +306,9 @@
         
       },
       '$route': function () {
-        this._getShopCarList()
+        if(this.$route.fullPath.indexOf("Shoppingcart") != -1) {
+          this._getShopCarList()
+        }
       }
     }
   }

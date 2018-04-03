@@ -274,6 +274,22 @@ export function updateWemallUserInfo(params) {
   return sendPost(url, params);
 }
 
+// 根据活动类别，获取当前未过期的活动列表的接口。
+// activityType（*）=活动类别
+export function findListByActivityType(activityType) {
+  const url = domainName + '/f/interface/wemall/market/findListByActivityType'
+  const params = {activityType: activityType}
+  return sendPost(url, params);
+}
+
+// 根据活动id和活动类别，获取参与该活动的商品列表。
+// activityId（*）=活动id
+// activityType（*）=活动类别
+export function findItemsByActivity(params) {
+  const url = domainName + '/f/interface/wemall/market/findItemsByActivity'
+  return sendPost(url, params);
+}
+
 
 export function jsonToObj(str) {
   return JSON.parse(str);
