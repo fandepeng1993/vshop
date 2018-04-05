@@ -55,9 +55,16 @@
            </div>
          </div>
          <div class="leaveWord">
-           <h3>
+           <h3 class='acChos'>
              <span>活动选择：</span>
-             <select name="activitySelect" id="" v-model="activity" maxlength="100" @change="chooseActivity()">
+             <!-- <select>
+              <option value="volvo">Volvddddddddddddddddddddo</option>
+              <option value="saab">Saab</option>
+              <option value="opel">Opel</option>
+              <option value="audi">Audi</option>
+            </select> -->
+            <select name="activitySelect" id="" v-model="activity" maxlength="100" @change="chooseActivity()">
+                 <option value="1" disabled>请选择活动</option>
                 <option v-for="activityInfo in orderInfo.activityList" :value="activityInfo.idStr">{{activityInfo.activity.name}}</option>
              </select>
            </h3>
@@ -152,7 +159,7 @@
         chooseadd: false,
         imageDomainName: imageDomainName,
         buyerMessage: "",
-        activity: "",
+        activity: "1",
         lastPrice: "",
         useScoreNum: ""
       }
@@ -263,7 +270,7 @@
           let idStr = activityInfo.activityId + "_" + activityInfo.activityType;
           if(this.activity == idStr) {
             this.lastPrice = (activityInfo.joinPrice/100).toFixed(2);
-            if(this.useScoreNum != 0 || this.useScoreNum != "") {
+            if(this.useScoreNum != 0 || this.useScorereNum != "") {
               this.lastPrice = this.lastPrice - this.useScoreNum/this.orderInfo.scoreRate;
               if(this.lastPrice < 0) this.lastPrice = 0;
             }
@@ -443,6 +450,14 @@
           span
             font-size 14px
             color #4d4d4d
+          &.acChos
+            display: flex
+            height: 40px
+            span
+              flex:1
+            select
+              height:30px
+              flex:3
           textarea
             flex 1
             outline none

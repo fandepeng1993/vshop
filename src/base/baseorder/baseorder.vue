@@ -203,14 +203,26 @@
       },
       cancelOrder(orderNo) {
         //取消订单
-        cancelOrder(orderNo).then((res) => {
-          if (res.ret === '0') {
-            this.checkoutfn("订单取消成功");
-            this._getOrderList();
-          } else {
-            this.checkoutfn(res.retMsg);
-          }
-        })
+        MessageBox({
+              title: '',
+              message: '是否取消此订单',
+              showCancelButton: true,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+                cancelOrder(orderNo).then((res) => {
+                  if (res.ret === '0') {
+                    this.checkoutfn("订单取消成功");
+                    this._getOrderList();
+                  } else {
+                    this.checkoutfn(res.retMsg);
+                  }
+                })
+        
+              } else {
+                return
+              }
+            })
       },
       payOrder(orderNo) {
         //付款
@@ -237,34 +249,67 @@
         }) */
       },
       cancelOrderForAlreadyPaid(orderNo) {
-        cancelOrderForAlreadyPaid(orderNo).then((res) => {
-          if (res.ret === '0') {
-            this.checkoutfn("取消已付款订单成功");
-            this._getOrderList();
-          } else {
-            this.checkoutfn(res.retMsg);
-          }
-        })
+        MessageBox({
+              title: '',
+              message: '是否取消此已付款订单',
+              showCancelButton: true,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+                cancelOrderForAlreadyPaid(orderNo).then((res) => {
+                  if (res.ret === '0') {
+                    this.checkoutfn("取消已付款订单成功");
+                    this._getOrderList();
+                  } else {
+                    this.checkoutfn(res.retMsg);
+                  }
+                })            
+              } else {
+                return
+              }
+            })
       },
       receiveOrder(orderNo) {
-        alreadyReceived(orderNo).then((res) => {
-          if (res.ret === '0') {
-            this.checkoutfn("确认收货成功");
-            this._getOrderList();
-          } else {
-            this.checkoutfn(res.retMsg);
-          }
-        })
+        MessageBox({
+              title: '',
+              message: '是否确认已收货',
+              showCancelButton: true,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+                alreadyReceived(orderNo).then((res) => {
+                  if (res.ret === '0') {
+                    this.checkoutfn("确认收货成功");
+                    this._getOrderList();
+                  } else {
+                    this.checkoutfn(res.retMsg);
+                  }
+                })            
+              } else {
+                return
+              }
+            })
       },
       applyForReject(orderNo) {
-        applyForReject(orderNo).then((res) => {
-          if (res.ret === '0') {
-            this.checkoutfn("提交退货申请成功");
-            this._getOrderList();
-          } else {
-            this.checkoutfn(res.retMsg);
-          }
-        })
+        MessageBox({
+              title: '',
+              message: '是否确认提交退货申请',
+              showCancelButton: true,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+                applyForReject(orderNo).then((res) => {
+                  if (res.ret === '0') {
+                    this.checkoutfn("提交退货申请成功");
+                    this._getOrderList();
+                  } else {
+                    this.checkoutfn(res.retMsg);
+                  }
+                })           
+              } else {
+                return
+              }
+            })
       },
       gotoOrderDeatil(orderInfo) {
         if(this.listType != '2' && orderInfo.wemallOrder.applyForReject != '1' && (orderInfo.wemallOrder.status == 1 ||

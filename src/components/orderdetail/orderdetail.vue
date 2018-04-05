@@ -219,6 +219,12 @@
       this._getOrderDetail()
     },
     methods:{
+      checkoutfn(value) {
+        Toast({
+          message: value,
+          duration: 1000
+        })
+      },
       _getOrderDetail() {
         getOrderDetail(this.orderNo).then((res) => {
           if (res.ret === '0') {
@@ -244,36 +250,28 @@
       },
       cancelOrder() {
         //取消订单
-        cancelOrder(this.orderNo).then((res) => {
-          if (res.ret === '0') {
-            MessageBox({
+        MessageBox({
               title: '',
-              message: '订单取消成功',
-              showCancelButton: false,
+              message: '是否取消此订单',
+              showCancelButton: true,
               closeOnClickModal: false
             }).then(action => {
               if (action === 'confirm') {
+                cancelOrder(this.orderNo).then((res) => {
+                  if (res.ret === '0') {
+                  this.checkoutfn('订单取消成功')
+                    this.$router.push({
+                      path: `/Membercenter/orderstatus/allorder`
+                    })
+                  } else {
+                      this.checkoutfn(res.retMsg)
+                      return
+                  }
+                })
               } else {
                 return
               }
             })
-            this.$router.push({
-              path: `/Membercenter/orderstatus/allorder`
-            })
-          } else {
-            MessageBox({
-              title: '',
-              message: res.retMsg,
-              showCancelButton: false,
-              closeOnClickModal: false
-            }).then(action => {
-              if (action === 'confirm') {
-              } else {
-                return
-              }
-            }) 
-          }
-        })
       },
       payOrder() {
         //付款
@@ -319,68 +317,52 @@
         }) */
       },
       cancelOrderForAlreadyPaid(orderNo) {
-        cancelOrderForAlreadyPaid(orderNo).then((res) => {
-          if (res.ret === '0') {
-            MessageBox({
+        MessageBox({
               title: '',
-              message: '取消已付款订单成功',
-              showCancelButton: false,
+              message: '是否取消此已付款订单',
+              showCancelButton: true,
               closeOnClickModal: false
             }).then(action => {
               if (action === 'confirm') {
-              } else {
-                return
-              }
-            }) 
-            this.$router.push({
-              path: `/Membercenter/orderstatus/allorder`
-            })
-          } else {
-            MessageBox({
-              title: '',
-              message: res.retMsg,
-              showCancelButton: false,
-              closeOnClickModal: false
-            }).then(action => {
-              if (action === 'confirm') {
+                cancelOrderForAlreadyPaid(orderNo).then((res) => {
+                  if (res.ret === '0') {
+                    this.checkoutfn('取消已付款订单成功')
+                    this.$router.push({
+                      path: `/Membercenter/orderstatus/allorder`
+                    })
+                  } else {
+                    this.checkoutfn(res.retMsg)
+                  }
+                })
               } else {
                 return
               }
             })
-          }
-        })
+
       },
       receiveOrder(orderNo) {
-        alreadyReceived(orderNo).then((res) => {
-          if (res.ret === '0') {
             MessageBox({
               title: '',
-              message: '确认收货成功',
-              showCancelButton: false,
+              message: '是否确认收货',
+              showCancelButton: true,
               closeOnClickModal: false
             }).then(action => {
               if (action === 'confirm') {
+                alreadyReceived(orderNo).then((res) => {
+                  if (res.ret === '0') {
+                    this.checkoutfn('确认收货成功')
+                    this.$router.push({
+                      path: `/Membercenter/orderstatus/allorder`
+                    })
+                  } else {
+                    this.checkoutfn(res.retMsg)
+                  }
+                })
               } else {
                 return
               }
             })
-            this.$router.push({
-              path: `/Membercenter/orderstatus/allorder`
-            })
-          } else {
-            MessageBox({
-              title: '',
-              message: res.retMsg,
-              showCancelButton: false,
-              closeOnClickModal: false
-            }).then(action => {
-              if (action === 'confirm') {
-              } else {
-                return
-              }
-            })
-          }
-        })
+        
       },
       gotoItemDeatil(itemId) {
         this.$router.push({

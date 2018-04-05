@@ -12,7 +12,7 @@
                   <p>暂无会员卡</p>
                 </li>
                 <li class="memberperson">
-                  <div>
+                  <div style="border-radius: 50%;overflow: hidden;">
                     <img :src="userInfo.headImgUrl" alt="">
                   </div>
                 </li>

@@ -2,7 +2,7 @@
   <transition name="slidex">
     <div class="coupons">
       <isat-publictoptitle
-        :titles="'我的拼团'"
+        :titles="Tames"
         :isback="false"
         :defaultHome="'/Membercenter'"
       ></isat-publictoptitle>
@@ -21,6 +21,18 @@
           {name: '满减送', srcfirst: '/Membercenter/mygroup/', srclast: '2'},
           {name: '限时打折', srcfirst: '/Membercenter/mygroup/', srclast: '3'}
         ]
+      }
+    },
+    created(){
+      console.log(this.$route.params.id)
+    },
+    computed: {
+      Tames() {
+        if(this.$route.params.id==="2") {
+          return "满减送"
+        } else if(this.$route.params.id==="3") {
+          return "限时打折"
+        }
       }
     },
     components: {

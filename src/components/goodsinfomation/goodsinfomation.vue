@@ -1,7 +1,7 @@
 <template>
   <transition name="slide">
     <div class="goodsInfo">
-       <!-- <mt-header :title="nexttitle">
+       <!-- <mt-header :title="Tnames">
           &lt;!&ndash;<div slot="left">
             <mt-button icon="back" @click="back"></mt-button>
             &lt;!&ndash; <mt-button @click="handleClose">关闭</mt-button>&ndash;&gt;
@@ -17,7 +17,7 @@
           </mt-button>
         </mt-header>-->
       <isat-publictoptitle
-        :titles="nexttitle"
+        :titles="Tnames"
         :isback="false"
         :defaultHome="'/Groupgoods'"
       >
@@ -61,6 +61,19 @@
       }
     },
     computed: {
+      Tnames() {
+        if(this.$route.params.id==="activity") {
+          if(this.$route.query.activityType=="2"){
+            return "满减宝贝"
+          } else if(this.$route.query.activityType=="3") {
+              return "限时折扣宝贝"
+          }
+        } else if(this.$route.query.searchkey) {
+            return "搜索"
+        } else {
+          return this.nexttitle
+        }
+      }
       /* Goodstitle() {
         return this.titlesname
       },

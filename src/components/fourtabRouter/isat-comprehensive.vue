@@ -12,6 +12,9 @@
         default: false
       }
     },
+    created(){
+      console.log('comprehensive')
+    },
     components: {
       IsatGoodList
     }

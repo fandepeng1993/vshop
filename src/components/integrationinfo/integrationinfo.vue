@@ -17,7 +17,7 @@
               <p>累计积分</p>
               <h3>{{userInfo.user.totalScoreNum}}</h3>
             </li>
-            <div class="tips">
+            <div class="tips" v-if="false">
               <i @click.prevent.stop="jumpage">积分规则</i>
             </div>
           </ul>

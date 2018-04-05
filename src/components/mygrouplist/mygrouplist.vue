@@ -1,19 +1,22 @@
 <template>
   <div class="couponslist">
-    <scroll class="scroll-content" v-if="activityList.length > 0">
+    <scroll class="scroll-content" datas="activityList" v-if="activityList.length > 0">
       <ul>
-        <!-- <li v-for="activity in activityList" style="line-height: 30px">{{activity.name}}</li> -->
+        <!-- <li v-for="activity in ul" style="line-height: 30px">{{activity.name}}</li> -->
 
         <li class="case" v-for="activity in activityList" @click.prevent.stop="gotoItemsForActivity(activity)">
-         <h3>
-           <span>{{activity.name}}</span>
-         </h3>
-         <h3>
-           <span>活动时间：{{activity.startDate}}~{{activity.endDate}}</span>
-         </h3>
-         <p>
-           <span>{{activity.remarks}}</span>
-         </p>
+         <div>
+           <h3 class="acName">
+              <span>{{activity.name}}</span>
+           </h3>
+           <h3 class="acTime">
+             活动时间：<span>{{activity.startDate}}~{{activity.endDate}}</span>
+           </h3>
+           <p  class="acRemark">
+             <span>{{activity.remarks}}</span>
+           </p>
+         </div>
+         <i class="icon-right"></i>
        </li>
       </ul>
     </scroll>
@@ -95,6 +98,24 @@
       width 100%
       height 100%
       overflow hidden
+      ul
+        li
+          border-bottom: 1px solid #e7e7e7
+          display:flex
+          align-items: center;
+          padding: 10px;
+          .acName
+            font-size: 18px;
+            color: red
+            margin-bottom:5px
+          .acTime
+            font-size:16px
+            margin-bottom:5px
+            span
+              color: #777
+          .acRemark
+            font-size:16px 
+            color: #333
     .noData
       height 150px
       width 100%
