@@ -294,7 +294,7 @@
     },
     watch: {
       '$route': function () {
-        if(this.$route.fullPath.indexOf("orderstatus") != -1) {
+        if(this.$route.fullPath.indexOf("orderstatus") != -1 || this.$route.fullPath.indexOf("afterSale") != -1) {
           this._getOrderList();
         }
       }

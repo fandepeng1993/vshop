@@ -13,10 +13,10 @@
         </div>
         <div class="selectq">
           <div v-if="specInfo.length > 0">
-            <h4>选择重量</h4>
+            <h4>选择{{specInfo[0].specName}}</h4>
             <ul>
               <li @click.prevent.stop="chooseQuality(0,index)" v-for="(item,index) in specInfo" :class="[index==chooseNum[0] ? 'actived': '']" >
-                <span>{{item.specInfoName}}公斤</span>
+                <span>{{item.specInfoName}}</span>
               </li>
             </ul>
           </div>
@@ -24,7 +24,7 @@
             <h4>选择价格1</h4>
             <ul>
               <li @click.prevent.stop="chooseQuality(1,index)" v-for="(item,index) in specInfo" :class="[index==chooseNum[1] ? 'actived': '']" >
-                <span>{{item.specInfoName}}公斤</span>
+                <span>{{item.specInfoName}}</span>
               </li>
             </ul>
           </div> -->

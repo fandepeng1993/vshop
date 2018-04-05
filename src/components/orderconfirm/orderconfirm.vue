@@ -30,9 +30,9 @@
          <div class="sidai">
          </div>
          <div class="shopgoods">
-           <div class="shophead">
-             <img src="http://file.jjiehao.com/files/87ef8d06/1331c0e77c4376cf28a4b45c961/201707/2808142246.jpg" alt="">
-             <span>知硒堂商城</span>
+           <div class="shophead">            
+             <img src="../../common/images/shop.jpg" alt="">
+             <span>爱科技商城</span>
            </div>
            <ul class="goodslist">
              <li v-for="orderItem in orderInfo.orderItemList" @click.prevent.stop="gotoItemDeatil(orderItem.itemId)">
@@ -87,7 +87,7 @@
          <div class="postage">
             <h3>
               <span>最多可使用{{orderInfo.userCurScoreNum > orderInfo.canUseTotalScore ? orderInfo.canUseTotalScore : orderInfo.userCurScoreNum}}积分抵扣</span>
-              <span>积分与人民币兑换比例：{{orderInfo.scoreRate}}</span>
+              <span>积分与人民币兑换比例({{orderInfo.scoreRate}}：1)</span>
             </h3>
          </div>
          <div class="leaveWord">

@@ -90,8 +90,7 @@
     },
     methods: {
       initParams() {
-        console.log(this.$route)
-
+		this.goodsList = [];
         if(this.$route.fullPath.indexOf("comprehensive") != -1) {
           //综合
           this.searchItemParams.orderBy = "";

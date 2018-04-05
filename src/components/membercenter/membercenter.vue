@@ -90,7 +90,7 @@
           {pname: '奖励金', src: 'bonus.svg', link: '/Membercenter/bounty'},
           {pname: '会员卡', src: 'card.svg', link: '/Membercenter/membershipcard'}, */
           {pname: '积分商城', src: 'jifenshangc.svg', link: '/Membercenter/integralmall/1'},
-          {pname: '优惠券', src: '7juan.svg', link: '/Membercenter/coupons/1'},
+          /*{pname: '优惠券', src: '7juan.svg', link: '/Membercenter/coupons/1'},*/
           {pname: '满减送', src: '4kanjia.svg', link: '/Membercenter/mygroup/2'},
           {pname: '限时打折', src: 'pintuan.svg', link: '/Membercenter/mygroup/3'},
           {pname: '积分明细', src: 'score-icon.svg', link: '/Membercenter/integrationinfo/1'},

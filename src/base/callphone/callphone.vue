@@ -8,7 +8,7 @@
         <span>客服电话</span>
         <span>{{phone}}</span>
       </div>
-      <div class="call-btn">
+      <div class="call-btn" @click.prevent.stop="call">
         <mt-button type="primary" size="small">拨号</mt-button>
       </div>
     </div>
@@ -20,6 +20,11 @@
       phone: {
         type: String,
         default: "18516662341"
+      }
+    },
+    methods:{
+      call() {
+        window.location.href = `tel:${this.phone}`
       }
     }
   }
