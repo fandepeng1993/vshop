@@ -3,6 +3,7 @@ const state = {
   titlesname: '',
   checkedstate: [],
   example: [],
-  address: []
+  address: [],
+  phoneNumber:''
 }
 export default state

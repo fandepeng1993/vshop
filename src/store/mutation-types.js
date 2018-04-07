@@ -9,4 +9,5 @@ export const EDIT_ADDRESS = 'EDIT_ADDRESS'
 export const SAVE_ADDRESS = 'SAVE_ADDRESS'
 export const DELETE_ADDRESS = 'DELETE_ADDRESS'
 export const SET_ALLADDRESS = 'SET_ALLADDRESS'
+export const SET_PHONE = 'SET_PHONE'
 

@@ -1,6 +1,6 @@
 <template>
   <div class="conhomepage" ref="conhomepage">
-      <scroll ref="scroll" :datas="homepagedata.banna"  class="conhomepage-content">
+      <scroll ref="scroll" :datas="homepagedata"  class="conhomepage-content">
         <div>
           <div class="bannerWraper" >
             <div v-if="homepagedata.banna.length" v-bind:style="{height:screenWidth*0.4+'px'}" class="slider-wrapper">
@@ -30,7 +30,7 @@
   import Loading from 'base/loading/loading'
   import IsatGoodlistshowWrap from 'components/goodslistshow-wrap/goodslistshow-wrap'
   import IsatCallphone from 'base/callphone/callphone'
-
+  import {mapMutations} from 'vuex'
   export default {
     data() {
       return {
@@ -70,6 +70,7 @@
         getWemallHomepage().then((res) => {
           if (res.ret === '0') {
             this.homepagedata = res.data
+            this.setphone(this.homepagedata.servicePhone)
           }
         })
       },
@@ -82,7 +83,10 @@
       getScreenWidth() {
         this.screenWidth = document.documentElement.clientWidth
         /* console.log(this.screenWidth) */
-      }
+      },
+      ...mapMutations({
+        setphone:'SET_PHONE'
+      })
     },
     components: {
       Slider,

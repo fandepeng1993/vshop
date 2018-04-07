@@ -65,9 +65,9 @@ export default new Router({
     {
       path: '/Membercenter',
       component: Membercenter,
-     /*meta: {
+      meta: {
         keepAlive: true // 不需要缓存
-      },*/
+      },
       children: [
         {
           path: 'orderstatus',

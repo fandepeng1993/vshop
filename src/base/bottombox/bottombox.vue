@@ -6,8 +6,8 @@
             <img :src="imageDomainName+imgurl" >
           </div>
           <div class="imgInfo">
-            <span>{{goodsEntity.currentPrice/100 | currency('￥')}}</span>
-            <p>库存<i>{{goodsEntity.storage}}</i>件</p>
+            <span>{{goodsEntityObj.currentPrice/100 | currency('￥')}}</span>
+            <p>库存<i>{{goodsEntityObj.storage}}</i>件</p>
           </div>
           <i class="closeICon" @click.prevent.stop="changeShower"></i>
         </div>
@@ -86,12 +86,19 @@ export default {
   activated() {
   },
   created() {
-    /* if(this.goodsEntity.specInfoStr) {
-      console.log(JSON.parse(this.goodsEntity.specInfoStr))
-      this.specInfo = JSON.parse(this.goodsEntity.specInfoStr);
+    /* if(this.goodsEntityObj.specInfoStr) {
+      console.log(JSON.parse(this.goodsEntityObj.specInfoStr))
+      this.specInfo = JSON.parse(this.goodsEntityObj.specInfoStr);
     } */
   },
   computed: {
+    goodsEntityObj: function () {
+      let obj = {};
+      for(let i in this.goodsEntity) {
+        obj[i] = this.goodsEntity[i]
+      }
+      return obj;
+    }
   },
   methods: {
     changeShower() {
@@ -104,11 +111,11 @@ export default {
       this.countNum = countNum + 1
     },
     sss() {
-      console.log("buyerType=" + this.buyerType, "itemId="+this.goodsEntity.id, "countNum=" + this.countNum)
+      console.log("buyerType=" + this.buyerType, "itemId="+this.goodsEntityObj.id, "countNum=" + this.countNum)
       let params = {}
-      params.itemId=this.goodsEntity.id
+      params.itemId=this.goodsEntityObj.id
       params.itemNum=this.countNum
-      params.itemSpecIds = this.goodsEntity.itemSpecIds
+      params.itemSpecIds = this.goodsEntityObj.itemSpecIds
       if(this.buyerType == 1) {
         //加入购物车
         addShopCarInfo(params).then((res) => {
@@ -155,25 +162,24 @@ export default {
     chooseQuality(dIndex, index) {
       /*console.log(dIndex, index)*/
       this.chooseNum.splice(dIndex, 1, index)
-      this.goodsEntity.currentPrice = this.specInfo[index].price;
-      this.goodsEntity.storage = this.specInfo[index].storage;
-      this.goodsEntity.itemSpecIds = this.specInfo[index].id;
+      this.goodsEntityObj.currentPrice = this.specInfo[index].price;
+      this.goodsEntityObj.storage = this.specInfo[index].storage;
+      this.goodsEntityObj.itemSpecIds = this.specInfo[index].id;
     }
   },
   components: {
     IsatNumberoption
   },
   watch: {
-    goodsEntity: function() {
-      if(this.goodsEntity.specInfoStr) {
-        console.log(JSON.parse(this.goodsEntity.specInfoStr))
-        this.specInfo = JSON.parse(this.goodsEntity.specInfoStr);
+    goodsEntityObj: function() {
+      if(this.goodsEntityObj.specInfoStr) {
+        this.specInfo = JSON.parse(this.goodsEntityObj.specInfoStr);
+        this.chooseQuality(0,0)
       }
     },
     '$route': function () {
-      if(this.goodsEntity.specInfoStr) {
-        console.log(JSON.parse(this.goodsEntity.specInfoStr))
-        this.specInfo = JSON.parse(this.goodsEntity.specInfoStr);
+      if(this.goodsEntityObj.specInfoStr) {
+        this.specInfo = JSON.parse(this.goodsEntityObj.specInfoStr);
       }
     }
   }

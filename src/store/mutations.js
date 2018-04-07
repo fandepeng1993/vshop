@@ -3,6 +3,9 @@ const mutations = {
   [types.SET_LOGINSTATE](state, loginstate) {
     state.loginstate = loginstate
   },
+  [types.SET_PHONE](state, phoneNumber) {
+    state.phoneNumber = phoneNumber
+  },
   [types.SET_TITLESNAME](state, titlesname) {
     state.titlesname = titlesname
   },

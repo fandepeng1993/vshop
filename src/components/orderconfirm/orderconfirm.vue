@@ -49,7 +49,7 @@
                <span>共{{orderInfo.orderItemList.length}}件商品</span>
                <i>小计：</i>
                <em>
-                 <b>￥{{((orderInfo.wemallOrder.orderPrice-orderInfo.wemallOrder.freightPrice)/100).toFixed(2)}}</b>
+                 <b>￥{{((orderInfo.wemallOrder.originalOrderPrice-orderInfo.wemallOrder.freightPrice)/100).toFixed(2)}}</b>
                </em>
              </h3>
            </div>
@@ -64,7 +64,7 @@
               <option value="audi">Audi</option>
             </select> -->
             <select name="activitySelect" id="" v-model="activity" maxlength="100" @change="chooseActivity()">
-                 <option value="1" disabled>请选择活动</option>
+                <option value="" disabled>请选择活动</option>
                 <option v-for="activityInfo in orderInfo.activityList" :value="activityInfo.idStr">{{activityInfo.activity.name}}</option>
              </select>
            </h3>
@@ -140,7 +140,7 @@
 </template>
 <script  type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
-  import {getOrderDetail, getPrepareIdForPay, jsonToObj} from 'api/getdata'
+  import {getOrderDetail, getPrepareIdForPay, jsonToObj, objToJson, wxPay} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   import { Toast, MessageBox } from 'mint-ui'
   export default {
@@ -159,7 +159,7 @@
         chooseadd: false,
         imageDomainName: imageDomainName,
         buyerMessage: "",
-        activity: "1",
+        activity: "",
         lastPrice: "",
         useScoreNum: ""
       }
@@ -199,7 +199,7 @@
               let activityInfo = this.orderInfo.activityList[index];
               activityInfo.idStr = activityInfo.activityId + "_" + activityInfo.activityType;
             }
-            this.lastPrice = (this.orderInfo.wemallOrder.orderPrice/100).toFixed(2);
+            this.lastPrice = (this.orderInfo.wemallOrder.originalOrderPrice/100).toFixed(2);
           }
         })
       },
@@ -253,6 +253,7 @@
               })
             } else {
               console.log("获取预付款id和签名成功", res.data);
+              wxPay(res.data.payRequestParams);
             }
           } else {
             this.checkoutfn(res.retMsg);
@@ -269,11 +270,12 @@
           let activityInfo = this.orderInfo.activityList[index];
           let idStr = activityInfo.activityId + "_" + activityInfo.activityType;
           if(this.activity == idStr) {
-            this.lastPrice = (activityInfo.joinPrice/100).toFixed(2);
+            this.lastPrice = activityInfo.joinPrice/100;
             if(this.useScoreNum != 0 || this.useScorereNum != "") {
               this.lastPrice = this.lastPrice - this.useScoreNum/this.orderInfo.scoreRate;
               if(this.lastPrice < 0) this.lastPrice = 0;
             }
+            this.lastPrice = this.lastPrice.toFixed(2);
           }
         }
       },

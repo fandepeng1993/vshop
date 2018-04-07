@@ -142,6 +142,12 @@
                     <span>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</span>
                   </h4>
                 </div>
+                <div class="appriec" style="display: flex;justify-content: space-between;" v-if="orderInfo.wemallOrder.status == 3 && orderInfo.wemallOrder.applyForReject != '1'">
+                  <div>
+                    <span>物流信息：</span>
+                  </div>
+                  <div>{{orderInfo.wemallOrder.freightName}}（运单号：{{orderInfo.wemallOrder.freightNo}}）</div>
+                </div>
               </li>
             </ul>
           </div>
@@ -150,8 +156,8 @@
               <span>积分</span>反<i>469积分</i>
             </h3> -->
             <div class="dbconcat">
-              <a class="external online-service" href="javascript:void(0)">联系卖家</a>
-              <a href="javascript:void(0)" class="phone">拨打电话</a>
+              <a class="external online-service" href="javascript:void(0)" @click.prevent.stop="call">联系卖家</a>
+              <a href="javascript:void(0)" class="phone" @click.prevent.stop="call">拨打电话</a>
             </div>
           </div>
           <div class="postage">
@@ -198,7 +204,14 @@
   import { Toast, MessageBox } from 'mint-ui'
   import {getOrderDetail, cancelOrder, getPrepareIdForPay, cancelOrderForAlreadyPaid, alreadyReceived, jsonToObj} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
+  import {mapGetters} from 'vuex'
   export default {
+    props: {
+        phone: {
+          type: String,
+          default: "18516662341"
+        }
+    },
     data() {
       return {
         orderNo: "",
@@ -218,7 +231,21 @@
       this.orderNo = this.$route.params.id;
       this._getOrderDetail()
     },
+    computed: {
+      ...mapGetters([
+        'phoneNumber'
+      ])
+    },
     methods:{
+      //拨打电话联系卖家
+      call() {
+        if(this.phoneNumber){
+          window.location.href = `tel:${this.phoneNumber}`
+        } else {
+          window.location.href = `tel:${this.phone}`
+        }
+      
+      },
       checkoutfn(value) {
         Toast({
           message: value,

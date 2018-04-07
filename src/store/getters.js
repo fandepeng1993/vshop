@@ -5,6 +5,7 @@ export const example = state => state.example
 export const address = function (state) {
   return state.address
 }
+export const phoneNumber = state => state.phoneNumber
 /* export const goodsname = function (state) {
   return state.goodsname
 } */

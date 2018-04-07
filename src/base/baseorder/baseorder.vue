@@ -1,6 +1,6 @@
 <template>
   <div class="wraper">
-    <scroll class="address-content" v-if="orderList.length">
+    <scroll class="address-content" :datas="orderList" v-if="orderList.length">
       <div class="address-list" >
         <ul class="orderList">
           <li v-for="orderInfo in orderList">
@@ -65,6 +65,12 @@
                 <span>运费：</span>
               </div>
               <div>￥{{(orderInfo.wemallOrder.freightPrice/100).toFixed(2)}}</div>
+            </div>
+            <div class="orderinfo" v-if="orderInfo.wemallOrder.status == 3 && orderInfo.wemallOrder.applyForReject != '1'">
+              <div>
+                <span>物流信息：</span>
+              </div>
+              <div>{{orderInfo.wemallOrder.freightName}}（运单号：{{orderInfo.wemallOrder.freightNo}}）</div>
             </div>
             <div class="shopPrices">
               <h3>
