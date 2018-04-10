@@ -26,7 +26,7 @@
         id: "1",
         scoreInfoList: [],
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 1000,
         beginCreateDate: null,
         endCreateDate: null
       }

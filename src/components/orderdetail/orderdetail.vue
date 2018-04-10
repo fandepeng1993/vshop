@@ -121,7 +121,7 @@
                     </p>
                     <div class="allPrice">
                       <span>订单总价</span>
-                      <span>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</span>
+                      <span>￥{{((orderInfo.wemallOrder.originalOrderPrice-orderInfo.wemallOrder.freightPrice)/100).toFixed(2)}}</span>
                     </div>
                   </h3>
                 </div>
@@ -139,7 +139,7 @@
                 <div class="appriec">
                   <h4>
                     <p>实付款（含运费）</p>
-                    <span>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</span>
+                    <span>￥{{(orderInfo.wemallOrder.originalOrderPrice/100).toFixed(2)}}</span>
                   </h4>
                 </div>
                 <div class="appriec" style="display: flex;justify-content: space-between;" v-if="orderInfo.wemallOrder.status == 3 && orderInfo.wemallOrder.applyForReject != '1'">

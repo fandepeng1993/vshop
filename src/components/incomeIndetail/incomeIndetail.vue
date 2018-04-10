@@ -32,7 +32,7 @@
         id: "all",
         bountyInfoList: [],
         pageNo: 1,
-        pageSize: 10
+        pageSize: 1000
       }
     },
     created() {

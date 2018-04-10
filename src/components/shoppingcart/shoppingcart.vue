@@ -71,7 +71,7 @@
         shopArray: [],
         imageDomainName:imageDomainName,
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 1000,
         shopgoods: [],
         isEdit: false,
         tempchecked: [],

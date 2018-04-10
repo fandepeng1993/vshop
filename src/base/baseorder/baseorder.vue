@@ -75,7 +75,7 @@
             <div class="shopPrices">
               <h3>
                 <i>微信支付</i>
-                <span>合计：<b>￥{{(orderInfo.wemallOrder.orderPrice/100).toFixed(2)}}</b></span>
+                <span>合计：<b>￥{{(orderInfo.wemallOrder.originalOrderPrice/100).toFixed(2)}}</b></span>
                 <div class="dbBtn" v-if="orderInfo.wemallOrder.status == 1 && listType != '2' && orderInfo.wemallOrder.applyForReject != '1'">
                   <a class="cancel" href="javascript:void(0);" @click.prevent.stop="cancelOrder(orderInfo.wemallOrder.orderNo)">取消订单</a>
                   <a class="buy external red" href="javascript:void(0);" @click.prevent.stop="payOrder(orderInfo.wemallOrder.orderNo)">立即支付</a>
