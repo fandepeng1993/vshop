@@ -290,6 +290,29 @@ export function findItemsByActivity(params) {
   return sendPost(url, params);
 }
 
+// 获取充值设置列表。
+export function getRechargeList() {
+  const url = domainName + '/f/interface/wemall/market/getRechargeList'
+  return sendPost(url, {});
+}
+
+// 根据单个商品生成订单的接口。
+// rechargeId（*）=充值设定id
+export function generateOrderByRecharge(rechargeId) {
+  const url = domainName + '/f/interface/wemall/order/generateOrderByRecharge'
+  const params = {rechargeId: rechargeId}
+  return sendPost(url, params);
+}
+
+// 充值订单，根据订单号，付款方式生成并返回预付款id。
+// paymentType（*）=付款方式
+// orderNo（*）=订单号
+// buyerMessage=买家留言
+// needAddress=是否需要收货地址
+export function getPrepareIdForRechargePay(params) {
+  const url = domainName + '/f/interface/wemall/order/getPrepareIdForRechargePay'
+  return sendPost(url, params);
+}
 
 export function jsonToObj(str) {
   return JSON.parse(str);

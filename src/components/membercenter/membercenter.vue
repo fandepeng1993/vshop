@@ -87,8 +87,8 @@
           /* {pname: '普通订单', src: '1dingdan.svg', link: '/Membercenter/orderstatus/allorder'},
           {pname: '自提订单', src: '2ziti.svg', link: '/Membercenter/orderstatus/allorder', ordername: 'sleflift'},
           {pname: '积分订单', src: 'jifen.png', link: '/Membercenter/orderstatus/allorder', ordername: 'integration'},
-          {pname: '奖励金', src: 'bonus.svg', link: '/Membercenter/bounty'},
           {pname: '会员卡', src: 'card.svg', link: '/Membercenter/membershipcard'}, */
+          {pname: '奖励金', src: 'bonus.svg', link: '/Membercenter/bounty'},
           {pname: '积分商城', src: 'jifenshangc.svg', link: '/Membercenter/integralmall/1'},
           /*{pname: '优惠券', src: '7juan.svg', link: '/Membercenter/coupons/1'},*/
           {pname: '满减送', src: '4kanjia.svg', link: '/Membercenter/mygroup/2'},
