@@ -230,6 +230,14 @@ export function alreadyReceived(orderNo) {
   return sendPost(url, params);
 }
 
+// 根据订单商品id获取订单商品的接口
+// id（*）=订单商品id
+export function getOrderItemDetail(id) {
+  const url = domainName + '/f/interface/wemall/order/getOrderItemDetail'
+  const params = {id: id}
+  return sendPost(url, params);
+}
+
 // 用户评论订单商品的接口
 // id（*）=订单商品id
 // buyerScore（*）=买家评分

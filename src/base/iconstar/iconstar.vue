@@ -33,6 +33,7 @@
     methods: {
       tapstar(index) {
         this.stars = index
+        this.$emit('ongetstar', this.starList)
        /* console.log(this.starList) */
       }
     },

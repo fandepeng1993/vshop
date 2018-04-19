@@ -26,6 +26,8 @@
 
 <script type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
+  import {getRechargeList} from 'api/getdata'
+  import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     name: "voucher-center",
     data() {
@@ -38,6 +40,7 @@
           {price: '100', info: '充值项的简要描述：充值100元'},
           {price: '200', info: '充值项的简要描述：充值200元'}
         ],
+        rechargeList: [],
         tabcontent: '',
         activeIndex: 0,
         btnText: '确认充值'
@@ -48,6 +51,13 @@
     },
     mounted() {},
     methods: {
+      _getRechargeList() {
+        getRechargeList().then((res) => {
+          if (res.ret === '0') {
+            this.rechargeList = res.data.list;
+          }
+        })
+      },
       tabs(index) {
         this.tabcontent = this.listData[index].info
         this.activeIndex = index

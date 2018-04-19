@@ -5,7 +5,7 @@
         <div>
           <div class="shopTop" ref="topsbox" data-fdp="fdp">
             <i :class="{'on': isallchecked}" @click.prevent.stop="allchecked"></i>
-            <h3>ISAT创作团队</h3>
+            <h3>加沃微商城</h3>
             <span :style="changeImg" @click.prevent.stop="changeEdit">{{edittext}}</span>
             <!--<span :style="{backgroundImage:'url(../../common/images/'+ noimg +'.png)'}" @click.prevent.stop="changeEdit">{{edittext}}</span>-->
           </div>

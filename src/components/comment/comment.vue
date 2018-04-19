@@ -12,7 +12,7 @@
           </p>
         </div>
         <div class="goodscomment">
-          <isat-iconstar></isat-iconstar>
+          <isat-iconstar @ongetstar="getstar"></isat-iconstar>
         </div>
         <div class="commentText">
           <textarea name="" v-model="textval" maxlength="120" rows="8" placeholder="对该商品的评价，最多可输入120个字"></textarea>
@@ -30,12 +30,16 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {Toast, MessageBox} from 'mint-ui'
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   import IsatIconstar from 'base/iconstar/iconstar'
+  import {getOrderItemDetail, commentItem} from 'api/getdata'
+  import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     name: "voucher-center",
     data() {
       return {
+        id: "", //订单商品id
         titlesname: '评价',
         listData: [
           {price: '10', info: '充值项的简要描述：充值10元'},
@@ -44,9 +48,12 @@
           {price: '100', info: '充值项的简要描述：充值100元'},
           {price: '200', info: '充值项的简要描述：充值200元'}
         ],
+        orderItemInfo: {},
         tabcontent: '',
         activeIndex: 0,
         btnText: '提交评价',
+        imageDomainName: imageDomainName,
+        buyerScore: "",
         textval: ''
       }
     },
@@ -55,9 +62,41 @@
     },
     mounted() {},
     methods: {
+      _getOrderItemDetail() {
+        getOrderItemDetail(this.id).then((res) => {
+          if (res.ret === '0') {
+            //this._getOrderList();
+            this.orderItemInfo = res.data.orderItemInfo;
+          } else {
+            this.checkoutfn(res.retMsg);
+          }
+        })
+      },
+      comment() {
+        let params = {};
+        params.id = this.id;
+        params.buyerScore = this.buyerScore;//评分
+        params.buyerMessage = this.textval;//买家评论
+        commentItem(params).then((res) => {
+          if (res.ret === '0') {
+            this.checkoutfn("确认评价成功");
+          } else {
+            this.checkoutfn(res.retMsg);
+          }
+        })
+      },
       tabs(index) {
         this.tabcontent = this.listData[index].info
         this.activeIndex = index
+      },
+      getstar(val) {
+        this.buyerScore = val;
+      },
+      checkoutfn(value) {
+        Toast({
+          message: value,
+          duration: 1000
+        })
       }
     },
     computed: {

@@ -1,7 +1,7 @@
 <template>
   <div class="shopenter">
     <div class="shopTop">
-      <h3><i class="shopImg"></i><span>ISAT创作团队</span></h3>
+      <h3><i class="shopImg"></i><span>加沃微商城</span></h3>
     </div>
     <ul class="shopcontent">
       <li>

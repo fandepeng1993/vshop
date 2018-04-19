@@ -32,7 +32,7 @@
          <div class="shopgoods">
            <div class="shophead">            
              <img src="../../common/images/shop.jpg" alt="">
-             <span>爱科技商城</span>
+             <span>加沃微商城</span>
            </div>
            <ul class="goodslist">
              <li v-for="orderItem in orderInfo.orderItemList" @click.prevent.stop="gotoItemDeatil(orderItem.itemId)">
@@ -103,6 +103,19 @@
               <textarea name="" id="" @blur="useScore()" v-model="useScoreNum" maxlength="100" rows="1" placeholder="选填，可填写您使用的积分数"></textarea>
             </h3>
          </div>
+
+         <div class="postage">
+            <h3>
+              <span>用户所剩余额：{{(orderInfo.userCurBountyNum/100).toFixed(2)}}元</span>
+            </h3>
+         </div>
+         <div class="leaveWord">
+            <h3>
+              <span>使用余额数（单位/元）</span>
+              <textarea name="" id="" @blur="useBounty()" v-model="useBountyNum" maxlength="100" rows="1" placeholder="选填，可填写您使用的余额数"></textarea>
+            </h3>
+         </div>
+
          <div class="countPrice">
           <h3>
             <span>合计：</span>
@@ -161,7 +174,8 @@
         buyerMessage: "",
         activity: "",
         lastPrice: "",
-        useScoreNum: ""
+        useScoreNum: "",
+        useBountyNum: ""
       }
     },
     created() {
@@ -244,6 +258,9 @@
         if(this.useScoreNum != 0 && this.useScoreNum != "") {
           params.scoreUsageNum=this.useScoreNum;
         }
+        if(this.useBountyNum != 0 && this.useBountyNum != "") {
+          params.bountyUsageNum=this.useBountyNum;
+        }
         getPrepareIdForPay(params).then((res) => {
           if (res.ret === '0') {
             if(res.data.needPay == "0") {
@@ -271,8 +288,14 @@
           let idStr = activityInfo.activityId + "_" + activityInfo.activityType;
           if(this.activity == idStr) {
             this.lastPrice = activityInfo.joinPrice/100;
-            if(this.useScoreNum != 0 || this.useScorereNum != "") {
+            //积分减价
+            if(this.useScoreNum != 0 && this.useScoreNum != "") {
               this.lastPrice = this.lastPrice - this.useScoreNum/this.orderInfo.scoreRate;
+              if(this.lastPrice < 0) this.lastPrice = 0;
+            }
+            //余额减价
+            if(this.useBountyNum != 0 && this.useBountyNum != "") {
+              this.lastPrice = this.lastPrice - this.useBountyNum;
               if(this.lastPrice < 0) this.lastPrice = 0;
             }
             this.lastPrice = this.lastPrice.toFixed(2);
@@ -284,6 +307,16 @@
         if(maxScore < this.useScoreNum) {
           this.checkoutfn("使用积分数不可超过最大使用积分值！");
           this.useScoreNum = 0;
+          return;
+        }
+
+        this.chooseActivity();
+      },
+      useBounty() {
+        let maxBounty = this.orderInfo.userCurBountyNum;
+        if(maxBounty < this.useBountyNum) {
+          this.checkoutfn("使用余额数不可超过用户剩余余额数！");
+          this.useBountyNum = 0;
           return;
         }
 
