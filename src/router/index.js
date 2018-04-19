@@ -42,6 +42,11 @@ import aftercontent from 'components/aftercontent/aftercontent'
 import orderconfirm from 'components/orderconfirm/orderconfirm'
 import orderdetail from 'components/orderdetail/orderdetail'
 /*import chooseaddress from 'base/chooseaddress/chooseaddress'*/
+
+// 添加路由组件，然后配置到哪个路由view 下面，本列配置在Menbercenter 中
+import voucherCenter from 'components/voucherCenter/voucherCenter'
+import comment from 'components/comment/comment'
+
 Vue.use(Router)
 
 export default new Router({
@@ -69,6 +74,14 @@ export default new Router({
         keepAlive: true // 不需要缓存
       },
       children: [
+		{
+          path: 'voucherCenter',
+          component: voucherCenter
+        },
+        {
+          path: 'comment',
+          component: comment
+        },
         {
           path: 'orderstatus',
           component: Orderstatus,

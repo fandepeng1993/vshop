@@ -97,7 +97,9 @@
           {pname: '购物车', src: '3gouwu.svg', link: '/Shoppingcart'},
           {pname: '个人设置', src: '8shezhi.svg', link: '/Membercenter/personalsetting'},
           {pname: '收货地址', src: '6map.svg', link: '/Membercenter/receiveraddress', link2: '/Membercenter/addreceiveradd'},
-          {pname: '退款/售后', src: '5tuikuan.svg', link: '/Membercenter/afterSale/1'}
+          {pname: '退款/售后', src: '5tuikuan.svg', link: '/Membercenter/afterSale/1'},
+		  {pname: '充值中心', src: 'vouchercenter.svg', link: '/Membercenter/voucherCenter'},
+          {pname: '评论页面', src: 'comment.svg', link: '/Membercenter/comment'}
         ],
         allorder: [
           {text: '待付款', routeid: 'obligation'},
