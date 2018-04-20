@@ -3,7 +3,16 @@
     <isat-publictoptitle  :titles="Goodstitle"></isat-publictoptitle>
     <transition name="slidex">
        <div class="shoppingcart-content" v-show="sss">
-         <div class="addrecive" v-if="isUseDefault">
+          <p style="background: white;
+                    font-size: 16px;
+                    color: #7a7a7a;
+                    padding-left: 5px;
+                    padding-top: 10px;
+                    border-bottom: 1px solid #ccc;
+                    padding-bottom: 10px;" v-if="fromRecharge=='1' && needAddress != '0'">
+              充值商品收货地址：
+          </p>
+         <div class="addrecive" v-if="isUseDefault && needAddress != '0'">
            <h3>
              <span>收货人：</span>
              <i>{{orderInfo.wemallOrderAddress.receiverName}}</i>
@@ -18,7 +27,7 @@
              <b @click.prevent.stop="changeAddress">更换地址 ></b>
            </p>
          </div>
-         <div class="noaddress" v-else>
+         <div class="noaddress" v-show="needAddress != '0'" v-else>
           <h3 @click.prevent.stop="changeAddress">
             <div class="leftss">
               <img src="../../common/images/add.svg" alt="">
@@ -44,7 +53,7 @@
                </div>
              </li>
            </ul>
-           <div class="allprice">
+           <div class="allprice" v-if="fromRecharge!='1'">
              <h3>
                <span>共{{orderInfo.orderItemList.length}}件商品</span>
                <i>小计：</i>
@@ -53,8 +62,13 @@
                </em>
              </h3>
            </div>
+           <div class="allprice" v-if="fromRecharge=='1'">
+             <h3>
+               <span>本次充值{{((orderInfo.wemallOrder.originalOrderPrice-orderInfo.wemallOrder.freightPrice)/100).toFixed(2)}}元</span>
+             </h3>
+           </div>
          </div>
-         <div class="leaveWord">
+         <div class="leaveWord" v-if="fromRecharge!='1'">
            <h3 class='acChos'>
              <span>活动选择：</span>
              <!-- <select>
@@ -69,13 +83,13 @@
              </select>
            </h3>
          </div>
-         <div class="leaveWord"> 
+         <div class="leaveWord" v-if="fromRecharge!='1'"> 
            <h3>
              <span>买家留言：</span>
              <textarea name="" id="" v-model="buyerMessage" maxlength="100" rows="1" placeholder="选填，可填写您和卖家达成一致的要求"></textarea>
            </h3>
          </div>
-         <div class="postage">
+         <div class="postage" v-if="fromRecharge!='1'">
             <h3>
               <span>配送方式</span>
               <p>
@@ -91,25 +105,25 @@
               <mt-switch v-model="isUseDefault"></mt-switch>
             </h3>
          </div> -->
-         <div class="postage">
+         <div class="postage" v-if="fromRecharge!='1'">
             <h3>
               <span>最多可使用{{orderInfo.userCurScoreNum > orderInfo.canUseTotalScore ? orderInfo.canUseTotalScore : orderInfo.userCurScoreNum}}积分抵扣</span>
               <span>积分与人民币兑换比例({{orderInfo.scoreRate}}：1)</span>
             </h3>
          </div>
-         <div class="leaveWord">
+         <div class="leaveWord" v-if="fromRecharge!='1'">
             <h3>
               <span>使用积分数</span>
               <textarea name="" id="" @blur="useScore()" v-model="useScoreNum" maxlength="100" rows="1" placeholder="选填，可填写您使用的积分数"></textarea>
             </h3>
          </div>
 
-         <div class="postage">
+         <div class="postage" v-if="fromRecharge!='1'">
             <h3>
               <span>用户所剩余额：{{(orderInfo.userCurBountyNum/100).toFixed(2)}}元</span>
             </h3>
          </div>
-         <div class="leaveWord">
+         <div class="leaveWord" v-if="fromRecharge!='1'">
             <h3>
               <span>使用余额数（单位/元）</span>
               <textarea name="" id="" @blur="useBounty()" v-model="useBountyNum" maxlength="100" rows="1" placeholder="选填，可填写您使用的余额数"></textarea>
@@ -153,7 +167,7 @@
 </template>
 <script  type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
-  import {getOrderDetail, getPrepareIdForPay, jsonToObj, objToJson, wxPay} from 'api/getdata'
+  import {getOrderDetail, getPrepareIdForPay, getPrepareIdForRechargePay, jsonToObj, objToJson, wxPay} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   import { Toast, MessageBox } from 'mint-ui'
   export default {
@@ -175,7 +189,9 @@
         activity: "",
         lastPrice: "",
         useScoreNum: "",
-        useBountyNum: ""
+        useBountyNum: "",
+        fromRecharge: "",
+        needAddress: ""
       }
     },
     created() {
@@ -184,6 +200,8 @@
     },
     methods:{
       _getOrderDetail() {
+        this.fromRecharge = this.$route.query.fromRecharge
+        this.needAddress = this.$route.query.needAddress
         getOrderDetail(this.orderNo).then((res) => {
           if (res.ret === '0') {
             this.orderInfo = res.data;
@@ -251,31 +269,51 @@
         params.orderNo = this.orderNo;
         params.buyerMessage = this.buyerMessage;
 
-        if(this.activity != "") {
-          params.activityId=this.activity.split("_")[0];
-          params.activityType=this.activity.split("_")[1];
-        }
-        if(this.useScoreNum != 0 && this.useScoreNum != "") {
-          params.scoreUsageNum=this.useScoreNum;
-        }
-        if(this.useBountyNum != 0 && this.useBountyNum != "") {
-          params.bountyUsageNum=this.useBountyNum;
-        }
-        getPrepareIdForPay(params).then((res) => {
-          if (res.ret === '0') {
-            if(res.data.needPay == "0") {
-              this.checkoutfn("订单付款成功");
-              this.$router.push({
-                path: `/Membercenter/orderstatus/waitsendgood`
-              })
+        if(this.fromRecharge=='1') {
+          params.needAddress = this.needAddress
+          getPrepareIdForRechargePay(params).then((res) => {
+            if (res.ret === '0') {
+              if(res.data.needPay == "0") {
+                this.checkoutfn("订单付款成功");
+                this.$router.push({
+                  path: `/Membercenter/orderstatus/waitsendgood`
+                })
+              } else {
+                console.log("获取预付款id和签名成功", res.data);
+                wxPay(res.data.payRequestParams);
+              }
             } else {
-              console.log("获取预付款id和签名成功", res.data);
-              wxPay(res.data.payRequestParams);
+              this.checkoutfn(res.retMsg);
             }
-          } else {
-            this.checkoutfn(res.retMsg);
+          })
+        } else {
+          if(this.activity != "") {
+            params.activityId=this.activity.split("_")[0];
+            params.activityType=this.activity.split("_")[1];
           }
-        })
+          if(this.useScoreNum != 0 && this.useScoreNum != "") {
+            params.scoreUsageNum=this.useScoreNum;
+          }
+          if(this.useBountyNum != 0 && this.useBountyNum != "") {
+            params.bountyUsageNum=this.useBountyNum;
+          }
+
+          getPrepareIdForPay(params).then((res) => {
+            if (res.ret === '0') {
+              if(res.data.needPay == "0") {
+                this.checkoutfn("订单付款成功");
+                this.$router.push({
+                  path: `/Membercenter/orderstatus/waitsendgood`
+                })
+              } else {
+                console.log("获取预付款id和签名成功", res.data);
+                wxPay(res.data.payRequestParams);
+              }
+            } else {
+              this.checkoutfn(res.retMsg);
+            }
+          })
+        }
       },
       gotoItemDeatil(itemId) {
         this.$router.push({
@@ -283,6 +321,7 @@
         })
       },
       chooseActivity() {
+        let useActivity = false;
         for(let index in this.orderInfo.activityList) {
           let activityInfo = this.orderInfo.activityList[index];
           let idStr = activityInfo.activityId + "_" + activityInfo.activityType;
@@ -299,10 +338,33 @@
               if(this.lastPrice < 0) this.lastPrice = 0;
             }
             this.lastPrice = this.lastPrice.toFixed(2);
+
+            useActivity = true;
           }
+        }
+
+        if(!useActivity) {
+          this.lastPrice = this.orderInfo.wemallOrder.originalOrderPrice/100;
+          //积分减价
+          if(this.useScoreNum != 0 && this.useScoreNum != "") {
+            this.lastPrice = this.lastPrice - this.useScoreNum/this.orderInfo.scoreRate;
+            if(this.lastPrice < 0) this.lastPrice = 0;
+          }
+          //余额减价
+          if(this.useBountyNum != 0 && this.useBountyNum != "") {
+            this.lastPrice = this.lastPrice - this.useBountyNum;
+            if(this.lastPrice < 0) this.lastPrice = 0;
+          }
+          this.lastPrice = this.lastPrice.toFixed(2);
         }
       },
       useScore() {
+        if(isNaN(this.useScoreNum)) {
+          this.checkoutfn("使用积分数必须为数字！");
+          this.useScoreNum = 0;
+          return;
+        }
+
         let maxScore = this.orderInfo.userCurScoreNum > this.orderInfo.canUseTotalScore ? this.orderInfo.canUseTotalScore : this.orderInfo.userCurScoreNum;
         if(maxScore < this.useScoreNum) {
           this.checkoutfn("使用积分数不可超过最大使用积分值！");
@@ -313,7 +375,13 @@
         this.chooseActivity();
       },
       useBounty() {
-        let maxBounty = this.orderInfo.userCurBountyNum;
+        if(isNaN(this.useBountyNum)) {
+          this.checkoutfn("使用余额数必须为数字！");
+          this.useBountyNum = 0;
+          return;
+        }
+
+        let maxBounty = this.orderInfo.userCurBountyNum/100;
         if(maxBounty < this.useBountyNum) {
           this.checkoutfn("使用余额数不可超过用户剩余余额数！");
           this.useBountyNum = 0;

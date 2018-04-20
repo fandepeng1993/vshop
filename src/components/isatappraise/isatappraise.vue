@@ -37,7 +37,7 @@
         params: {
           itemId: "",
           pageNo: 1,
-          pageSize: 1000
+          pageSize: 20
         }
       }
     },

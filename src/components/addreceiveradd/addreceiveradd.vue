@@ -84,7 +84,7 @@
     computed: {
       newdata() {
         var tempId = this.$route.params.id
-        if (tempId) {
+        if (tempId && this.address[Number(tempId)]) {
           var tempThis = this.newdatas
           var tempState = this.address[Number(tempId)]
           if(tempState.isDefault===1) {

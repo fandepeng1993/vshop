@@ -43,12 +43,12 @@
               </div>
               <i class="icon-right"></i>
             </div>
-            <div v-for="orderItem in orderInfo.orderItemList" class="shopInfo" @click.prevent.stop="gotoItemDeatil(orderItem.itemId)">
+            <div v-for="orderItem in orderInfo.orderItemList" class="shopInfo" >
               <!--<p class="headTop">
                 <span>欣皓妮阳创意礼品专营店</span>
                 <i class="icon-right"></i>
               </p>-->
-              <div class="shopImg">
+              <div class="shopImg" @click.prevent.stop="gotoItemDeatil(orderItem.itemId)">
                 <div class="leftInfodiv">
                   <img :src="imageDomainName+orderItem.photo" alt="">
                 </div>
@@ -58,6 +58,14 @@
                   <span>{{orderItem.itemNum}} 件</span>
                   <strong>￥{{((orderItem.totalFee)/100).toFixed(2)}}</strong>
                 </div>
+              </div>
+              <div class="shopPrices" v-if="orderInfo.wemallOrder.status == 4 && listType != '2' && orderInfo.wemallOrder.applyForReject != '1' && (!orderItem.buyerScore || orderItem.buyerScore == '')">
+                <h3>
+                  <i>评价商品：</i>
+                  <div class="dbBtn" >
+                    <a class="buy external red" href="javascript:void(0);" @click.prevent.stop="gotoCommentItem(orderItem.id)">去评价</a>
+                  </div>
+                </h3>
               </div>
             </div>
             <div class="orderinfo">
@@ -157,6 +165,7 @@
           }
         }
 
+        params.orderCategory = 1; //筛选条件为商品订单
         //status (*）=状态（1、未付款，2、已付款，3、已发货，4、已收货，5、已评论，6、交易退货，7、交易关闭，8、已取消）
         //params.status = 
         getOrderList(params).then((res) => {
@@ -331,6 +340,12 @@
       gotoItemDeatil(itemId) {
         this.$router.push({
           path: `/Goodsdetail/`+itemId
+        })
+      },
+      gotoCommentItem(orderItemId) {
+        this.$router.push({
+          path: '/Membercenter/comment',
+          query: {id: orderItemId}
         })
       },
       checkoutfn(value) {

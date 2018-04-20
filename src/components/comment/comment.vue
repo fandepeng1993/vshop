@@ -5,10 +5,10 @@
       <div class="content">
         <div class="goodsInfo">
           <div class="goodsImg">
-            <img src="../../common/images/user.jpg" width="100" height="100" alt="" >
+            <img :src="imageDomainName+orderItemInfo.photo" width="100" height="100" alt="" >
           </div>
           <p class="goodsName">
-            【野生葛粉】500克/袋，绿色认证，出口日本，39元/袋
+            {{orderItemInfo.title}}
           </p>
         </div>
         <div class="goodscomment">
@@ -20,7 +20,7 @@
           <p v-show="canInByte <= 0 ? true : false"><i style="color: red">*</i> 已经超出<span style="color: red">{{Math.abs(canInByte)}}</span> 个字</p>
         </div>
       </div>
-      <div class="publicbtn" @click.prevent.stop="jumpage">
+      <div class="publicbtn" @click.prevent.stop="comment">
         <a class="footerbox">
           <span>{{btnText}}</span>
         </a>
@@ -41,16 +41,7 @@
       return {
         id: "", //订单商品id
         titlesname: '评价',
-        listData: [
-          {price: '10', info: '充值项的简要描述：充值10元'},
-          {price: '20', info: '充值项的简要描述：充值20元'},
-          {price: '50', info: '充值项的简要描述：充值50元'},
-          {price: '100', info: '充值项的简要描述：充值100元'},
-          {price: '200', info: '充值项的简要描述：充值200元'}
-        ],
         orderItemInfo: {},
-        tabcontent: '',
-        activeIndex: 0,
         btnText: '提交评价',
         imageDomainName: imageDomainName,
         buyerScore: "",
@@ -58,11 +49,12 @@
       }
     },
     created() {
-      this.tabcontent = this.listData[0].info
+      this._getOrderItemDetail();
     },
     mounted() {},
     methods: {
       _getOrderItemDetail() {
+        this.id = this.$route.query.id;
         getOrderItemDetail(this.id).then((res) => {
           if (res.ret === '0') {
             //this._getOrderList();
@@ -77,17 +69,41 @@
         params.id = this.id;
         params.buyerScore = this.buyerScore;//评分
         params.buyerMessage = this.textval;//买家评论
+
+        if(params.buyerScore == "") {
+          this.checkoutfn("请填写评分");
+          return;
+        }
+        if(params.buyerMessage == "") {
+          switch(params.buyerScore) {
+          case 1:
+            params.buyerMessage = "差";
+            break;
+          case 2:
+            params.buyerMessage = "差";
+            break;
+          case 3:
+            params.buyerMessage = "一般";
+            break;
+          case 4:
+            params.buyerMessage = "满意";
+            break;
+          case 5:
+            params.buyerMessage = "非常满意";
+            break;
+          }
+        }
+
         commentItem(params).then((res) => {
           if (res.ret === '0') {
             this.checkoutfn("确认评价成功");
+            this.$router.push({
+              path: `/Membercenter/orderstatus/waitevaluated`
+            })
           } else {
             this.checkoutfn(res.retMsg);
           }
         })
-      },
-      tabs(index) {
-        this.tabcontent = this.listData[index].info
-        this.activeIndex = index
       },
       getstar(val) {
         this.buyerScore = val;
@@ -107,6 +123,13 @@
     components: {
       IsatPublictoptitle,
       IsatIconstar
+    },
+    watch: {
+      '$route': function () {
+        if(this.$route.fullPath.indexOf("comment") != -1 || this.$route.fullPath.indexOf("comment") != -1) {
+          this._getOrderItemDetail();
+        }
+      }
     }
   }
 </script>
@@ -136,6 +159,7 @@
           overflow hidden
         .goodsName
           font-size 14px
+          text-align center
       .goodscomment
         background #fff
         padding 10px 0px

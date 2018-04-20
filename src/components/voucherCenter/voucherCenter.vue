@@ -5,9 +5,9 @@
     <div class="content">
       <h3>充值选项</h3>
       <ul class="tabsbtn">
-        <li v-for="(item,index) in listData" @click.prevent.stop="tabs(index)" :class="index==activeIndex ? 'active' : ''">
-          <p>{{item.price}}</p>
-          <p class="info">售价{{item.price}}元</p>
+        <li v-for="(item,index) in rechargeList" @click.prevent.stop="tabs(item, index)" :class="index==activeIndex ? 'active' : ''">
+          <p>{{item.name}}</p>
+          <p class="info">售价{{(item.originalPrice/100).toFixed(2)}}元</p>
         </li>
       </ul>
       <div class="tabscontent" v-show="tabcontent">
@@ -26,28 +26,22 @@
 
 <script type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
-  import {getRechargeList} from 'api/getdata'
+  import {getRechargeList, generateOrderByRecharge} from 'api/getdata'
   import {ERR_OK, imageDomainName} from 'api/config'
   export default {
     name: "voucher-center",
     data() {
       return {
         titlesname: '充值中心',
-        listData: [
-          {price: '10', info: '充值项的简要描述：充值10元'},
-          {price: '20', info: '充值项的简要描述：充值20元'},
-          {price: '50', info: '充值项的简要描述：充值50元'},
-          {price: '100', info: '充值项的简要描述：充值100元'},
-          {price: '200', info: '充值项的简要描述：充值200元'}
-        ],
         rechargeList: [],
         tabcontent: '',
         activeIndex: 0,
+        selectRecharge: {},
         btnText: '确认充值'
       }
     },
     created() {
-      this.tabcontent = this.listData[0].info
+      this._getRechargeList();
     },
     mounted() {},
     methods: {
@@ -55,12 +49,38 @@
         getRechargeList().then((res) => {
           if (res.ret === '0') {
             this.rechargeList = res.data.list;
+            this.tabs(this.rechargeList[0],0);
           }
         })
       },
-      tabs(index) {
-        this.tabcontent = this.listData[index].info
+      tabs(obj, index) {
+        this.tabcontent = obj.desc
         this.activeIndex = index
+        this.selectRecharge = obj
+      },
+      jumpage() {
+        //确认充值
+        generateOrderByRecharge(this.selectRecharge.id).then((res) => {
+          if (res.ret === '0') {
+            this.$router.push({
+              path: '/orderconfirm/'+res.data.orderNo,
+              query: {needAddress: this.selectRecharge.needaddress,
+                    fromRecharge: "1"}
+            })
+          } else {
+            MessageBox({
+              title: '',
+              message: res.retMsg,
+              showCancelButton: false,
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+              } else {
+                return
+              }
+            })
+          }
+        })
       }
     },
     components: {

@@ -9,7 +9,7 @@
                   <div>
                     <img src="../../common/images/memberimage/pc-t1.svg" alt="">
                   </div>
-                  <p>暂无会员卡</p>
+                  <p>余额：{{(userInfo.user.curBountyNum/100).toFixed(2)}}元</p>
                 </li>
                 <li class="memberperson">
                   <div style="border-radius: 50%;overflow: hidden;">
@@ -88,7 +88,8 @@
           {pname: '自提订单', src: '2ziti.svg', link: '/Membercenter/orderstatus/allorder', ordername: 'sleflift'},
           {pname: '积分订单', src: 'jifen.png', link: '/Membercenter/orderstatus/allorder', ordername: 'integration'},
           {pname: '会员卡', src: 'card.svg', link: '/Membercenter/membershipcard'}, */
-          {pname: '奖励金', src: 'bonus.svg', link: '/Membercenter/bounty'},
+          {pname: '充值中心', src: 'vouchercenter.svg', link: '/Membercenter/voucherCenter'},
+          {pname: '余额明细', src: 'bonus.svg', link: '/Membercenter/bounty'},
           {pname: '积分商城', src: 'jifenshangc.svg', link: '/Membercenter/integralmall/1'},
           /*{pname: '优惠券', src: '7juan.svg', link: '/Membercenter/coupons/1'},*/
           {pname: '满减送', src: '4kanjia.svg', link: '/Membercenter/mygroup/2'},
@@ -97,9 +98,8 @@
           {pname: '购物车', src: '3gouwu.svg', link: '/Shoppingcart'},
           {pname: '个人设置', src: '8shezhi.svg', link: '/Membercenter/personalsetting'},
           {pname: '收货地址', src: '6map.svg', link: '/Membercenter/receiveraddress', link2: '/Membercenter/addreceiveradd'},
-          {pname: '退款/售后', src: '5tuikuan.svg', link: '/Membercenter/afterSale/1'},
-		  {pname: '充值中心', src: 'vouchercenter.svg', link: '/Membercenter/voucherCenter'},
-          {pname: '评论页面', src: 'comment.svg', link: '/Membercenter/comment'}
+          {pname: '退款/售后', src: '5tuikuan.svg', link: '/Membercenter/afterSale/1'}
+          //{pname: '评论页面', src: 'comment.svg', link: '/Membercenter/comment'}
         ],
         allorder: [
           {text: '待付款', routeid: 'obligation'},

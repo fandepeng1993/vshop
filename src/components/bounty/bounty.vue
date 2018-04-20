@@ -4,12 +4,12 @@
         <isat-publictoptitle :isback="false" :defaultHome="'/Membercenter'" :titles="titlesname"></isat-publictoptitle>
         <div class="bountytop">
           <div class="usablebounty">
-            <p>当前可用奖励金（元）</p>
+            <p>当前可用余额（元）</p>
             <h3>{{(parseFloat(userInfo.user.curBountyNum)/100).toFixed(2)}}</h3>
           </div>
-          <div class="rules">
-            <a @click.prevent.stop="checkbonusrules"><i></i><span>奖励金规则</span></a>
-          </div>
+          <!-- <div class="rules">
+            <a @click.prevent.stop="checkbonusrules"><i></i><span>余额规则</span></a>
+          </div> -->
         </div>
         <div class="tabs">
           <isat-infourTab
@@ -31,7 +31,7 @@
   export default {
     data() {
       return {
-        titlesname: '奖励金',
+        titlesname: '余额',
         userInfo: {
           user: {}
         },

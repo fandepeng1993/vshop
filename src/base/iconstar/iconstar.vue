@@ -33,7 +33,15 @@
     methods: {
       tapstar(index) {
         this.stars = index
-        this.$emit('ongetstar', this.starList)
+
+        let starNum = 0;
+        for(let index in this.starList) {
+          if(this.starList[index] == "active") {
+            starNum++;
+          }
+        }
+
+        this.$emit('ongetstar', starNum)
        /* console.log(this.starList) */
       }
     },

@@ -162,9 +162,11 @@ export default {
     chooseQuality(dIndex, index) {
       /*console.log(dIndex, index)*/
       this.chooseNum.splice(dIndex, 1, index)
-      this.goodsEntityObj.currentPrice = this.specInfo[index].price;
-      this.goodsEntityObj.storage = this.specInfo[index].storage;
-      this.goodsEntityObj.itemSpecIds = this.specInfo[index].id;
+      if(this.specInfo && this.specInfo[index]) {
+        this.goodsEntityObj.currentPrice = this.specInfo[index].price;
+        this.goodsEntityObj.storage = this.specInfo[index].storage;
+        this.goodsEntityObj.itemSpecIds = this.specInfo[index].id;
+      }
     }
   },
   components: {

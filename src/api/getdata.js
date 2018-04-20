@@ -266,6 +266,7 @@ export function getOrderDetail(orderNo) {
 
 // 获取订单列表的接口。
 // status (*）=状态（1、未付款，2、已付款，3、已发货，4、已收货，5、已评论，6、交易退货，7、交易关闭，8、已取消）
+// orderCategory=订单类别
 export function getOrderList(params) {
   const url = domainName + '/f/interface/wemall/order/getOrderList'
   return sendPost(url, params);

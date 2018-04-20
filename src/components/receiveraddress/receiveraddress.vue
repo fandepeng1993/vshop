@@ -67,14 +67,16 @@
         })
       },
       _setDefaultUserAddr(index) {
-        setDefaultUserAddr({id: this.address[index].id}).then((res) => {
-          if (res.ret === '0') {
-            this.editDefaultAddress(index)
-            this.checkoutfn('设置默认成功')
-          } else {
-            this.checkoutfn('设置默认失败')
-          }
-        });
+        if(this.address[index]) {
+          setDefaultUserAddr({id: this.address[index].id}).then((res) => {
+            if (res.ret === '0') {
+              this.editDefaultAddress(index)
+              this.checkoutfn('设置默认成功')
+            } else {
+              this.checkoutfn('设置默认失败')
+            }
+          });
+        }
       },
       checkedThis(index) {
         console.log(index)
