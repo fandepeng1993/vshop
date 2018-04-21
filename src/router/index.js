@@ -81,7 +81,10 @@ export default new Router({
         },
         {
           path: 'comment',
-          component: comment
+          component: comment,
+          meta: {
+            keepAlive: true // 不需要缓存
+          },
         },
         {
           path: 'orderstatus',
@@ -263,7 +266,10 @@ export default new Router({
     },
     {
       path:'/about',
-      component: aboutus
+      component: aboutus,
+      meta: {
+            keepAlive: true // 不需要缓存
+          },
     },
     {
       path: '/Groupgoods',
