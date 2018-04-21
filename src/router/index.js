@@ -46,6 +46,7 @@ import orderdetail from 'components/orderdetail/orderdetail'
 // 添加路由组件，然后配置到哪个路由view 下面，本列配置在Menbercenter 中
 import voucherCenter from 'components/voucherCenter/voucherCenter'
 import comment from 'components/comment/comment'
+import aboutus from 'components/aboutus/aboutus'
 
 Vue.use(Router)
 
@@ -259,6 +260,10 @@ export default new Router({
     {
       path: '/login',
       component: Loginpage
+    },
+    {
+      path:'/about',
+      component: aboutus
     },
     {
       path: '/Groupgoods',

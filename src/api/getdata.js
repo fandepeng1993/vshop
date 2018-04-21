@@ -323,6 +323,29 @@ export function getPrepareIdForRechargePay(params) {
   return sendPost(url, params);
 }
 
+// 获取公司宣传文章类别列表获取接口
+export function getIntroduceData() {
+  const url = domainName + '/f/interface/wemall/sys/getIntroduceData'
+  return sendPost(url, {});
+}
+
+// 根据资讯类型进行分页查询
+// category.id=类别id
+// pageNo
+// pageSize
+export function getArticleListByCategory(params) {
+  const url = domainName + '/f/interface/wemall/operate/getArticleListByCategory'
+  return sendPost(url, params);
+}
+
+// 根据资讯文章id获取详情
+// id=资讯文章id
+export function getArticleById(id) {
+  const url = domainName + '/f/interface/wemall/operate/getArticleById'
+  const params = {id: id}
+  return sendPost(url, params);
+}
+
 export function jsonToObj(str) {
   return JSON.parse(str);
 }

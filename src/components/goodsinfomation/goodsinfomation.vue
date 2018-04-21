@@ -33,6 +33,7 @@
   </transition>
 </template>
 <script type="text/ecmascript-6">
+  /* transition all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55) */
   import IsatInfourTab from 'base/infourtab/infourtab'
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   import {mapGetters} from 'vuex'
@@ -158,7 +159,7 @@
     transform translate3d(100%,0,0)
 
   .slides-enter-active,.slides-leave-active
-    transition all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)
+    transition all 0.3s
   .slides-enter
     transform translate3d(100%,0,0)
   .slides-leave-to

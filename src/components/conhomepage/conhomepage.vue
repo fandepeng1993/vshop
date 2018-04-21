@@ -15,6 +15,7 @@
             <Loading v-if="!homepagedata.banna.length"></Loading>
           </div>
           <isat-goodlistshow-wrap :homepagedata="homepagedata"></isat-goodlistshow-wrap>
+          <isat-about></isat-about>
           <isat-callphone :phone="homepagedata.servicePhone"></isat-callphone>
         </div>
       </scroll>
@@ -30,6 +31,7 @@
   import Loading from 'base/loading/loading'
   import IsatGoodlistshowWrap from 'components/goodslistshow-wrap/goodslistshow-wrap'
   import IsatCallphone from 'base/callphone/callphone'
+  import IsatAbout from 'base/about/about'
   import {mapMutations} from 'vuex'
   export default {
     data() {
@@ -94,7 +96,8 @@
       Scroll,
       Loading,
       IsatGoodlistshowWrap,
-      IsatCallphone
+      IsatCallphone,
+      IsatAbout
     }
   }
 </script>

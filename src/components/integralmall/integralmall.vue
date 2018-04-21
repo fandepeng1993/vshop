@@ -10,7 +10,7 @@
       <div class="integralmall-header">
         <span>当前积分</span>
         <div class="num">
-          <b>200</b>
+          <b>{{userInfo.user.curScoreNum}}</b>
         </div>
         <div class="tips">
           <i @click.prevent.stop="jumpage">积分明细</i>
@@ -26,6 +26,8 @@
 <script type="text/ecmascript-6">
   import IsatPublictoptitle from 'base/publictoptitle/publictoptitle'
   import IsatInfourTab from 'base/infourtab/infourtab'
+  import {imageDomainName} from 'api/config'
+  import {getCurrentUser} from 'api/getdata'
   export default {
     data() {
       return {
@@ -33,10 +35,24 @@
           {name: '积分抵扣', srcfirst: '/Membercenter/integralmall/', srclast: '1'},
           {name: '积分兑换', srcfirst: '/Membercenter/integralmall/', srclast: '2'}
         ],
-        rowValue: false
+        rowValue: false,
+        userInfo: {
+          user: {}
+        }
       }
     },
+    created() {
+      this._getCurrentUser()
+    },
     methods: {
+      _getCurrentUser() {
+        getCurrentUser().then((res) => {
+          if (res.ret === '0') {
+            console.log(res.data.userInfo)
+            this.userInfo = res.data.userInfo;
+          }
+        })
+      },
       changeValue(newval) {
         this.rowValue = newval
       },

@@ -63,6 +63,13 @@
     components: {
       IsatPublictoptitle,
       IsatInfourTab
+    },
+    watch: {
+      '$route': function () {
+        if(this.$route.fullPath.indexOf("bounty") != -1) {
+          this._getCurrentUser()
+        }
+      }
     }
   }
 </script>

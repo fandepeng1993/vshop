@@ -12,6 +12,6 @@ export const options = {
 
 export const ERR_OK = 0
 
-export const domainName = 'http://ldkservice.tunnel.qydev.com'
+export const domainName = 'http://jiawoserver.jianzhibang365.com'
 
-export const imageDomainName = 'http://ldkservice.tunnel.qydev.com'
+export const imageDomainName = 'http://jiawoserver.jianzhibang365.com'

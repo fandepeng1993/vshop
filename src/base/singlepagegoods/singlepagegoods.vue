@@ -36,9 +36,9 @@
               <i class="icon-right"></i>
             </div>
           </div>
+          <div id="descDiv" v-html="goodsEntity.desc"></div>
           <isat-appraise :itemId="id"></isat-appraise>
           <!-- <isat-shopentrance></isat-shopentrance> -->
-          <div id="descDiv" v-html="goodsEntity.desc"></div>
           <!-- <isat-shopinfo @refreshscroll="refreshscroll"></isat-shopinfo>
           <!--<mt-popup
             v-model="popupVisible"
